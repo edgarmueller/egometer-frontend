@@ -1,7 +1,5 @@
-export const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://egometer-backend.herokuapp.com"
-    : "http://localhost:9000";
+
+export const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const NOT_APPLICABLE = -1;
 
