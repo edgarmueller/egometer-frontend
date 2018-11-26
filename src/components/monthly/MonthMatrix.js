@@ -166,7 +166,7 @@ class MonthMatrix extends React.PureComponent {
                 </div>
               }
               dataKey={date}
-              cellRenderer={({...props, cellData}) => {
+              cellRenderer={({cellData, ...props}) => {
                 const isHovered = props.columnIndex === this.state.hoveredColumnIndex ||
                   props.rowIndex === this.state.hoveredRowIndex;
                 const className = isHovered ? 'item hoveredItem' : 'item';
