@@ -44,7 +44,6 @@ describe("MonthMatrix", () => {
         widgets={widgets}
       />
     );
-    // console.log(wrapper.debug());
     expect(wrapper.find(Table).length).toBe(1);
     wrapper.unmount();
   });

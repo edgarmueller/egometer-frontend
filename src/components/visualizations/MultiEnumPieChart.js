@@ -28,7 +28,6 @@ const colorRange = [
 class MultiEnumPieChart extends React.Component {
   render() {
     const { data } = this.props;
-    console.log("data", data);
 
     const values = _.flatMap(data, d => d.value);
     const groupedValues = values.reduce((acc, val) => {
