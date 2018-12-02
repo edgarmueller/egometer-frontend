@@ -115,7 +115,6 @@ export function updateEntryDebounceEpic(action$, store, deps) {
           });
         })
         .catch(error => {
-          console.log("XX", error);
           return Observable.of({
             type: UPDATE_ENTRY_FAILURE,
             meterId: entry.meterId,
