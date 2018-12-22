@@ -8,6 +8,7 @@ import configureStore from "./store/configureStore";
 import { Provider } from "react-redux";
 import { history } from "./store/configureStore";
 import { checkToken } from "./common/util";
+import DefaultErrorBoundary from './components/common/DefaultErrorBoundary';
 
 require("dotenv").config();
 
@@ -18,7 +19,9 @@ checkToken(store.dispatch);
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
-      <App />
+      <DefaultErrorBoundary>
+        <App />
+      </DefaultErrorBoundary>
     </ConnectedRouter>
   </Provider>,
   document.getElementById("root")
