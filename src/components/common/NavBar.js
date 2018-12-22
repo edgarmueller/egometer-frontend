@@ -9,7 +9,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { routerActions } from "react-router-redux";
 import Radium from "radium";
-import { link } from "../../common/styles";
+import { link, logo } from "../../common/styles";
 import { logout } from "../../actions";
 import { visibleOnlyAdmin } from "../../common/auth";
 
@@ -25,21 +25,7 @@ const styles = () => ({
     ...link,
     flex: 1
   },
-  logo: {
-    flex: 1,
-    color: "#333435",
-    borderRadius: "16px",
-    paddingLeft: "2em",
-    paddingRight: "2em",
-    paddingTop: "1em",
-    paddingBottom: "1em",
-    marginRight: "1em",
-    fontSize: "0.8125em",
-    fontWeight: "bold",
-    marginLeft: "auto",
-    textDecoration: "none",
-    fontFamily: "'Arial', sans-serif"
-  }
+  logo
 });
 
 export const RadiumLink = Radium(Link);

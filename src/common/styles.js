@@ -74,4 +74,19 @@ export const display1 = {
   fontWeight: "bold"
 };
 
+export const logo = {
+    flex: 1,
+    color: "#333435",
+    borderRadius: "16px",
+    paddingLeft: "2em",
+    paddingRight: "2em",
+    paddingTop: "1em",
+    paddingBottom: "1em",
+    marginRight: "1em",
+    fontSize: "0.8125em",
+    fontWeight: "bold",
+    textDecoration: "none",
+    fontFamily: "'Arial', sans-serif"
+}
+
 export const joinClasses = (...classNames) => `${[...classNames].join(" ")}`;
