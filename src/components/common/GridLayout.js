@@ -13,7 +13,7 @@ const generateLayout = items => {
   if (localStorage && localStorage.getItem(LAYOUT_STORAGE_KEY)) {
     layout = JSON.parse(localStorage.getItem(LAYOUT_STORAGE_KEY));
   }
-  return _.map(items, function(item, i) {
+  return _.map(items, function (item, i) {
     const y = 2;
     if (!_.isEmpty(layout) && !_.isEmpty(layout[i])) {
       return layout[i];
@@ -32,7 +32,7 @@ const generateLayout = items => {
 
 class BasicLayout extends React.PureComponent {
   static defaultProps = {
-    onLayoutChange: function() {}
+    onLayoutChange: function () { }
   };
 
   constructor(props) {
@@ -80,6 +80,7 @@ class BasicLayout extends React.PureComponent {
         layout={this.state.layout}
         onLayoutChange={this.onLayoutChange}
         draggableCancel="input,textarea"
+        draggableHandle='.drag-handle'
         rowHeight={ROW_HEIGHT}
         {...this.props}
       >
