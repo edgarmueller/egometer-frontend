@@ -14,7 +14,7 @@ export const journalVis = {
   month: undefined,
   cell: StringCell,
   isApplicable: s => (isString(s) ? 1 : -1),
-  h: 1
+  h: 2
 };
 
 export default journalVis;
