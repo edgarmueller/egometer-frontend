@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import withStyles from "@material-ui/core/styles/withStyles";
 import SettingsIcon from "@material-ui/icons/MoreVert";
+import DragHandle from "@material-ui/icons/DragHandle";
 import { meterTitle, underline } from "../../../common/styles";
 import MeterSettingsDialog from "./MeterSettingsDialog";
 
@@ -42,6 +43,9 @@ class TitleBar extends React.Component {
           }}
         >
           <Grid container alignItems="center">
+            <Grid item xs={1}>
+              <DragHandle className='drag-handle' />
+            </Grid>
             <Grid item xs={2}>
               {icon && (
                 <span
@@ -56,7 +60,7 @@ class TitleBar extends React.Component {
                 </span>
               )}
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={7}>
               <div
                 style={{
                   display: "flex",
