@@ -23,7 +23,8 @@ const DailyBoolean = ({ meter, date, data, updateEntry, isLoading, icon }) => {
       // TODO: this should be probably be the default?
       fromEvent={x => x}
       updateEntry={updateEntry}
-      inputComponent={({ handleOnChange, data: checked }) => {
+    >
+      {({ handleOnChange, data: checked }) => {
         return (
           <div>
             <TitleBar meter={meter} icon={icon} />
@@ -34,7 +35,7 @@ const DailyBoolean = ({ meter, date, data, updateEntry, isLoading, icon }) => {
           </div>
         );
       }}
-    />
+    </ConnectedComponent>
   );
 };
 

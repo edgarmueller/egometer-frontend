@@ -23,7 +23,8 @@ export class DailyString extends React.Component {
         date={date}
         updateOnChange
         updateEntry={updateEntry}
-        inputComponent={({ handleOnChange, data: text }) => {
+      >
+        {({ handleOnChange, data: text }) => {
           return (
             <div
               style={{
@@ -46,7 +47,7 @@ export class DailyString extends React.Component {
             </div>
           );
         }}
-      />
+      </ConnectedComponent>
     );
   }
 }

@@ -11,9 +11,10 @@ describe('ConnectedComponent', () => {
     const wrapper = shallow(
       <ConnectedComponent
         date={testDate}
-        inputComponent={() => (<div>Test</div>)}
         updateEntry={jest.fn()}
-      />
+      >
+        {() => (<div>Test</div>)}
+      </ConnectedComponent >
     );
     expect(wrapper.find('div').length).toBe(1);
   });
@@ -24,12 +25,13 @@ describe('ConnectedComponent', () => {
       <ConnectedComponent
         data={'init'}
         date={testDate}
-        inputComponent={() => (<div>Test</div>)}
-        updateEntry={() => didUpdate = true }
+        updateEntry={() => didUpdate = true}
         updateOnChange
-      />
+      >
+        {() => (<div>Test</div>)}
+      </ConnectedComponent>
     );
-    wrapper.instance().handleOnChange({ target: { value: 'test' }});
+    wrapper.instance().handleOnChange({ target: { value: 'test' } });
     expect(wrapper.state().text).toBe('test');
     expect(didUpdate).toBe(true);
   });
@@ -40,12 +42,13 @@ describe('ConnectedComponent', () => {
       <ConnectedComponent
         data={'init'}
         date={testDate}
-        inputComponent={() => (<div>Test</div>)}
-        updateEntry={() => didUpdate = true }
+        updateEntry={() => didUpdate = true}
         updateOnChange={false}
-      />
+      >
+        {() => (<div>Test</div>)}
+      </ConnectedComponent>
     );
-    wrapper.instance().handleOnChange({ target: { value: 'test' }});
+    wrapper.instance().handleOnChange({ target: { value: 'test' } });
     expect(didUpdate).toBe(false);
   });
 
@@ -54,12 +57,13 @@ describe('ConnectedComponent', () => {
     const wrapper = shallow(
       <ConnectedComponent
         date={testDate}
-        inputComponent={({ reset, submitEntry }) => {
-          submitEntry();
-        } }
-        updateEntry={() => didUpdate = true }
+        updateEntry={() => didUpdate = true}
         updateOnChange={false}
-      />
+      >
+        {
+          ({ reset, submitEntry }) => submitEntry()
+        }
+      </ConnectedComponent>
     );
     expect(didUpdate).toBe(true);
   });
@@ -70,14 +74,13 @@ describe('ConnectedComponent', () => {
       <ConnectedComponent
         data={'init'}
         date={testDate}
-        inputComponent={({ reset}) => {
-          doReset = reset;
-        } }
-        updateEntry={() => didUpdate = true }
+        updateEntry={() => didUpdate = true}
         updateOnChange={false}
-      />
+      >
+        {({ reset }) => { doReset = reset; }}
+      </ConnectedComponent>
     );
-    wrapper.instance().handleOnChange({ target: { value: 'test' }});
+    wrapper.instance().handleOnChange({ target: { value: 'test' } });
     doReset();
     expect(wrapper.state().text).toBe('init');
   });
@@ -87,11 +90,12 @@ describe('ConnectedComponent', () => {
       <ConnectedComponent
         data={'init'}
         date={testDate}
-        inputComponent={jest.fn()}
         updateEntry={jest.fn()}
-      />
+      >
+        {jest.fn}
+      </ConnectedComponent>
     );
-    wrapper.instance().handleOnKeyDown({ target: { value: 'test' }});
+    wrapper.instance().handleOnKeyDown({ target: { value: 'test' } });
     expect(wrapper.state().text).toBe('test');
   });
 
@@ -101,11 +105,12 @@ describe('ConnectedComponent', () => {
       <ConnectedComponent
         data={'init'}
         date={testDate}
-        inputComponent={jest.fn()}
         updateEntry={() => didUpdate = true}
-      />
+      >
+        {jest.fn}
+      </ConnectedComponent>
     );
-    wrapper.instance().handleOnKeyDown({ key: 'Enter', target: { value: 'test' }});
+    wrapper.instance().handleOnKeyDown({ key: 'Enter', target: { value: 'test' } });
     expect(wrapper.state().text).toBe('test');
     expect(didUpdate).toBe(true);
   });
@@ -118,9 +123,10 @@ describe('ConnectedComponent', () => {
       <ConnectedComponent
         data={'init'}
         date={testDate}
-        inputComponent={jest.fn()}
         updateEntry={jest.fn()}
-      />
+      >
+        {jest.fn}
+      </ConnectedComponent>
     );
     wrapper.setProps({ data: 'foo' });
     expect(wrapper.state().text).toBe('init');
@@ -131,9 +137,10 @@ describe('ConnectedComponent', () => {
       <ConnectedComponent
         data={'init'}
         date={testDate}
-        inputComponent={jest.fn()}
         updateEntry={jest.fn()}
-      />
+      >
+        {jest.fn}
+      </ConnectedComponent>
     );
     wrapper.setProps({
       'data': 'foo',

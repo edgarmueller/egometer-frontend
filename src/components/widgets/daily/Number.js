@@ -47,7 +47,8 @@ export class DailyNumber extends React.Component {
         date={date}
         updateOnChange
         updateEntry={updateEntry}
-        inputComponent={({ handleOnChange, data: number }) => {
+      >
+        {({ handleOnChange, data: number }) => {
           return (
             <div
               style={{
@@ -69,7 +70,7 @@ export class DailyNumber extends React.Component {
             </div>
           );
         }}
-      />
+      </ConnectedComponent>
     );
   }
 }

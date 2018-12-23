@@ -30,7 +30,8 @@ export class NumberSlider extends React.Component {
                 updateOnChange
                 updateEntry={updateEntry}
                 fromEvent={x => x}
-                inputComponent={({ handleOnChange, data: number }) => {
+            >
+                {({ handleOnChange, data: number }) => {
                     const onChannge = (ev, value) => {
                         handleOnChange(value)
                     }
@@ -49,7 +50,7 @@ export class NumberSlider extends React.Component {
                         </div>
                     );
                 }}
-            />
+            </ConnectedComponent>
         );
     }
 }

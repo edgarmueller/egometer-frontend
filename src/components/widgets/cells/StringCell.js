@@ -49,7 +49,8 @@ export class StringCell extends React.Component {
         isLoading={isLoading}
         updateEntry={updateEntry}
         updateOnChange={false}
-        inputComponent={({
+      >
+        {({
           data: value,
           handleOnChange,
           reset,
@@ -113,7 +114,7 @@ export class StringCell extends React.Component {
               </Dialog>
             </React.Fragment>
           )}
-      />
+      </ConnectedComponent>
     );
   }
 }

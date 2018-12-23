@@ -45,11 +45,11 @@ export class ConnectedComponent extends React.Component {
   };
 
   render() {
-    const { data, inputComponent, updateEntry, shouldDebounce } = this.props;
+    const { data, children, updateEntry, shouldDebounce } = this.props;
 
     return (
       <React.Fragment>
-        {inputComponent({
+        {children({
           handleOnChange: this.handleOnChange,
           handleOnKeyDown: this.handleOnKeyDown,
           data: this.state.text,
@@ -66,7 +66,6 @@ ConnectedComponent.propTypes = {
   fromEvent: PropTypes.func,
   updateOnChange: PropTypes.bool,
   updateEntry: PropTypes.func.isRequired,
-  inputComponent: PropTypes.func.isRequired,
   // TODO: maybe rename prop to initData?
   data: PropTypes.any,
   date: PropTypes.string,

@@ -57,10 +57,9 @@ class NumberCell extends React.Component {
         updateOnChange={false}
         isLoading={isLoading}
         fromEvent={ev => _.toNumber(ev.target.value)}
-        inputComponent={props => {
-          return <StyledNumberInput {...props} color={color} />;
-        }}
-      />
+      >
+        {props => <StyledNumberInput {...props} color={color} />}
+      </ConnectedComponent>
     );
   }
 }
