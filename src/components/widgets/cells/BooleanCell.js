@@ -22,32 +22,33 @@ const BooleanCell = ({
   hover,
   updateEntry
 }) => (
-  <ConnectedComponent
-    isLoading={isLoading}
-    data={data}
-    updateEntry={updateEntry}
-    fromEvent={ev => {
-      return ev.target.checked;
-    }}
-    inputComponent={({ handleOnChange, data }) => {
-      return (
-        <div className={classes.checkbox} style={{ backgroundColor: color }}>
-          <Checkbox
-            icon={
-              hover ? (
-                <RadioButtonUnchecked style={{ color: "#fff" }} />
-              ) : (
-                <span />
-              )
-            }
-            checkedIcon={<CheckCircle />}
-            checked={data}
-            onChange={ev => handleOnChange(ev)}
-          />
-        </div>
-      );
-    }}
-  />
-);
+    <ConnectedComponent
+      isLoading={isLoading}
+      data={data}
+      updateEntry={updateEntry}
+      fromEvent={ev => {
+        return ev.target.checked;
+      }}
+    >
+      {({ handleOnChange, data }) => {
+        return (
+          <div className={classes.checkbox} style={{ backgroundColor: color }}>
+            <Checkbox
+              icon={
+                hover ? (
+                  <RadioButtonUnchecked style={{ color: "#fff" }} />
+                ) : (
+                    <span />
+                  )
+              }
+              checkedIcon={<CheckCircle />}
+              checked={data}
+              onChange={ev => handleOnChange(ev)}
+            />
+          </div>
+        );
+      }}
+    </ConnectedComponent>
+  );
 
 export default withStyles(styles)(BooleanCell);
