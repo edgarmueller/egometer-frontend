@@ -2,6 +2,7 @@ import * as React from "react";
 import { compose } from "redux";
 import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import Button from "@material-ui/core/Button/Button";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
@@ -54,58 +55,64 @@ export class StringCell extends React.Component {
           reset,
           submitEntry
         }) => (
-          <React.Fragment>
-            <div
-              className={classes.stringCell}
-              style={{
-                backgroundColor: color
-              }}
-              onClick={() => {
-                if (this.state.open) {
-                  return;
-                }
-                this.setState({ open: true });
-              }}
-            />
-            <Dialog
-              open={this.state.open}
-              onClose={() => {
-                this.setState({ open: false });
-              }}
-            >
-              <DialogTitle>Add entry</DialogTitle>
-              <DialogContent>
-                <div>
+            <React.Fragment>
+              <div
+                className={classes.stringCell}
+                style={{
+                  backgroundColor: color
+                }}
+                onClick={() => {
+                  if (this.state.open) {
+                    return;
+                  }
+                  this.setState({ open: true });
+                }}
+              />
+              <Dialog
+                open={this.state.open}
+                maxWidth='md'
+                fullWidth
+                onClose={() => {
+                  this.setState({ open: false });
+                }}
+              >
+                <DialogTitle>Add entry</DialogTitle>
+                <DialogContent>
                   <TextField
                     multiline
                     value={value}
                     onChange={handleOnChange}
-                    rows={3}
+                    rows={10}
+                    variant='outlined'
+                    fullWidth
+                    margin={'dense'}
                   />
-                </div>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    submitEntry();
-                    this.setState({ open: false });
-                  }}
-                  autoFocus
-                >
-                  OK
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      submitEntry();
+                      this.setState({ open: false });
+                    }}
+                    color='primary'
+                    autoFocus
+                  >
+                    OK
                 </Button>
-                <Button
-                  variant="outlined"
-                  onClick={() => {
-                    this.setState({ open: false });
-                    reset();
-                  }}
-                >
-                  Close
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      this.setState({ open: false });
+                      reset();
+                    }}
+                  >
+                    Close
                 </Button>
-              </DialogContent>
-            </Dialog>
-          </React.Fragment>
-        )}
+                </DialogActions>
+              </Dialog>
+            </React.Fragment>
+          )}
       />
     );
   }
