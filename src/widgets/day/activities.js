@@ -26,8 +26,10 @@ const icons = {
   traveling: "md-plane",
   food: "md-restaurant",
   nature: "md-leaf",
-  cleaning: "md-home",
-  pet_project: "md-star"
+  cleaning: "md-trash",
+  pet_project: "md-star",
+  family: "md-home",
+  sick: "md-thermometer"
 };
 
 const imageProvider = (color, isSelected, value) => {
@@ -63,7 +65,7 @@ const ActivitiesMeter = {
     withLabels(defaultLiteralLabelProvider)(MultiEnumCell)
   ),
   isApplicable: s => (isArray(s) ? 1 : -1),
-  h: 2
+  h: 2.5
 };
 
 export default ActivitiesMeter;
