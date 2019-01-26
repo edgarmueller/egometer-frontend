@@ -20,7 +20,7 @@ class NumberBarChart extends React.Component {
       const idx = Number(
         val.date.substr(val.date.lastIndexOf("-") + 1, val.date.length)
       );
-      values[idx].y = val.value;
+      values[idx - 1].y = val.value;
     });
 
     return (
