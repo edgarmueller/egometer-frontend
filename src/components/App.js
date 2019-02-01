@@ -6,20 +6,13 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 
 import "./App.css";
-import Dashboard from "../components/daily/DailyDashboard";
-import SchemaList from "../components/schemas/SchemaList";
-import MonthDashboard from "../components/monthly/MonthDashboard";
 import NavBar from "./common/NavBar";
 import {
   userIsAuthenticated,
   userIsAdminRedir,
   userIsNotAuthenticated
 } from "../common/auth";
-import LoginPage from "./auth/LoginPage";
-import ActivatedAccountPage from "./auth/ActivatedAccountPage";
-import SignUpPage from "./auth/SignUpPage";
-import RecoverPasswordPage from "./auth/RecoverPasswordPage";
-import ResetPasswordPage from "./auth/ResetPasswordPage";
+import asyncComponent from "../components/common/AsyncComponent";
 
 const ConnectedSwitch = connect(state => ({
   location: state.router.location
@@ -33,6 +26,26 @@ const navStyle = {
   maxWidth: "1200px",
   margin: "auto"
 };
+const AsyncLoginPage = asyncComponent(() => import("./auth/LoginPage"));
+const AsyncSignUpPage = asyncComponent(() => import("./auth/SignUpPage"));
+const AsyncActivedAccountPage = asyncComponent(() =>
+  import("./auth/ActivatedAccountPage")
+);
+const AsyncRecoverPasswordPage = asyncComponent(() =>
+  import("./auth/RecoverPasswordPage")
+);
+const AsyncResetPasswordPage = asyncComponent(() =>
+  import("./auth/ResetPasswordPage")
+);
+const AsyncDailyDashboard = asyncComponent(() =>
+  import("../components/daily/DailyDashboard")
+);
+const AsyncSchemaList = asyncComponent(() =>
+  import("../components/schemas/SchemaList")
+);
+const AsycnMonthDashboard = asyncComponent(() =>
+  import("../components/monthly/MonthDashboard")
+);
 
 class App extends Component {
   render() {
@@ -46,45 +59,47 @@ class App extends Component {
             <Route
               exact
               path="/login"
-              component={userIsNotAuthenticated(LoginPage)}
+              component={userIsNotAuthenticated(AsyncLoginPage)}
             />
             <Route
               exact
               path="/sign-up"
-              component={userIsNotAuthenticated(SignUpPage)}
+              component={userIsNotAuthenticated(AsyncSignUpPage)}
             />
             <Route
               exact
               path="/schemas"
-              component={userIsAuthenticated(userIsAdminRedir(SchemaList))}
+              component={userIsAuthenticated(userIsAdminRedir(AsyncSchemaList))}
             />
             <Route
               exact
               path="/matrix"
-              component={userIsAuthenticated(MonthDashboard)}
+              component={userIsAuthenticated(AsycnMonthDashboard)}
             />
             <Route
               exact
               path="/dashboard"
-              component={userIsAuthenticated(Dashboard)}
+              component={userIsAuthenticated(AsyncDailyDashboard)}
             />
-            <Route exact path="/sign-in" component={LoginPage} />
             <Route
               exact
               path="/auth/account/activation/:token"
-              component={ActivatedAccountPage}
+              component={AsyncActivedAccountPage}
             />
             <Route
               exact
               path="/auth/recover/password"
-              component={RecoverPasswordPage}
+              component={AsyncRecoverPasswordPage}
             />
             <Route
               exact
               path="/auth/recover/password/:token"
-              component={ResetPasswordPage}
+              component={AsyncResetPasswordPage}
             />
-            <Route path="*" component={userIsAuthenticated(Dashboard)} />
+            <Route
+              path="*"
+              component={userIsAuthenticated(AsyncDailyDashboard)}
+            />
           </ConnectedSwitch>
         </main>
       </div>
