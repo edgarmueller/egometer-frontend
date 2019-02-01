@@ -4,6 +4,7 @@ import moment from "moment";
 import "react-dates/initialize";
 import MonthPickerInput from "react-month-picker-input";
 import "../../react-month-picker-input.css";
+import Loader from "react-loader-spinner";
 
 import { compose, withProps } from "recompose";
 import PropTypes from "prop-types";
@@ -46,13 +47,27 @@ export class MonthDashboard extends React.Component {
   }
 
   render() {
-    const { classes, fetchEntries, ...otherProps } = this.props;
+    const { classes, fetchEntries, isLoading, ...otherProps } = this.props;
 
     if (this.props.error) {
       return (
         <div>
           <Typography variant="display1">MONTH</Typography>
           <div>{this.props.error}</div>
+        </div>
+      );
+    }
+
+    if (isLoading) {
+      return (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%"
+          }}
+        >
+          <Loader type="Puff" color="#00BFFF" height="100" width={100} />
         </div>
       );
     }
@@ -73,12 +88,16 @@ export class MonthDashboard extends React.Component {
             year={this.state.year}
             month={this.state.month - 1}
             onChange={(maskedValue, selectedYear, selectedMonth) => {
-              this.setState({
-                year: selectedYear,
-                month: selectedMonth + 1
-              });
-              fetchEntries(
-                `${selectedYear}-${selectedMonth + 1}-${moment().date()}`
+              console.log(maskedValue);
+              this.setState(
+                {
+                  year: selectedYear,
+                  month: selectedMonth + 1
+                },
+                () =>
+                  fetchEntries(
+                    `${selectedYear}-${selectedMonth + 1}-${moment().date()}`
+                  )
               );
             }}
             closeOnSelect={true}
@@ -106,6 +125,7 @@ MonthDashboard.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  isLoading: state.entries.loadingStatus.isLoading,
   meters: getMeters(state),
   entries: state.entries.entries,
   findMeterById(meterId) {

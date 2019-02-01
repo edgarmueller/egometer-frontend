@@ -7,7 +7,6 @@ import { Column, Table } from 'react-virtualized';
 import hexToRgba from 'hex-to-rgba';
 import withStyles from '@material-ui/core/styles/withStyles';
 import ErrorBoundary from 'react-error-boundary';
-import Loader from 'react-loader-spinner'
 import Tooltip from '@material-ui/core/Tooltip';
 import DefaultTableRowRenderer from './DefaultTableRowRenderer'
 import Cell from './Cell';
@@ -109,21 +108,6 @@ class MonthMatrix extends React.PureComponent {
       updateEntry
     } = this.props;
 
-    if (isLoading) {
-      return (
-        <div style={{
-          position: 'fixed',
-          top: '40%',
-        }}>
-          <Loader
-            type="Puff"
-            color="#00BFFF"
-            height="100"
-            width={width}
-          />
-        </div>
-      );
-    }
     // if specified in this order the json reponse contains HTML
     // TODO updateEntry={updateEntry(date, props.rowData.meterId)}
     // TODO: 60 per meter + header
