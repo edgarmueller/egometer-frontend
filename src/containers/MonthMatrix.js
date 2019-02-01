@@ -15,13 +15,18 @@ function daysInMonth(year, month) {
 class MonthMatrixContainer extends React.Component {
   width;
   render() {
-    const { meters, findBySchemaId, entries, isLoading } = this.props;
+    const {
+      meters,
+      findBySchemaId,
+      entries,
+      isLoading,
+      month,
+      year
+    } = this.props;
     const colorMapping = meters.reduce((acc, m) => {
       acc[m.name] = m.color;
       return acc;
     }, {});
-    const year = new Date().getFullYear();
-    const month = new Date().getMonth() + 1;
     const days = daysInMonth(year, month);
     return (
       <React.Fragment>
