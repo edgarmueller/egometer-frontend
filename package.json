@@ -26,7 +26,7 @@
     "react-ionicons": "^2.1.6",
     "react-loader-spinner": "^2.0.6",
     "react-moment-proptypes": "^1.6.0",
-    "react-month-picker-input": "^1.1.6",
+    "react-month-picker-input": "^1.2.0",
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
