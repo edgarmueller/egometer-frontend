@@ -73,7 +73,7 @@ class App extends Component {
             />
             <Route
               exact
-              path="/matrix"
+              path="/matrix/:year(\d{4})?/:month(0?[1-9]|1[012])?"
               component={userIsAuthenticated(AsycnMonthDashboard)}
             />
             <Route

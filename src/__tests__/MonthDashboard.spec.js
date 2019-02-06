@@ -34,6 +34,12 @@ describe("Dashboard", () => {
             monthMatrix: ""
           }}
           widgets={[mood]}
+          match={{
+            params: {
+              year: 2019,
+              month: 2
+            }
+          }}
         />
       </Provider>
     );

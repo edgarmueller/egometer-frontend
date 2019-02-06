@@ -1,4 +1,5 @@
 import React from "react";
+import _ from "lodash";
 import { connect } from "react-redux";
 import moment from "moment";
 import "react-dates/initialize";
@@ -35,21 +36,26 @@ export class MonthDashboard extends React.Component {
   constructor(props) {
     super(props);
     const now = moment();
+    const { match } = props;
+    const year = _.get(match, "params.year");
+    const month = _.get(match, "params.month");
     this.state = {
-      entries: props.entries || undefined,
-      focused: false,
-      overscanByPixels: 0,
-      windowScrollerEnabled: false,
-      year: now.year(),
-      month: now.month() + 1,
-      metersWithWidgets: []
+      year: year ? Number(year) : now.year(),
+      month: month ? Number(month) : now.month() + 1
     };
   }
 
   render() {
-    const { classes, fetchEntries, isLoading, ...otherProps } = this.props;
+    const {
+      classes,
+      fetchEntries,
+      error,
+      history,
+      isLoading,
+      ...otherProps
+    } = this.props;
 
-    if (this.props.error) {
+    if (error) {
       return (
         <div>
           <Typography variant="display1">MONTH</Typography>
@@ -88,17 +94,10 @@ export class MonthDashboard extends React.Component {
             year={this.state.year}
             month={this.state.month - 1}
             onChange={(maskedValue, selectedYear, selectedMonth) => {
-              console.log(maskedValue);
-              this.setState(
-                {
-                  year: selectedYear,
-                  month: selectedMonth + 1
-                },
-                () =>
-                  fetchEntries(
-                    `${selectedYear}-${selectedMonth + 1}-${moment().date()}`
-                  )
+              fetchEntries(
+                `${selectedYear}-${selectedMonth + 1}-${moment().date()}`
               );
+              history.push(`/matrix/${selectedYear}/${selectedMonth + 1}`);
             }}
             closeOnSelect={true}
           />
