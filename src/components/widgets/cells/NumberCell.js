@@ -18,14 +18,23 @@ const styles = {
 class NumberInput extends React.Component {
   ref = React.createRef();
 
+  constructor(props) {
+    super(props);
+    this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
+    this.handleOnBlur = this.handleOnBlur.bind(this);
+  }
+
+  handleOnKeyDown(ev) {
+    this.props.handleOnKeyDown(ev);
+    ev.key === "Enter" && this.ref.current.blur();
+  }
+
+  handleOnBlur() {
+    this.props.submitEntry();
+  }
+
   render() {
-    const {
-      classes,
-      data,
-      handleOnChange,
-      handleOnKeyDown,
-      color
-    } = this.props;
+    const { classes, data, handleOnChange, color } = this.props;
     return (
       <input
         ref={this.ref}
@@ -34,10 +43,8 @@ class NumberInput extends React.Component {
         type={"number"}
         value={data || ""}
         onChange={handleOnChange}
-        onKeyDown={ev => {
-          handleOnKeyDown(ev);
-          ev.key === "Enter" && this.ref.current.blur();
-        }}
+        onKeyDown={this.handleOnKeyDown}
+        onBlur={this.handleOnBlur}
       />
     );
   }
