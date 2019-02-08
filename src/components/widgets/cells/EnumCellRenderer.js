@@ -11,7 +11,7 @@ import Grid from "@material-ui/core/Grid";
 import IconButtonWithLabel from "../../common/IconButtonWithLabel";
 
 const styles = {
-  moodIcon: {
+  enumIcon: {
     fontSize: "2em",
     margin: "0.5em",
     display: "flex",
@@ -23,7 +23,7 @@ const styles = {
     margin: "0 auto",
     fontWeight: "bold"
   },
-  moodStyle: {
+  enum: {
     width: "100%",
     height: "100%",
     display: "flex",
@@ -41,6 +41,14 @@ class EnumCellRenderer extends React.Component {
       open: false,
       selected: props.data
     };
+    this.handleOnOpenClick = this.handleOnOpenClick.bind(this);
+  }
+
+  handleOnOpenClick() {
+    if (this.state.open) {
+      return;
+    }
+    this.setState({ open: true });
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -82,16 +90,9 @@ class EnumCellRenderer extends React.Component {
     return (
       <React.Fragment>
         <div
-          className={classes.moodStyle}
-          style={{
-            backgroundColor: color
-          }}
-          onClick={() => {
-            if (this.state.open) {
-              return;
-            }
-            this.setState({ open: true });
-          }}
+          className={classes.enum}
+          style={{ backgroundColor: color }}
+          onClick={this.handleOnOpenClick}
         >
           {// use black as color (== unselected)
           showImage
@@ -114,7 +115,7 @@ class EnumCellRenderer extends React.Component {
                   <Grid
                     key={value}
                     item
-                    className={classes.moodIcon}
+                    className={classes.enumIcon}
                     onClick={() => {
                       updateEntry(value);
                       this.setState({
