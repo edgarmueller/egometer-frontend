@@ -5,8 +5,7 @@ import moment from "moment";
 import "react-dates/initialize";
 import MonthPickerInput from "react-month-picker-input";
 import "../../react-month-picker-input.css";
-import Loader from "react-loader-spinner";
-
+import { ClipLoader } from "react-spinners";
 import { compose, withProps } from "recompose";
 import PropTypes from "prop-types";
 import "react-dates/lib/css/_datepicker.css";
@@ -18,7 +17,9 @@ import {
   getMeterError,
   getSchemaError,
   findMeterById as _findMeterById,
-  findBySchemaId as _findBySchemaId
+  findBySchemaId as _findBySchemaId,
+  isSchemasLoading,
+  isMetersLoading
 } from "../../reducers";
 import widgets from "../../widgets";
 import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
@@ -55,6 +56,8 @@ export class MonthDashboard extends React.Component {
       ...otherProps
     } = this.props;
 
+    console.log("isLoading", isLoading);
+
     if (error) {
       return (
         <div>
@@ -73,7 +76,7 @@ export class MonthDashboard extends React.Component {
             left: "50%"
           }}
         >
-          <Loader type="Puff" color="#00BFFF" height="100" width={100} />
+          <ClipLoader sizeUnit={"px"} size={150} color={"#123abc"} />
         </div>
       );
     }
@@ -124,7 +127,10 @@ MonthDashboard.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  isLoading: state.entries.loadingStatus.isLoading,
+  isLoading:
+    state.entries.loadingStatus.isLoading ||
+    isMetersLoading(state) ||
+    isSchemasLoading(state),
   meters: getMeters(state),
   entries: state.entries.entries,
   findMeterById(meterId) {

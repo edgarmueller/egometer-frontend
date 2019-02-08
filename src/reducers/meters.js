@@ -3,12 +3,14 @@ import {
   DELETE_METER_SUCCESS,
   FETCH_METERS_SUCCESS,
   FETCH_METERS_FAILURE,
-  UPDATE_METER_SUCCESS
+  UPDATE_METER_SUCCESS,
+  FETCH_METERS_REQUEST
 } from "../actions";
 
 const initialState = {
   error: undefined,
-  meters: []
+  meters: [],
+  isLoading: false
 };
 
 const findMeter = (meters, meterId) =>
@@ -34,6 +36,11 @@ export const metersReducer = (state = initialState, action) => {
           () => action.meter
         )
       };
+    case FETCH_METERS_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      };
     case FETCH_METERS_SUCCESS:
       return {
         error: undefined,
@@ -58,3 +65,4 @@ export const findMeterById = meterId => state =>
   _.find(state.meters, meter => meter.id === meterId);
 export const getMeters = state => state.meters;
 export const getMeterError = state => state.error;
+export const getIsMetersLoading = state => state.isLoading;

@@ -3,12 +3,14 @@ import { routerReducer } from "react-router-redux";
 import {
   metersReducer,
   getMeters as _getMeters,
-  getMeterError as _getMeterError
+  getMeterError as _getMeterError,
+  getIsMetersLoading
 } from "./meters";
 import {
   findBySchemaId as _findBySchemaId,
   findBySchemaName as _findBySchemaName,
-  getSchemaError as _getSchemaError
+  getSchemaError as _getSchemaError,
+  getIsSchemasLoading
 } from "./schemas";
 
 import { findMeterById as _findMeterById } from "../reducers/meters";
@@ -40,3 +42,5 @@ export const findBySchemaName = schemaName => state =>
   _findBySchemaName(schemaName)(state.schemas);
 
 export const getEntriesError = state => state.entries.error;
+export const isSchemasLoading = state => getIsSchemasLoading(state.schemas);
+export const isMetersLoading = state => getIsMetersLoading(state.meters);
