@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Route, Switch } from "react-router";
 import { connect } from "react-redux";
+import Loadable from "react-loadable";
 
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
@@ -12,7 +13,7 @@ import {
   userIsAdminRedir,
   userIsNotAuthenticated
 } from "../common/auth";
-import asyncComponent from "../components/common/AsyncComponent";
+import Loading from "./common/Loading";
 
 const ConnectedSwitch = connect(state => ({
   location: state.router.location
@@ -26,26 +27,38 @@ const navStyle = {
   maxWidth: "1200px",
   margin: "auto"
 };
-const AsyncLoginPage = asyncComponent(() => import("./auth/LoginPage"));
-const AsyncSignUpPage = asyncComponent(() => import("./auth/SignUpPage"));
-const AsyncActivedAccountPage = asyncComponent(() =>
-  import("./auth/ActivatedAccountPage")
-);
-const AsyncRecoverPasswordPage = asyncComponent(() =>
-  import("./auth/RecoverPasswordPage")
-);
-const AsyncResetPasswordPage = asyncComponent(() =>
-  import("./auth/ResetPasswordPage")
-);
-const AsyncDailyDashboard = asyncComponent(() =>
-  import("../components/daily/DailyDashboard")
-);
-const AsyncSchemaList = asyncComponent(() =>
-  import("../components/schemas/SchemaList")
-);
-const AsycnMonthDashboard = asyncComponent(() =>
-  import("../components/monthly/MonthDashboard")
-);
+const AsyncLoginPage = Loadable({
+  loader: () => import("./auth/LoginPage"),
+  loading: Loading
+});
+const AsyncSignUpPage = Loadable({
+  loader: () => import("./auth/SignUpPage"),
+  loading: Loading
+});
+const AsyncActivedAccountPage = Loadable({
+  loader: () => import("./auth/ActivatedAccountPage"),
+  loading: Loading
+});
+const AsyncRecoverPasswordPage = Loadable({
+  loader: () => import("./auth/RecoverPasswordPage"),
+  loading: Loading
+});
+const AsyncResetPasswordPage = Loadable({
+  loader: () => import("./auth/ResetPasswordPage"),
+  loading: Loading
+});
+const AsyncDailyDashboard = Loadable({
+  loader: () => import("../components/daily/DailyDashboard"),
+  loading: Loading
+});
+const AsyncSchemaList = Loadable({
+  loader: () => import("../components/schemas/SchemaList"),
+  loading: Loading
+});
+const AsycnMonthDashboard = Loadable({
+  loader: () => import("../components/monthly/MonthDashboard"),
+  loading: Loading
+});
 
 class App extends Component {
   render() {

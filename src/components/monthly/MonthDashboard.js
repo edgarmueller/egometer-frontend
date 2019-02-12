@@ -5,7 +5,6 @@ import moment from "moment";
 import "react-dates/initialize";
 import MonthPickerInput from "react-month-picker-input";
 import "../../react-month-picker-input.css";
-import { ClipLoader } from "react-spinners";
 import { compose, withProps } from "recompose";
 import PropTypes from "prop-types";
 import "react-dates/lib/css/_datepicker.css";
@@ -24,6 +23,7 @@ import {
 import widgets from "../../widgets";
 import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
 import * as actions from "../../actions";
+import Loading from "../common/Loading";
 
 const styles = {
   monthMatrix: {
@@ -68,17 +68,7 @@ export class MonthDashboard extends React.Component {
     }
 
     if (isLoading) {
-      return (
-        <div
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%"
-          }}
-        >
-          <ClipLoader sizeUnit={"px"} size={150} color={"#123abc"} />
-        </div>
-      );
+      return <Loading />;
     }
 
     return (
