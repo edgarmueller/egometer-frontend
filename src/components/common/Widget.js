@@ -38,6 +38,23 @@ const NoWidgetFound = ({ requestedWidget, widgetType }) => {
 };
 
 export class Widget extends React.Component {
+  updateEntry = (value, shouldDebounce) => {
+    const { updateEntry, meter, date } = this.props;
+    return updateEntry(meter.id, date)(value, shouldDebounce);
+  };
+
+  shouldComponentUpdate(nextProps) {
+    const { data, date, meter, width, height, isLoading } = this.props;
+    return (
+      !_.isEqual(nextProps.data, data) ||
+      nextProps.date !== date ||
+      nextProps.meter.id !== meter.id ||
+      nextProps.width !== width ||
+      nextProps.height !== height ||
+      nextProps.isLoading !== isLoading
+    );
+  }
+
   render() {
     // TODO: We're no making of loadingStatus here yet, do we?
     const {
@@ -46,12 +63,11 @@ export class Widget extends React.Component {
       meter,
       width,
       height,
-      updateEntry,
-      isLoading,
       schema,
-      findBySchemaId,
+      isLoading,
       widgetType,
-      widgets
+      widgets,
+      meterSchema
     } = this.props;
 
     let _schema = schema;
@@ -62,11 +78,10 @@ export class Widget extends React.Component {
     }
     const foundWidget = widget[widgetType];
     if (schema === undefined) {
-      const foundSchema = findBySchemaId(meter.schemaId);
-      if (_.isEmpty(foundSchema)) {
+      if (_.isEmpty(meterSchema)) {
         return null;
       }
-      _schema = foundSchema.schema;
+      _schema = meterSchema.schema;
     }
     if (foundWidget === null || foundWidget === undefined) {
       return (
@@ -82,8 +97,6 @@ export class Widget extends React.Component {
       h = _.toNumber(height.substr(0, height.length - 2));
     }
 
-    const meterId = meter.id;
-
     return (
       <WidgetComponent
         icon={widget.icon}
@@ -94,7 +107,7 @@ export class Widget extends React.Component {
         schema={_schema}
         width={w}
         height={h}
-        updateEntry={updateEntry(meterId, date)}
+        updateEntry={this.updateEntry}
       />
     );
   }
@@ -114,7 +127,8 @@ Widget.propTypes = {
   loadingStatus: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     meterId: PropTypes.string
-  })
+  }),
+  meterSchema: PropTypes.object.isRequired
 };
 
 Widget.defaultProps = {
@@ -122,12 +136,10 @@ Widget.defaultProps = {
 };
 
 const mapStateToProps = (state, ownProps) => {
+  const foundSchema = findBySchemaId(ownProps.meter.schemaId)(state);
   return {
-    loadingStatus: state.entries.loadingStatus,
     meters: getMeters(state),
-    findBySchemaId(schemaId) {
-      return findBySchemaId(schemaId)(state);
-    },
+    meterSchema: foundSchema,
     ...ownProps
   };
 };

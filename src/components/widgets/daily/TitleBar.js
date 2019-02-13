@@ -10,10 +10,30 @@ import MeterSettingsDialog from "./MeterSettingsDialog";
 
 const styles = {
   underline,
-  meterTitle
+  meterTitle,
+  meterTitleContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  settingsButton: {
+    float: "right"
+  },
+  settingsIcon: {
+    fontSize: 20
+  },
+  icon: {
+    paddingRight: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end"
+  },
+  container: {
+    minHeight: 44
+  }
 };
 
-class TitleBar extends React.Component {
+class TitleBar extends React.PureComponent {
   state = {
     openSettings: false
   };
@@ -22,52 +42,25 @@ class TitleBar extends React.Component {
     this.setState({ openSettings: false });
   };
 
+  handleOpen = () => {
+    this.setState({ openSettings: true });
+  };
+
   render() {
     const { classes, meter, icon } = this.props;
 
-    const SettingsButton = () => (
-      <IconButton
-        aria-label="Settings"
-        style={{ float: "right" }}
-        onClick={() => this.setState({ openSettings: true })}
-      >
-        <SettingsIcon style={{ fontSize: 20 }} />
-      </IconButton>
-    );
-
     return (
       <React.Fragment>
-        <div
-          style={{
-            minHeight: 44
-          }}
-        >
+        <div className={classes.container}>
           <Grid container alignItems="center">
             <Grid item xs={1}>
-              <DragHandle className='drag-handle' />
+              <DragHandle className="drag-handle" />
             </Grid>
             <Grid item xs={2}>
-              {icon && (
-                <span
-                  style={{
-                    paddingRight: 10,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end"
-                  }}
-                >
-                  {icon}
-                </span>
-              )}
+              {icon && <span className={classes.icon}>{icon}</span>}
             </Grid>
             <Grid item xs={7}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
-              >
+              <div className={classes.meterTitleContainer}>
                 <span
                   key={`${meter.name}-title`}
                   variant="display1"
@@ -78,7 +71,13 @@ class TitleBar extends React.Component {
               </div>
             </Grid>
             <Grid item xs={2}>
-              <SettingsButton />
+              <IconButton
+                aria-label="Settings"
+                className={classes.settingsButton}
+                onClick={this.handleOpen}
+              >
+                <SettingsIcon className={classes.settingsIcon} />
+              </IconButton>
             </Grid>
           </Grid>
         </div>

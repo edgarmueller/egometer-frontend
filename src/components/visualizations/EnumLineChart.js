@@ -13,6 +13,15 @@ import {
 } from "react-vis";
 
 class EnumLineChart extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    const { data, days, width } = this.props;
+    return (
+      !_.isEqual(nextProps.data, data) ||
+      days.length !== nextProps.days.length ||
+      width !== nextProps.width
+    );
+  }
+
   render() {
     const { data, days, schema, labelProvider, width } = this.props;
 

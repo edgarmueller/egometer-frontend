@@ -1,26 +1,36 @@
 import React from "react";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
+import { withStyles } from "@material-ui/core";
 
-const IconButtonWithLabel = ({ label, icon, onSubmit }) => (
-  <span
-    key={label}
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      paddingBottom: 5,
-      paddingLeft: 5,
-      paddingRight: 5,
-      flexWrap: "wrap"
-    }}
-  >
-    <IconButton aria-label={label} onClick={onSubmit}>
-      {icon}
-    </IconButton>
-    <span style={{ fontSize: 10 }}>{label}</span>
-  </span>
-);
+const styles = {
+  button: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    paddingBottom: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
+    flexWrap: "wrap"
+  },
+  label: {
+    fontSize: 10
+  }
+};
+
+class IconButtonWithLabel extends React.Component {
+  render() {
+    const { classes, label, icon, onSubmit } = this.props;
+    return (
+      <span key={label} className={classes.button}>
+        <IconButton aria-label={label} onClick={onSubmit}>
+          {icon}
+        </IconButton>
+        <span className={classes.label}>{label}</span>
+      </span>
+    );
+  }
+}
 
 IconButtonWithLabel.propTypes = {
   label: PropTypes.string.isRequired,
@@ -32,4 +42,4 @@ IconButtonWithLabel.defaultProps = {
   onSubmit: () => {}
 };
 
-export default IconButtonWithLabel;
+export default withStyles(styles)(IconButtonWithLabel);

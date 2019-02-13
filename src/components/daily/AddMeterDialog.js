@@ -1,13 +1,8 @@
 import React from "react";
-import {
-  connect
-} from "react-redux";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
-import {
-  compose,
-  withProps
-} from "recompose";
+import { compose, withProps } from "recompose";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -15,42 +10,40 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 
-import Category from './Category';
+import Category from "./Category";
 import widgets from "../../widgets";
-import {
-  getSchemas,
-  findBySchemaName
-} from "../../reducers";
+import { getSchemas, findBySchemaName } from "../../reducers";
 import * as api from "../../api";
 
 const filterApplicableWidgets = (widgets, schema) => {
   return _.filter(widgets, widget => widget.isApplicable(schema) > -1);
 };
-export class AddMeterDialog extends React.Component {
+export class AddMeterDialog extends React.PureComponent {
   constructor(props) {
     super(props);
-    const applicableWidgets = !_.isEmpty(props.schemas) ?
-      filterApplicableWidgets(props.widgets, _.head(props.schemas).schema) :
-      [];
+    const applicableWidgets = !_.isEmpty(props.schemas)
+      ? filterApplicableWidgets(props.widgets, _.head(props.schemas).schema)
+      : [];
     this.state = {
-      selectedSchema: props.schemas.length > 0 ? _.head(props.schemas) : undefined,
-      selectedVis: _.head(applicableWidgets) !== undefined ?
-        _.head(applicableWidgets).name :
-        "",
+      selectedSchema:
+        props.schemas.length > 0 ? _.head(props.schemas) : undefined,
+      selectedVis:
+        _.head(applicableWidgets) !== undefined
+          ? _.head(applicableWidgets).name
+          : "",
       applicableVis: applicableWidgets,
       name: ""
     };
   }
 
   handleSubmit = (schemaId, name, widget) => {
-    api
-      .createMeter(schemaId, name.trim(), widget, "#cecece")
-      .then(
-        () => this.props.onSubmit(),
-        errorMsg => this.setState({
+    api.createMeter(schemaId, name.trim(), widget, "#cecece").then(
+      () => this.props.onSubmit(),
+      errorMsg =>
+        this.setState({
           error: errorMsg
         })
-      );
+    );
   };
 
   render() {
@@ -64,9 +57,9 @@ export class AddMeterDialog extends React.Component {
 
     const widgetsByCategory = _.groupBy(
       _.map(widgets, widget => {
-        const category = _.isEmpty(widget.category) ?
-          "Uncategorized" :
-          widget.category;
+        const category = _.isEmpty(widget.category)
+          ? "Uncategorized"
+          : widget.category;
         return {
           ...widget,
           category
@@ -75,14 +68,18 @@ export class AddMeterDialog extends React.Component {
       widget => widget.category
     );
 
-    const availableSchemaIds = schemas.map(schema => schema.name)
+    const availableSchemaIds = schemas.map(schema => schema.name);
     const widgetsPerCategory = _.keys(widgetsByCategory)
       .filter(category => category !== "Custom")
       .concat(["Custom"])
       .reduce((acc, category) => {
         const availableWidgets = widgetsByCategory[category];
-        const applicableWidgets = availableWidgets
-          .filter(vis => vis.name !== undefined && vis.label !== undefined && availableSchemaIds.indexOf(vis.schemaId) !== -1);
+        const applicableWidgets = availableWidgets.filter(
+          vis =>
+            vis.name !== undefined &&
+            vis.label !== undefined &&
+            availableSchemaIds.indexOf(vis.schemaId) !== -1
+        );
         if (applicableWidgets.length > 0) {
           acc[category] = applicableWidgets;
         }
@@ -100,35 +97,34 @@ export class AddMeterDialog extends React.Component {
       >
         <DialogTitle id="alert-schema-title">Add Meter</DialogTitle>
         <DialogContent>
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column"
-          }}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column"
+            }}
           >
-            {
-              _.keys(widgetsPerCategory).length > 0 ?
-                _.map(
-                  _.keys(widgetsPerCategory),
-                  category =>
-                    <Category
-                      key={category}
-                      widgets={widgetsPerCategory[category]}
-                      category={category}
-                      schemas={schemas}
-                      findBySchemaName={findBySchemaName}
-                      handleSubmit={this.handleSubmit}
-                      drawTitle
-                    />
-                ) : <Typography variant="body1">Sorry, no widgets seem applicable</Typography>
-            }
+            {_.keys(widgetsPerCategory).length > 0 ? (
+              _.map(_.keys(widgetsPerCategory), category => (
+                <Category
+                  key={category}
+                  widgets={widgetsPerCategory[category]}
+                  category={category}
+                  schemas={schemas}
+                  findBySchemaName={findBySchemaName}
+                  handleSubmit={this.handleSubmit}
+                  drawTitle
+                />
+              ))
+            ) : (
+              <Typography variant="body1">
+                Sorry, no widgets seem applicable
+              </Typography>
+            )}
           </div>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={handleClose}
-            color="primary"
-          >
+          <Button onClick={handleClose} color="primary">
             Close
           </Button>
         </DialogActions>

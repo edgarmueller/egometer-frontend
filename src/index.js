@@ -12,6 +12,11 @@ import DefaultErrorBoundary from "./components/common/DefaultErrorBoundary";
 
 require("dotenv").config();
 
+//if (process.env.NODE_ENV !== "production") {
+//  const { whyDidYouUpdate } = require("why-did-you-update");
+//  whyDidYouUpdate(React);
+//}
+
 const store = configureStore();
 
 checkToken(store.dispatch);

@@ -31,9 +31,9 @@ describe("Widget", () => {
         width={"400"}
         height={"300"}
         updateEntry={jest.fn()}
-        findBySchemaId={() => counterSchema}
         widgetType="month"
         widgets={widgets}
+        meterSchema={counterSchema}
       />
     );
     expect(wrapper.find(FakeWidget).length).toBe(1);

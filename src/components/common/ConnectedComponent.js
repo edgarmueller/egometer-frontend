@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export class ConnectedComponent extends React.Component {
+export class ConnectedComponent extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,8 +44,17 @@ export class ConnectedComponent extends React.Component {
     this.setState({ text: newValue });
   };
 
+  submitEntry = () => {
+    const { updateEntry, shouldDebounce } = this.props;
+    updateEntry(this.state.text, shouldDebounce);
+  };
+
+  reset = () => {
+    this.setState({ text: this.props.data });
+  };
+
   render() {
-    const { data, children, updateEntry, shouldDebounce } = this.props;
+    const { children } = this.props;
 
     return (
       <React.Fragment>
@@ -53,8 +62,8 @@ export class ConnectedComponent extends React.Component {
           handleOnChange: this.handleOnChange,
           handleOnKeyDown: this.handleOnKeyDown,
           data: this.state.text,
-          submitEntry: () => updateEntry(this.state.text, shouldDebounce),
-          reset: () => this.setState({ text: data })
+          submitEntry: this.submitEntry,
+          reset: this.reset
         })}
       </React.Fragment>
     );

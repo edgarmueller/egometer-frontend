@@ -26,6 +26,11 @@ const colorRange = [
 ];
 
 class MultiEnumPieChart extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    const { data } = this.props;
+    return !_.isEqual(nextProps.data, data);
+  }
+
   render() {
     const { data } = this.props;
 

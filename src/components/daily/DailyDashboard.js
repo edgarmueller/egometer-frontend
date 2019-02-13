@@ -8,7 +8,7 @@ import "react-dates/initialize";
 import { SingleDatePicker } from "react-dates";
 import "react-dates/lib/css/_datepicker.css";
 import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
 import { connect } from "react-redux";
 
 import { getMeters } from "../../reducers";
@@ -80,6 +80,11 @@ export class DailyDashboard extends Component {
     this.setState({ open: false });
   };
 
+  confirmDialog = () => {
+    this.closeDialog();
+    this.props.fetchMeters();
+  };
+
   render() {
     const { classes, meters, entries, isLoading, widgets } = this.props;
 
@@ -112,39 +117,34 @@ export class DailyDashboard extends Component {
         id={"dashboard"}
       >
         <div className={classes.paper}>
-          <div>
-            <span>Selected date is &nbsp;</span>
-            <SingleDatePicker
-              isOutsideRange={() => false}
-              date={this.state.date}
-              onDateChange={this.handleDateChange}
-              focused={this.state.focused}
-              onFocusChange={({ focused }) => this.setState({ focused })}
-              block={false}
-              small={true}
-            />
-          </div>
-          <UpdateEntryErrorSnackbar />
-          <div>
-            <GridLayout items={widgetsInUse.map(v => ({ h: v.h, w: v.w }))}>
-              {meterWidgets}
-            </GridLayout>
-          </div>
-          <div className={classes.button}>
-            <Button variant="fab" onClick={this.handleClick}>
-              <AddIcon />
-            </Button>
-          </div>
-          <AddMeterDialog
-            open={this.state.open}
-            onSubmit={() => {
-              this.closeDialog();
-              this.props.fetchMeters();
-            }}
-            handleClose={this.closeDialog}
-            widgets={widgets}
+          <span>Selected date is &nbsp;</span>
+          <SingleDatePicker
+            isOutsideRange={() => false}
+            date={this.state.date}
+            onDateChange={this.handleDateChange}
+            focused={this.state.focused}
+            onFocusChange={({ focused }) => this.setState({ focused })}
+            block={false}
+            small={true}
           />
         </div>
+        <UpdateEntryErrorSnackbar />
+        <div>
+          <GridLayout items={widgetsInUse.map(v => ({ h: v.h, w: v.w }))}>
+            {meterWidgets}
+          </GridLayout>
+        </div>
+        <div className={classes.button}>
+          <Fab onClick={this.handleClick}>
+            <AddIcon />
+          </Fab>
+        </div>
+        <AddMeterDialog
+          open={this.state.open}
+          onSubmit={this.confirmDialog}
+          handleClose={this.closeDialog}
+          widgets={widgets}
+        />
       </div>
     );
   }

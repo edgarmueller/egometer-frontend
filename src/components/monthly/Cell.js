@@ -13,7 +13,7 @@ const NoCellRendererFound = () => (
 export class Cell extends React.Component {
   shouldComponentUpdate(nextProps, nextState, snapshot) {
     return (
-      this.props.data !== nextProps.data ||
+      !_.isEqual(this.props.data, nextProps.data) ||
       (this.props.isLoading && !nextProps.isLoading) ||
       this.props.isHovered !== nextProps.isHovered
     );

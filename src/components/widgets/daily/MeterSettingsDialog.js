@@ -22,7 +22,7 @@ const styles = {
   }
 };
 
-class MeterSettingsDialog extends React.Component {
+class MeterSettingsDialog extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {

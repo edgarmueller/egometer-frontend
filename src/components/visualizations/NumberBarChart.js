@@ -13,6 +13,16 @@ import {
 } from "react-vis";
 
 class NumberBarChart extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    const { data, days, meter, width } = this.props;
+    return (
+      !_.isEqual(nextProps.data, data) ||
+      days.length !== nextProps.days.length ||
+      meter.name !== nextProps.meter.name ||
+      width !== nextProps.width
+    );
+  }
+
   render() {
     const { data, days, meter, width } = this.props;
     const values = days.map(i => ({ x: i, y: 0 }));

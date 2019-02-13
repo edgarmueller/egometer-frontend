@@ -6,6 +6,13 @@ import EnumRenderer from "./EnumRenderer";
 const styles = {};
 
 export class Enum extends Component {
+  shouldComponentUpdate(nextProps) {
+    return (
+      !_.isEqual(this.props.data, nextProps.data) ||
+      this.props.date !== nextProps.date
+    );
+  }
+
   render() {
     const { data, date, updateEntry } = this.props;
 

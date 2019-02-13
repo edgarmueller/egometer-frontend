@@ -14,13 +14,17 @@ const styles = {
 };
 
 class EnumRenderer extends Component {
+
+  updateEntry = value => () => {
+    this.props.updateEntry(value)
+  }
+
   render() {
     const {
       meter,
       width,
       height,
       schema,
-      updateEntry,
       labelProvider,
       imageProvider,
       isSelected,
@@ -50,7 +54,7 @@ class EnumRenderer extends Component {
               <Grid item key={label}>
                 <IconButtonWithLabel
                   key={label}
-                  onSubmit={() => updateEntry(value)}
+                  onSubmit={this.updateEntry(value)}
                   label={label}
                   icon={
                     imageProvider

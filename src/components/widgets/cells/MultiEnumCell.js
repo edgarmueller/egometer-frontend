@@ -3,22 +3,26 @@ import * as _ from "lodash";
 import EnumCellRenderer from "./EnumCellRenderer";
 
 class MultiEnumCell extends React.Component {
-  render() {
-    const { data, schema, updateEntry } = this.props;
+  isSelected = val => {
+    const { data } = this.props;
+    return data !== undefined ? data.indexOf(val) !== -1 : false;
+  };
 
-    const isSelected = val =>
-      data !== undefined ? data.indexOf(val) !== -1 : false;
-    const updateMulti = val => {
-      if (data === undefined) {
-        updateEntry([val]);
+  updateMulti = val => {
+    const { data, updateEntry } = this.props;
+    if (data === undefined) {
+      updateEntry([val]);
+    } else {
+      if (data.indexOf(val) === -1) {
+        updateEntry(data.concat([val]));
       } else {
-        if (data.indexOf(val) === -1) {
-          updateEntry(data.concat([val]));
-        } else {
-          updateEntry(data.filter(x => x !== val));
-        }
+        updateEntry(data.filter(x => x !== val));
       }
-    };
+    }
+  };
+
+  render() {
+    const { updateEntry, schema, ...otherProps } = this.props;
 
     if (_.isEmpty(schema)) {
       return null;
@@ -26,11 +30,11 @@ class MultiEnumCell extends React.Component {
 
     return (
       <EnumCellRenderer
-        {...this.props}
+        {...otherProps}
         showImage={false}
-        updateEntry={updateMulti}
+        updateEntry={this.updateMulti}
         schema={schema.items}
-        isSelected={isSelected}
+        isSelected={this.isSelected}
         closeOnSelect={false}
       />
     );
