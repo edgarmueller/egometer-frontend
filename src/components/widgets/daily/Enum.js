@@ -1,18 +1,8 @@
 import React, { Component } from "react";
 import _ from "lodash";
-import { withStyles } from "@material-ui/core/styles";
 import EnumRenderer from "./EnumRenderer";
 
-const styles = {};
-
 export class Enum extends Component {
-  shouldComponentUpdate(nextProps) {
-    return (
-      !_.isEqual(this.props.data, nextProps.data) ||
-      this.props.date !== nextProps.date
-    );
-  }
-
   render() {
     const { data, date, updateEntry } = this.props;
 
@@ -30,4 +20,4 @@ export class Enum extends Component {
   }
 }
 
-export default withStyles(styles)(Enum);
+export default Enum;
