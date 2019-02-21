@@ -40,7 +40,7 @@ export class NumberSlider extends React.Component {
               <TitleBar meter={meter} icon={icon} />
               <Slider
                 style={{ padding: "1em" }}
-                value={number}
+                value={Number(number)}
                 min={min}
                 max={max}
                 step={step}
