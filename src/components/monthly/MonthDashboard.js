@@ -56,8 +56,6 @@ export class MonthDashboard extends React.Component {
       ...otherProps
     } = this.props;
 
-    console.log("isLoading", isLoading);
-
     if (error) {
       return (
         <div>

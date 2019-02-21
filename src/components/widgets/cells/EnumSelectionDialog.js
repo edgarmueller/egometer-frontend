@@ -25,21 +25,19 @@ const styles = {
   }
 };
 
-class EnumSelectionPanel extends React.Component {
-  shouldComponentUpdate() {
-    return false;
-  }
+const isSelected = selected => value => selected.indexOf(value) !== -1;
 
+class EnumSelectionPanel extends React.PureComponent {
   render() {
     const {
       color,
       imageProvider,
       onSelect,
       classes,
-      isSelected,
       schema,
       labelProvider,
-      onClose
+      onClose,
+      selected
     } = this.props;
     const labelToLiteralMapping = schema.enum.map(literal => [
       labelProvider(literal),
@@ -49,23 +47,25 @@ class EnumSelectionPanel extends React.Component {
     return (
       <Grid container justify={"center"}>
         <Grid container wrap={"wrap"} justify="space-around">
-          {labelToLiteralMapping.map(([label, value]) => (
-            <Grid
-              key={value}
-              item
-              className={classes.enumIcon}
-              onClick={onSelect(value)}
-            >
-              <IconButtonWithLabel
-                label={label}
-                icon={
-                  imageProvider
-                    ? imageProvider(color, isSelected(value), value)
-                    : null
-                }
-              />
-            </Grid>
-          ))}
+          {labelToLiteralMapping.map(([label, value]) => {
+            return (
+              <Grid
+                key={value}
+                item
+                className={classes.enumIcon}
+                onClick={onSelect(value)}
+              >
+                <IconButtonWithLabel
+                  label={label}
+                  icon={
+                    imageProvider
+                      ? imageProvider(color, isSelected(selected)(value), value)
+                      : null
+                  }
+                />
+              </Grid>
+            );
+          })}
         </Grid>
         <Grid item className={classes.closeGridItem}>
           <Button variant="outlined" onClick={onClose}>
@@ -87,7 +87,7 @@ class EnumSelectionDialog extends React.PureComponent {
       schema,
       imageProvider,
       labelProvider,
-      isSelected,
+      selected,
       onClose,
       onSelect
     } = this.props;
@@ -104,7 +104,7 @@ class EnumSelectionDialog extends React.PureComponent {
             imageProvider={imageProvider}
             labelProvider={labelProvider}
             schema={schema}
-            isSelected={isSelected}
+            selected={selected}
             classes={classes}
           />
         </DialogContent>

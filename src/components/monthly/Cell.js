@@ -33,7 +33,6 @@ export class Cell extends React.Component {
       color
     } = this.props;
 
-    //console.log("props", this.props);
     const foundWidget = _.find(widgets, widget => widget.name === widgetId);
     if (_.has(foundWidget, "cell") && foundWidget.cell !== undefined) {
       const Cell = foundWidget["cell"];

@@ -22,7 +22,7 @@ class EnumCellRenderer extends React.Component {
     super(props);
     this.state = {
       open: false,
-      selected: props.data
+      selected: props.data || []
     };
     this.handleOnOpenClick = this.handleOnOpenClick.bind(this);
   }
@@ -47,10 +47,17 @@ class EnumCellRenderer extends React.Component {
 
   handleClick = value => ev => {
     const { updateEntry, closeOnSelect } = this.props;
+    const selected = this.state.selected.slice();
+    const selectedIdx = this.state.selected.indexOf(value);
+    if (selectedIdx === -1) {
+      selected.push(value);
+    } else {
+      selected.splice(selectedIdx, 1);
+    }
     updateEntry(value);
     this.setState({
       open: !closeOnSelect,
-      selected: value
+      selected
     });
   };
 
@@ -65,7 +72,6 @@ class EnumCellRenderer extends React.Component {
       color,
       showImage,
       date,
-      isSelected,
       data
     } = this.props;
 
@@ -90,7 +96,7 @@ class EnumCellRenderer extends React.Component {
         <EnumSelectionDialog
           schema={schema}
           color={color}
-          isSelected={isSelected}
+          selected={this.state.selected}
           date={date}
           labelProvider={labelProvider}
           imageProvider={imageProvider}
@@ -105,7 +111,6 @@ class EnumCellRenderer extends React.Component {
 
 EnumCellRenderer.propTypes = {
   labelProvider: PropTypes.func.isRequired,
-  isSelected: PropTypes.func.isRequired,
   showImage: PropTypes.bool
 };
 

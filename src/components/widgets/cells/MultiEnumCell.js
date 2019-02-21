@@ -34,7 +34,6 @@ class MultiEnumCell extends React.Component {
         showImage={false}
         updateEntry={this.updateMulti}
         schema={schema.items}
-        isSelected={this.isSelected}
         closeOnSelect={false}
       />
     );
