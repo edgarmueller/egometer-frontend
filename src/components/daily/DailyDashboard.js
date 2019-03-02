@@ -112,7 +112,6 @@ export class DailyDashboard extends Component {
 
   render() {
     const { classes, meters, entries, isLoading, widgets } = this.props;
-    console.log(this.state.date);
 
     // TODO: duplicate code, see month dashboard
     const meterWidgets = meters.map((meter, i) => {

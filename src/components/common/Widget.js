@@ -98,17 +98,26 @@ export class Widget extends React.Component {
     }
 
     return (
-      <WidgetComponent
-        icon={widget.icon}
-        isLoading={isLoading}
-        meter={meter}
-        date={date}
-        data={data}
-        schema={_schema}
-        width={w}
-        height={h}
-        updateEntry={this.updateEntry}
-      />
+      <div
+        style={{
+          backgroundColor: "#f7f7f7",
+          padding: 5,
+          borderRadius: 5,
+          height: "100%"
+        }}
+      >
+        <WidgetComponent
+          icon={widget.icon}
+          isLoading={isLoading}
+          meter={meter}
+          date={date}
+          data={data}
+          schema={_schema}
+          width={w}
+          height={h}
+          updateEntry={this.updateEntry}
+        />
+      </div>
     );
   }
 }
