@@ -24,12 +24,12 @@ class EnumLineChart extends React.Component {
 
   render() {
     const { data, days, schema, labelProvider, width } = this.props;
+    const reversed = _.reverse(_.cloneDeep(schema.enum));
 
-    const values = data.map((d, idx) => {
-      return {
-        x: idx,
-        y: _.reverse(_.cloneDeep(schema.enum)).indexOf(d.value) + 1
-      };
+    const values = days.map(i => ({ x: i, y: 0 }));
+    _.forEach(data, ({ date, value }) => {
+      const idx = Number(date.substr(date.lastIndexOf("-") + 1, date.length));
+      values[idx - 1].y = reversed.indexOf(value);
     });
 
     const offset = 100;
@@ -39,12 +39,7 @@ class EnumLineChart extends React.Component {
           <HorizontalGridLines />
           <VerticalGridLines />
           <XAxis title="Date" tickValues={days} />
-          <YAxis
-            title="Mood"
-            tickFormat={i =>
-              labelProvider(_.reverse(_.cloneDeep(schema.enum))[i - 1])
-            }
-          />
+          <YAxis title="Mood" tickFormat={i => labelProvider(reversed[i])} />
           <LineSeries data={values} color="#20211f" />
         </XYPlot>
       </div>

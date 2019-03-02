@@ -46,6 +46,12 @@ export class MonthDashboard extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.props.fetchEntries(
+      `${this.state.year}-${this.state.month}-${moment().date()}`
+    );
+  }
+
   render() {
     const {
       classes,
@@ -85,6 +91,7 @@ export class MonthDashboard extends React.Component {
             year={this.state.year}
             month={this.state.month - 1}
             onChange={(maskedValue, selectedYear, selectedMonth) => {
+              console.log("wattt");
               fetchEntries(
                 `${selectedYear}-${selectedMonth + 1}-${moment().date()}`
               );

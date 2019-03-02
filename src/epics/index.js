@@ -1,5 +1,4 @@
 import { Observable } from "rxjs/Observable";
-import moment from "moment";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/filter";
 import "rxjs/add/operator/switchMap";
@@ -11,7 +10,6 @@ import "rxjs/add/observable/forkJoin";
 import "rxjs/add/operator/map";
 import { combineEpics } from "redux-observable";
 import {
-  fetchEntriesPerMonthRequest,
   receiveEntries,
   setSchemas,
   setSchemasError,
@@ -52,12 +50,10 @@ export function fetchMetersEpic(action$, store, deps) {
 }
 
 export function fetchAllAfterLogin(action$, store, deps) {
-  const today = moment().format("YYYY-MM-DD");
   return action$.ofType(USER_LOGIN_SUCCESS).flatMap(() => [
     // fetch everything initially
     { type: FETCH_SCHEMAS_REQUEST },
-    { type: FETCH_METERS_REQUEST },
-    fetchEntriesPerMonthRequest(today)
+    { type: FETCH_METERS_REQUEST }
   ]);
 }
 
