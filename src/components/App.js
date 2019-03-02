@@ -91,7 +91,7 @@ class App extends Component {
             />
             <Route
               exact
-              path="/dashboard"
+              path="/dashboard/:year(\d{4})?/:month(0?[1-9]|1[012])?/:day(0?[1-9]|1[0-9]|2[0-9]|3[01])?"
               component={userIsAuthenticated(AsyncDailyDashboard)}
             />
             <Route

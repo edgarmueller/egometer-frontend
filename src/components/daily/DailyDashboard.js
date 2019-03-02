@@ -53,19 +53,36 @@ const styles = {
 export class DailyDashboard extends Component {
   constructor(props) {
     super(props);
+    const now = moment();
+    const { match } = props;
+    const year = _.get(match, "params.year");
+    const month = _.get(match, "params.month");
+    const day = _.get(match, "params.day");
     this.state = {
-      date: moment(),
+      date: moment(`${year}-${month}-${day}`, "YYYY-MM-DD"),
       entries: props.entries,
       focused: false,
       overscanByPixels: 0,
-      windowScrollerEnabled: false
+      windowScrollerEnabled: false,
+      year: year ? Number(year) : now.year(),
+      month: month ? Number(month) : now.month() + 1,
+      day: day ? Number(day) : day.date()
     };
   }
 
+  componentDidMount() {
+    const { year, month, day } = this.state;
+    this.props.fetchEntries(`${year}-${month}-${day}`);
+  }
+
   handleDateChange = date => {
+    const { history } = this.props;
     const formattedDate = date.format("YYYY-MM-DD");
     this.setState({ date });
     this.props.fetchEntries(formattedDate);
+    history.push(
+      `/dashboard/${date.year()}/${date.month() + 1}/${date.date()}`
+    );
   };
 
   handleClick = () => {
