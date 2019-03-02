@@ -59,14 +59,17 @@ export class DailyDashboard extends Component {
     const month = _.get(match, "params.month");
     const day = _.get(match, "params.day");
     this.state = {
-      date: moment(`${year}-${month}-${day}`, "YYYY-MM-DD"),
       entries: props.entries,
       focused: false,
       overscanByPixels: 0,
       windowScrollerEnabled: false,
+      date:
+        year && month && day
+          ? moment(`${year}-${month}-${day}`, "YYYY-MM-DD")
+          : moment(),
       year: year ? Number(year) : now.year(),
       month: month ? Number(month) : now.month() + 1,
-      day: day ? Number(day) : day.date()
+      day: day ? Number(day) : now.date()
     };
   }
 
@@ -78,7 +81,12 @@ export class DailyDashboard extends Component {
   handleDateChange = date => {
     const { history } = this.props;
     const formattedDate = date.format("YYYY-MM-DD");
-    this.setState({ date });
+    this.setState({
+      date,
+      year: date.year(),
+      month: date.month(),
+      day: date.date()
+    });
     this.props.fetchEntries(formattedDate);
     history.push(
       `/dashboard/${date.year()}/${date.month() + 1}/${date.date()}`
@@ -104,6 +112,7 @@ export class DailyDashboard extends Component {
 
   render() {
     const { classes, meters, entries, isLoading, widgets } = this.props;
+    console.log(this.state.date);
 
     // TODO: duplicate code, see month dashboard
     const meterWidgets = meters.map((meter, i) => {
