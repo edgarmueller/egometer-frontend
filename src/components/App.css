@@ -16,11 +16,17 @@ body {
 }
 
 html, body, #root {
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0
 }
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 
 .ReactVirtualized__Table__headerTruncatedText {
   display: inline;
