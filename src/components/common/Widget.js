@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import * as _ from "lodash";
 import { compose, withProps } from "recompose";
+import Ionicon from "react-ionicons";
 import * as actions from "../../actions";
 import { findBySchemaId, getMeters } from "../../reducers";
 import widgets from "../../widgets";
-import Ionicon from "react-ionicons";
 
 const NoWidgetFound = ({ requestedWidget, widgetType }) => {
   if (process.env.NODE_ENV === "development") {
@@ -101,7 +101,6 @@ export class Widget extends React.Component {
       <div
         style={{
           backgroundColor: "#f7f7f7",
-          padding: 5,
           borderRadius: 5,
           height: "100%"
         }}
