@@ -121,30 +121,34 @@ MonthDashboard.defaultProps = {
   widgets: []
 };
 
-const mapStateToProps = state => ({
-  isLoading:
-    state.entries.loadingStatus.isLoading ||
-    isMetersLoading(state) ||
-    isSchemasLoading(state),
-  meters: getMeters(state),
-  entries: state.entries.entries,
-  findMeterById(meterId) {
-    return _findMeterById(meterId)(state);
-  },
-  error: getMeterError(state) || getSchemaError(state),
-  findBySchemaId(schemaId) {
-    const foundSchema = _findBySchemaId(schemaId)(state);
-    if (foundSchema !== undefined) {
-      return foundSchema.schema;
-    }
-    return undefined;
-  }
-});
+const mapStateToProps = state => {
 
-const mapDispatchToProps = dispatch => ({
+  return {
+    isLoading:
+      state.entries.loadingStatus.isLoading ||
+      isMetersLoading(state) ||
+      isSchemasLoading(state),
+    meters: getMeters(state),
+    entries: state.entries.entries,
+    findMeterById(meterId) {
+      return _findMeterById(meterId)(state);
+    },
+    error: getMeterError(state) || getSchemaError(state),
+    findBySchemaId(schemaId) {
+      const foundSchema = _findBySchemaId(schemaId)(state);
+      if (foundSchema !== undefined) {
+        return foundSchema.schema;
+      }
+      return undefined;
+    }
+  };
+};
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchEntries(date) {
     dispatch(actions.fetchEntriesPerMonthRequest(date));
-  }
+  },
+  ...ownProps
 });
 
 export default compose(

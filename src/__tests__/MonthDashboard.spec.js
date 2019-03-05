@@ -1,5 +1,4 @@
 import React from "react";
-import { findDOMNode } from "react-dom";
 import { configure, mount } from "enzyme";
 import { Provider } from "react-redux";
 import Adapter from "enzyme-adapter-react-16";
@@ -33,6 +32,7 @@ describe("Dashboard", () => {
           classes={{
             monthMatrix: ""
           }}
+          fetchEntries={jest.fn()}
           widgets={[mood]}
           match={{
             params: {

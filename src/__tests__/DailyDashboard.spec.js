@@ -1,7 +1,6 @@
 import React from "react";
 import { configure, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import Typography from "@material-ui/core/Typography";
 
 import { DailyDashboard } from "../components/daily/DailyDashboard";
 import { moodEntries, moodMeter, moodMeterId } from "../__mocks__/testData";
@@ -23,6 +22,7 @@ describe("Dashboard", () => {
         entries={entries}
         isLoading={false}
         widgets={[mood]}
+        fetchEntries={jest.fn()}
       />
     );
     // Dashboard title
