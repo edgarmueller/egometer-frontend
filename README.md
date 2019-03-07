@@ -1,13 +1,22 @@
 # egometer-frontend
 
-A customizable habit tracker
+## A customizable habit tracker
+
+<p>
+    <img src="/screenshots/daily-dashboard-cropped.png?raw=true" />
+    <img src="/screenshots/monthly-dashboard-cropped.png?raw=true" />
+</p>
 
 egometer is a habit tracker that lets you track your habits via so-called meters.
-It consists of a backend (see egometer-backend) and a frontend part.
-This repo represents the frontend part.
 
 A meter is a data definition based on a JSON schema which is stored on the backend.
 The frontend takes care of visualizing the stored data of the meters.
+
+It consists of a backend (see egometer-backend) and a frontend part.
+This repo represents the frontend part.
+
+**NOTE**: This is a WIP side project of mine, but feel free to leave any feedback, bug reports,
+feature requests etc.
 
 ## Dashboards
 
@@ -17,12 +26,8 @@ the monthly dashboard is meant to give you an overview of the current month, alt
 component property of a widget.
 
 Widgets on the daily dashboard can be dragged around. The layout will be saved on the client via local storage.
-TODO: screenshot of daily dashboard
 
-The monthly dashboard actually consists of two components, one is a calendar-like cell-based view for each meter per day while
-the other one consists of aggregated data views.
-
-TODO: screenshot of monthly dashboard
+The monthly dashboard actually consists of two components, one is a calendar-like cell-based view for each meter per day while the other one consists of aggregated data views.
 
 ## Meter format
 
