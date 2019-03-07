@@ -47,8 +47,8 @@ export class Widget extends React.Component {
     const { data, date, meter, width, height, isLoading } = this.props;
     return (
       !_.isEqual(nextProps.data, data) ||
+      !_.isEqual(nextProps.meter, meter) ||
       nextProps.date !== date ||
-      nextProps.meter.id !== meter.id ||
       nextProps.width !== width ||
       nextProps.height !== height ||
       nextProps.isLoading !== isLoading
