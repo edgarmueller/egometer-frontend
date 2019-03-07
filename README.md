@@ -3,8 +3,8 @@
 ## A customizable habit tracker
 
 <p>
-    <img src="/screenshots/daily-dashboard-cropped.png?raw=true" />
-    <img src="/screenshots/monthly-dashboard-cropped.png?raw=true" />
+    <img src="/screenshots/daily-dashboard.png?raw=true" />
+    <img src="/screenshots/monthly-matrix.png?raw=true" />
 </p>
 
 egometer is a habit tracker that lets you track your habits via so-called meters.
@@ -58,7 +58,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### Getting started
 
-- Clone [egometer-backend](https://https://github.com/edgarmueller/egometer-backend)
+- Clone [egometer-backend](https://github.com/edgarmueller/egometer-backend)
   and follow instructions to setup the backend
 - Install dependencies via `yarn install`
 - Run `yarn run start` to start dev mode
