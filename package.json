@@ -41,7 +41,9 @@
     "redux-auth-wrapper": "^2.0.2",
     "redux-observable": "^0.18.0",
     "redux-thunk": "^2.2.0",
-    "rxjs": "^5.6.0-forward-compat.4"
+    "rxjs": "^5.6.0-forward-compat.4",
+    "typography": "^0.16.19",
+    "typography-theme-grand-view": "^0.16.19"
   },
   "scripts": {
     "start": "react-scripts start",

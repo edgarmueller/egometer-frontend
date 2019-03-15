@@ -100,7 +100,6 @@ export class Widget extends React.Component {
     return (
       <div
         style={{
-          backgroundColor: "#f7f7f7",
           borderRadius: 5,
           height: "100%"
         }}

@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { ConnectedRouter } from "react-router-redux";
+import Typography from "typography";
+import grandViewTheme from "typography-theme-grand-view";
 import "./index.css";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
@@ -9,6 +11,9 @@ import { Provider } from "react-redux";
 import { history } from "./store/configureStore";
 import { checkToken } from "./common/util";
 import DefaultErrorBoundary from "./components/common/DefaultErrorBoundary";
+
+const typography = new Typography(grandViewTheme);
+typography.injectStyles();
 
 require("dotenv").config();
 

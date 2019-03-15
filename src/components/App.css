@@ -1,6 +1,5 @@
 body {
   background-color: #fff;
-  font-family: 'Oxygen', sans-serif;
 }
 
 .App {
@@ -8,25 +7,28 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 0
+  padding: 0;
 }
 
 .App-title {
   font-size: 1.5em;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 0
+  padding: 0;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
-
 
 .ReactVirtualized__Table__headerTruncatedText {
   display: inline;
@@ -42,26 +44,27 @@ html, body, #root {
   flex-direction: row;
   -webkit-box-align: center;
   -ms-flex-align: center;
-   align-items: stretch;
+  align-items: stretch;
 }
 
-.ReactVirtualized__Table__headerColumn, .ReactVirtualized__Table__rowColumn {
+.ReactVirtualized__Table__headerColumn,
+.ReactVirtualized__Table__rowColumn {
   margin: 0;
 }
 
-input[contenteditable]{
+input[contenteditable] {
   border: 1px solid black;
   max-height: 100%;
   overflow: auto;
 }
 
 /* For Firefox */
-input[type='number'] {
-  -moz-appearance:textfield;
+input[type="number"] {
+  -moz-appearance: textfield;
 }
 /* Webkit browsers like Safari and Chrome */
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
