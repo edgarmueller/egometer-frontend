@@ -76,7 +76,7 @@ MultiEnumPieChart.propTypes = {
       value: PropTypes.arrayOf(PropTypes.string)
     })
   ),
-  days: PropTypes.arrayOf(PropTypes.number).isRequired,
+  days: PropTypes.array.isRequired,
   schema: PropTypes.shape({
     enum: PropTypes.array
   }).isRequired

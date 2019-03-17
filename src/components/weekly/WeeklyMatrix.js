@@ -65,7 +65,8 @@ class WeeklyMatrix extends React.PureComponent {
       year,
       widgets,
       isLoading,
-      updateEntry
+      updateEntry,
+      days
     } = this.props;
 
     // if specified in this order the json reponse contains HTML
@@ -73,11 +74,8 @@ class WeeklyMatrix extends React.PureComponent {
     // TODO: 60 per meter + header
     const height = meters.length * 60 + 60;
     const rowCount = meters.length;
-    //const days = daysInMonth(year, month);
 
-    const rowGetter = ({ index }) => {
-      return this._getDatum(index);
-    };
+    const rowGetter = ({ index }) => this._getDatum(index);
 
     const meterColumn = [
       <Column
@@ -100,9 +98,8 @@ class WeeklyMatrix extends React.PureComponent {
       />
     ];
     const columns = meterColumn.concat(
-      daysOfWeek(new Date()).map(d => {
+      days.map(d => {
         const day = d.getDate();
-        //const date = day.getDate(); //`${year}-${pad(month.toString())}-${pad(d.toString())}`;
         const date = `${year}-${pad(month.toString())}-${pad(day.toString())}`;
         const dayName = moment(date, "YYYY-MM-DD").format("dddd");
 
