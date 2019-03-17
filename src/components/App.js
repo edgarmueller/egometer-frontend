@@ -55,8 +55,12 @@ const AsyncSchemaList = Loadable({
   loader: () => import("../components/schemas/SchemaList"),
   loading: Loading
 });
-const AsycnMonthDashboard = Loadable({
-  loader: () => import("../components/monthly/MonthDashboard"),
+const AsycnMonthlyDashboard = Loadable({
+  loader: () => import("../components/monthly/MonthlyDashboard"),
+  loading: Loading
+});
+const AsycnWeeklyDashboard = Loadable({
+  loader: () => import("../components/weekly/WeeklyDashboard"),
   loading: Loading
 });
 
@@ -87,7 +91,12 @@ class App extends Component {
             <Route
               exact
               path="/matrix/:year(\d{4})?/:month(0?[1-9]|1[012])?"
-              component={userIsAuthenticated(AsycnMonthDashboard)}
+              component={userIsAuthenticated(AsycnMonthlyDashboard)}
+            />
+            <Route
+              exact
+              path="/weekly/:year(\d{4})?/:month(0?[1-9]|1[012])?"
+              component={userIsAuthenticated(AsycnWeeklyDashboard)}
             />
             <Route
               exact
