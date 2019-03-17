@@ -1,3 +1,5 @@
+import _ from "lodash";
+
 export const pad = s => {
   while (s.length < 2) {
     s = "0" + s;
@@ -31,4 +33,11 @@ export function daysOfWeek(d) {
   }
 
   return week;
+}
+
+export function findByDate(data, desiredDate) {
+  return _.find(data, ({ date }) => {
+    const day = Number(date.substr(date.lastIndexOf("-") + 1, date.length));
+    return day === desiredDate;
+  });
 }

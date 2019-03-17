@@ -11,26 +11,29 @@ import {
   VerticalGridLines,
   LineSeries
 } from "react-vis";
+import { findByDate } from "../../common/date";
 
 class EnumLineChart extends React.Component {
   shouldComponentUpdate(nextProps) {
     const { data, days, width } = this.props;
     return (
       !_.isEqual(nextProps.data, data) ||
-      days.length !== nextProps.days.length ||
+      !_.isEqual(days, nextProps.days) ||
       width !== nextProps.width
     );
   }
 
   render() {
-    const { data, days, schema, labelProvider, width } = this.props;
+    const { data, days, schema, labelProvider, meter, width } = this.props;
     const reversed = _.reverse(_.cloneDeep(schema.enum));
-
-    const values = days.map(i => ({ x: i, y: 0 }));
-    _.forEach(data, ({ date, value }) => {
-      const idx = Number(date.substr(date.lastIndexOf("-") + 1, date.length));
-      values[idx - 1].y = reversed.indexOf(value);
+    const values = days.map((d, i) => {
+      const entry = findByDate(data, d.getDate());
+      return {
+        x: i,
+        y: entry ? reversed.indexOf(entry.value) : 0
+      };
     });
+    const labels = days.map(day => day.getDate().toString());
 
     const offset = 100;
     return (
@@ -38,8 +41,15 @@ class EnumLineChart extends React.Component {
         <XYPlot width={width} height={350} margin={{ left: offset }}>
           <HorizontalGridLines />
           <VerticalGridLines />
-          <XAxis title="Date" tickValues={days} />
-          <YAxis title="Mood" tickFormat={i => labelProvider(reversed[i])} />
+          <XAxis
+            title="Date"
+            tickValues={days.map((d, i) => i)}
+            tickFormat={(value, index) => labels[index] }
+          />
+          <YAxis
+            title={meter.name}
+            tickFormat={i => labelProvider(reversed[i])}
+          />
           <LineSeries data={values} color="#20211f" />
         </XYPlot>
       </div>
