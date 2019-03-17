@@ -3,7 +3,6 @@ export const link = {
   color: "#000",
   paddingLeft: "2em",
   paddingRight: "2em",
-  height: "28px",
   display: "inline-flex",
   alignItems: "center",
   marginLeft: "1em",
@@ -75,18 +74,18 @@ export const display1 = {
 };
 
 export const logo = {
-    flex: 1,
-    color: "#333435",
-    borderRadius: "16px",
-    paddingLeft: "2em",
-    paddingRight: "2em",
-    paddingTop: "1em",
-    paddingBottom: "1em",
-    marginRight: "1em",
-    fontSize: "0.8125em",
-    fontWeight: "bold",
-    textDecoration: "none",
-    fontFamily: "'Arial', sans-serif"
-}
+  flex: 1,
+  color: "#333435",
+  borderRadius: "16px",
+  paddingLeft: "2em",
+  paddingRight: "2em",
+  paddingTop: "1em",
+  paddingBottom: "1em",
+  marginRight: "1em",
+  fontSize: "0.8125em",
+  fontWeight: "bold",
+  textDecoration: "none",
+  fontFamily: "'Arial', sans-serif"
+};
 
 export const joinClasses = (...classNames) => `${[...classNames].join(" ")}`;

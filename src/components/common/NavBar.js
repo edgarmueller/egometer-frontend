@@ -45,6 +45,7 @@ export const NavBar = ({ classes, isAuthenticated, logout }) => {
           <Toolbar>
             <AdminLinkButton link="/schemas" label="Schemas" />
             <LinkButton link="/matrix" label="Month" />
+            <LinkButton link="/weekly" label="Week" />
             <LinkButton link="/dashboard" label="Today" />
             <Button className={classes.link} onClick={logout}>
               Logout
@@ -52,7 +53,9 @@ export const NavBar = ({ classes, isAuthenticated, logout }) => {
             <RadiumLink className={classes.logo} to="/">
               <Ionicon icon="md-flash" />
               egometer
-              {isDevmode && <strong style={{ color: '#FF7043'}}>&nbsp;DEVMODE</strong>}
+              {isDevmode && (
+                <strong style={{ color: "#FF7043" }}>&nbsp;DEVMODE</strong>
+              )}
             </RadiumLink>
           </Toolbar>
         </AppBar>
