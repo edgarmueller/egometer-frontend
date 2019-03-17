@@ -1,54 +1,17 @@
 import * as React from "react";
 import { compose } from "recompose";
+import { AutoSizer } from "react-virtualized";
 import PropTypes from "prop-types";
 import moment from "moment";
 import * as _ from "lodash";
 import { Column, Table } from "react-virtualized";
-import hexToRgba from "hex-to-rgba";
 import withStyles from "@material-ui/core/styles/withStyles";
 import ErrorBoundary from "react-error-boundary";
-import DefaultTableRowRenderer from "./DefaultTableRowRenderer";
-import Cell from "./Cell";
+import DefaultTableRowRenderer from "../cells/DefaultTableRowRenderer";
+import Cell from "../cells/Cell";
 import styles from "./MonthMatrix.css";
-
-const pad = s => {
-  while (s.length < 2) {
-    s = "0" + s;
-  }
-  return s;
-};
-
-function daysInMonth(year, month) {
-  return new Date(year, month, 0).getDate();
-}
-
-const createColor = (colorMapping, year, month, rowData, columnIndex) => {
-  const streak = calcStreak(rowData, year, month, columnIndex);
-  const alpha = 0.4 + streak / 10;
-  if (colorMapping && colorMapping[rowData.meterName]) {
-    return hexToRgba(colorMapping[rowData.meterName], alpha);
-  }
-  return "#fff";
-};
-
-const calcStreak = (year, m, rowData, startIndex) => {
-  let i = startIndex;
-  let streak = 0;
-  while (i >= 0) {
-    const month = pad(m.toString());
-    const day = pad(i.toString());
-    const key = `${year}-${month}-${day}`;
-
-    if (_.has(rowData, key)) {
-      streak += 1;
-      i -= 1;
-    } else {
-      return streak;
-    }
-  }
-
-  return streak;
-};
+import { createColor } from "../../common/color";
+import { pad } from "../../common/date";
 
 const additionalStyles = {
   meterColumn: {
@@ -101,10 +64,10 @@ class MonthMatrix extends React.PureComponent {
       meters,
       month,
       year,
-      width,
       widgets,
       isLoading,
-      updateEntry
+      updateEntry,
+      days
     } = this.props;
 
     // if specified in this order the json reponse contains HTML
@@ -112,7 +75,7 @@ class MonthMatrix extends React.PureComponent {
     // TODO: 60 per meter + header
     const height = meters.length * 60 + 60;
     const rowCount = meters.length;
-    const days = daysInMonth(year, month);
+    //const days = daysInMonth(year, month);
 
     const rowGetter = ({ index }) => {
       return this._getDatum(index);
@@ -184,13 +147,17 @@ class MonthMatrix extends React.PureComponent {
                         props.rowData,
                         props.columnIndex
                       )}
+                      widget={_.find(
+                        widgets,
+                        widget =>
+                          widget.name === props.rowData.widget &&
+                          _.has(widget, "cell")
+                      )}
                       rowData={props.rowData}
                       isLoading={isLoading}
                       date={date}
                       data={cellData}
                       updateEntry={updateEntry(props.rowData.meterId, date)}
-                      widgets={widgets}
-                      widgetId={props.rowData.widget}
                     />
                   </ErrorBoundary>
                 </div>
@@ -203,29 +170,31 @@ class MonthMatrix extends React.PureComponent {
       })
     );
     return (
-      <React.Fragment>
-        <Table
-          ref="Table"
-          disableHeader={disableHeader}
-          headerClassName={styles.headerColumn}
-          onHeaderClick={ev => console.log(ev)}
-          headerHeight={headerHeight}
-          height={height}
-          noRowsRenderer={this._noRowsRenderer}
-          overscanRowCount={overscanRowCount}
-          rowClassName={this._rowClassName}
-          rowHeight={rowHeight}
-          rowGetter={rowGetter}
-          rowCount={rowCount}
-          rowRenderer={this.rowRenderer}
-          scrollToIndex={scrollToIndex}
-          sort={this._sort}
-          sortBy={sortBy}
-          width={width > 0 ? width : 100} // tests cause the width to become negative
-        >
-          {React.Children.toArray(columns)}
-        </Table>
-      </React.Fragment>
+      <AutoSizer disableHeight defaultHeight={768} defaultWidth={1024}>
+        {({ width }) => (
+          <Table
+            ref="Table"
+            disableHeader={disableHeader}
+            headerClassName={styles.headerColumn}
+            onHeaderClick={ev => console.log(ev)}
+            headerHeight={headerHeight}
+            height={height}
+            noRowsRenderer={this._noRowsRenderer}
+            overscanRowCount={overscanRowCount}
+            rowClassName={this._rowClassName}
+            rowHeight={rowHeight}
+            rowGetter={rowGetter}
+            rowCount={rowCount}
+            rowRenderer={this.rowRenderer}
+            scrollToIndex={scrollToIndex}
+            sort={this._sort}
+            sortBy={sortBy}
+            width={width > 0 ? width : 100} // tests cause the width to become negative
+          >
+            {React.Children.toArray(columns)}
+          </Table>
+        )}
+      </AutoSizer>
     );
   }
 
@@ -309,7 +278,6 @@ MonthMatrix.propTypes = {
   meters: PropTypes.arrayOf(PropTypes.object),
   month: PropTypes.number.isRequired,
   year: PropTypes.number.isRequired,
-  width: PropTypes.number.isRequired,
   widgets: PropTypes.array.isRequired
 };
 

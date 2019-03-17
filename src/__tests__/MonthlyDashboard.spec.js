@@ -2,7 +2,7 @@ import React from "react";
 import { configure, mount } from "enzyme";
 import { Provider } from "react-redux";
 import Adapter from "enzyme-adapter-react-16";
-import MonthDashboard from "../components/monthly/MonthDashboard";
+import MonthlyDashboard from "../components/monthly/MonthlyDashboard";
 import { moodEntries, moodMeter, moodSchema } from "../__mocks__/testData";
 import mood from "../widgets/day/mood";
 import configureStore from "../store/configureStore";
@@ -27,7 +27,7 @@ describe("Dashboard", () => {
     });
     const wrapper = mount(
       <Provider store={store}>
-        <MonthDashboard
+        <MonthlyDashboard
           meters={[moodMeter]}
           classes={{
             monthMatrix: ""

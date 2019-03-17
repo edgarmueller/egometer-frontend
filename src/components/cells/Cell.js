@@ -2,13 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as _ from "lodash";
 import moment from "moment";
-import ReportIcon from "@material-ui/icons/Report";
-
-const NoCellRendererFound = () => (
-  <div style={{ color: "red" }}>
-    <ReportIcon />
-  </div>
-);
+import NoCellRenderer from "./NoCellRenderer";
 
 export class Cell extends React.Component {
   shouldComponentUpdate(nextProps, nextState, snapshot) {
@@ -27,31 +21,30 @@ export class Cell extends React.Component {
       rowData,
       date,
       updateEntry,
-      widgets,
-      widgetId,
       isLoading,
-      color
+      color,
+      widget
     } = this.props;
 
-    const foundWidget = _.find(widgets, widget => widget.name === widgetId);
-    if (_.has(foundWidget, "cell") && foundWidget.cell !== undefined) {
-      const Cell = foundWidget["cell"];
-      return (
-        <Cell
-          isLoading={isLoading}
-          schema={rowData.schema}
-          data={data}
-          date={date}
-          updateEntry={updateEntry}
-          meterId={rowData.meterId}
-          color={
-            data ? color : today === date ? "rgba(246, 246, 31, 0.56)" : null
-          }
-        />
-      );
+    if (widget === undefined || widget.cell === undefined) {
+      return <NoCellRenderer />;
     }
 
-    return <NoCellRendererFound />;
+    const Cell = widget.cell;
+
+    return (
+      <Cell
+        isLoading={isLoading}
+        schema={rowData.schema}
+        data={data}
+        date={date}
+        updateEntry={updateEntry}
+        meterId={rowData.meterId}
+        color={
+          data ? color : today === date ? "rgba(246, 246, 31, 0.56)" : null
+        }
+      />
+    );
   }
 }
 
@@ -60,8 +53,6 @@ Cell.propTypes = {
   rowData: PropTypes.object.isRequired,
   date: PropTypes.string.isRequired,
   updateEntry: PropTypes.func.isRequired,
-  widgets: PropTypes.array.isRequired,
-  widgetId: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
   color: PropTypes.string.isRequired
 };
