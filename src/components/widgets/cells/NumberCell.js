@@ -8,6 +8,9 @@ const styles = {
   numberCell: {
     width: "100%",
     height: "100%",
+    maxWidth: 30,
+    maxHeight: 30,
+    borderRadius: 5,
     display: "flex",
     textAlign: "center",
     fontWeight: 700,
