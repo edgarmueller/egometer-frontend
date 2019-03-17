@@ -3,8 +3,6 @@ import _ from "lodash";
 import { connect } from "react-redux";
 import moment from "moment";
 import "react-dates/initialize";
-import MonthPickerInput from "react-month-picker-input";
-import "../../react-month-picker-input.css";
 import { compose, withProps } from "recompose";
 import PropTypes from "prop-types";
 import "react-dates/lib/css/_datepicker.css";
@@ -25,6 +23,8 @@ import widgets from "../../widgets";
 import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
 import * as actions from "../../actions";
 import Loading from "../common/Loading";
+import WeekPicker from "./WeekPicker";
+import Charts from "../monthly/Charts";
 
 const styles = {
   monthMatrix: {
@@ -32,6 +32,20 @@ const styles = {
     padding: "1em"
   }
 };
+
+function tempGenerateDays(date) {
+  const days = [];
+  days.push(date);
+  let i = 0;
+  while (i < 7) {
+    date = new Date(date.getTime());
+    date.setDate(date.getDate() + 1);
+    days.push(date);
+    i++;
+  }
+
+  return days;
+}
 
 export class WeeklyDashboard extends React.Component {
   constructor(props) {
@@ -42,7 +56,9 @@ export class WeeklyDashboard extends React.Component {
     const month = _.get(match, "params.month");
     this.state = {
       year: year ? Number(year) : now.year(),
-      month: month ? Number(month) : now.month() + 1
+      month: month ? Number(month) : now.month() + 1,
+      date: new Date(),
+      days: tempGenerateDays(new Date())
     };
   }
 
@@ -59,6 +75,9 @@ export class WeeklyDashboard extends React.Component {
       error,
       history,
       isLoading,
+      meters,
+      entries,
+      findBySchemaId,
       ...otherProps
     } = this.props;
 
@@ -78,33 +97,38 @@ export class WeeklyDashboard extends React.Component {
     return (
       <div>
         <UpdateEntryErrorSnackbar />
-        <div id={"dashboard"} className={classes.monthMatrix}>
-          <MonthPickerInput
-            inputProps={{
-              style: {
-                border: "1px solid black",
-                borderRadius: "2px",
-                textAlign: "center",
-                lineHeight: 1.5
-              }
-            }}
-            year={this.state.year}
-            month={this.state.month - 1}
-            onChange={(maskedValue, selectedYear, selectedMonth) => {
-              fetchEntries(
-                `${selectedYear}-${selectedMonth + 1}-${moment().date()}`
-              );
-              history.push(`/matrix/${selectedYear}/${selectedMonth + 1}`);
-            }}
-            closeOnSelect={true}
-          />
-          <MatrixContainer
-            days={7}
-            headerHeight={30}
-            year={this.state.year}
-            month={this.state.month}
-            {...otherProps}
-            child={WeeklyMatrix}
+        <div
+          style={{ display: "flex", flexDirection: "column" }}
+          className={classes.monthMatrix}
+        >
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <WeekPicker
+              onChange={days => {
+                console.log("days", days);
+                this.setState({ days });
+              }}
+            />
+            <MatrixContainer
+              date={this.state.date}
+              days={this.state.days}
+              headerHeight={30}
+              year={this.state.year}
+              month={this.state.month}
+              child={WeeklyMatrix}
+              findBySchemaId={findBySchemaId}
+              meters={meters}
+              entries={entries}
+              {...otherProps}
+            />
+          </div>
+          <Charts
+            isLoading={isLoading}
+            days={this.state.days}
+            entries={entries}
+            findBySchemaId={findBySchemaId}
+            meters={meters}
+            widgets={widgets}
+            width={window.innerWidth / 2}
           />
         </div>
       </div>

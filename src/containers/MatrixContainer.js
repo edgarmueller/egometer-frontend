@@ -26,15 +26,6 @@ class MatrixContainer extends React.Component {
     return (
       <React.Fragment>
         <Child {...this.props} colorMapping={colorMapping} />
-        <Charts
-          isLoading={isLoading}
-          days={days}
-          entries={entries}
-          findBySchemaId={findBySchemaId}
-          meters={meters}
-          widgets={widgets}
-          width={window.innerWidth / 2}
-        />
       </React.Fragment>
     );
   }
