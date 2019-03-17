@@ -21,7 +21,6 @@ class DefaultErrorBoundary extends React.Component {
   };
 
   static getDerivedStateFromError(error) {
-    console.log(error);
     return { isError: true };
   }
 

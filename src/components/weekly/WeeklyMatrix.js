@@ -34,7 +34,6 @@ class WeeklyMatrix extends React.PureComponent {
       sortBy,
       useDynamicRowHeight: false
     };
-    this._headerRenderer = this._headerRenderer.bind(this);
     this._noRowsRenderer = this._noRowsRenderer.bind(this);
     this._onRowCountChange = this._onRowCountChange.bind(this);
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this);
@@ -219,12 +218,6 @@ class WeeklyMatrix extends React.PureComponent {
     }
 
     return [];
-  }
-
-  _headerRenderer({ dataKey }) {
-    return (
-      <div onClick={() => console.log("header was clicked!")}>{dataKey}</div>
-    );
   }
 
   _noRowsRenderer() {

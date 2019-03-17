@@ -35,7 +35,6 @@ class MonthMatrix extends React.PureComponent {
       sortBy,
       useDynamicRowHeight: false
     };
-    this._headerRenderer = this._headerRenderer.bind(this);
     this._noRowsRenderer = this._noRowsRenderer.bind(this);
     this._onRowCountChange = this._onRowCountChange.bind(this);
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this);
@@ -176,7 +175,6 @@ class MonthMatrix extends React.PureComponent {
             ref="Table"
             disableHeader={disableHeader}
             headerClassName={styles.headerColumn}
-            onHeaderClick={ev => console.log(ev)}
             headerHeight={headerHeight}
             height={height}
             noRowsRenderer={this._noRowsRenderer}
@@ -225,12 +223,6 @@ class MonthMatrix extends React.PureComponent {
     }
 
     return [];
-  }
-
-  _headerRenderer({ dataKey }) {
-    return (
-      <div onClick={() => console.log("header was clicked!")}>{dataKey}</div>
-    );
   }
 
   _noRowsRenderer() {
