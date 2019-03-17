@@ -11,13 +11,14 @@ import {
   VerticalGridLines,
   VerticalBarSeries
 } from "react-vis";
+import { findByDate } from "../../common/date";
 
 class NumberBarChart extends React.Component {
   shouldComponentUpdate(nextProps) {
     const { data, days, meter, width } = this.props;
     return (
       !_.isEqual(nextProps.data, data) ||
-      days.length !== nextProps.days.length ||
+      !_.isEqual(days, nextProps.days) ||
       meter.name !== nextProps.meter.name ||
       width !== nextProps.width
     );
@@ -25,20 +26,27 @@ class NumberBarChart extends React.Component {
 
   render() {
     const { data, days, meter, width } = this.props;
-    const values = days.map(i => ({ x: i, y: 0 }));
-    _.forEach(data, val => {
-      const idx = Number(
-        val.date.substr(val.date.lastIndexOf("-") + 1, val.date.length)
-      );
-      values[idx - 1].y = val.value;
+    const values = days.map((d, i) => {
+      const entry = findByDate(data, d.getDate());
+      return {
+        x: i,
+        y: entry ? entry.value : 0
+      };
     });
+    const labels = days.map(day => day.getDate().toString());
 
     return (
       <div>
         <XYPlot width={width} height={250} color="#20211f">
           <HorizontalGridLines />
           <VerticalGridLines />
-          <XAxis title="Date" tickValues={days} />
+          <XAxis
+            title="Date"
+            tickValues={days.map((d, i) => i)}
+            tickFormat={(value, index) => {
+              return labels[index];
+            }}
+          />
           <YAxis title={meter.name} />
           <VerticalBarSeries data={values} />
         </XYPlot>
@@ -53,7 +61,7 @@ NumberBarChart.propTypes = {
       value: PropTypes.number
     })
   ),
-  days: PropTypes.arrayOf(PropTypes.number).isRequired,
+  days: PropTypes.array.isRequired,
   schema: PropTypes.shape({
     enum: PropTypes.array
   }).isRequired
