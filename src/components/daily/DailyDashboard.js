@@ -5,8 +5,13 @@ import moment from "moment";
 import { compose, withProps } from "recompose";
 import * as _ from "lodash";
 import "react-dates/initialize";
-import { SingleDatePicker } from "react-dates";
-import "react-dates/lib/css/_datepicker.css";
+import DayPickerInput from "react-day-picker/DayPickerInput";
+
+import "react-day-picker/lib/style.css";
+import MomentLocaleUtils, {
+  formatDate,
+  parseDate
+} from "react-day-picker/moment";
 import { withStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
 import { connect } from "react-redux";
@@ -78,7 +83,8 @@ export class DailyDashboard extends Component {
     this.props.fetchEntries(`${year}-${month}-${day}`);
   }
 
-  handleDateChange = date => {
+  handleDateChange = day => {
+    const date = moment(day)
     const { history } = this.props;
     const formattedDate = date.format("YYYY-MM-DD");
     this.setState({
@@ -143,10 +149,15 @@ export class DailyDashboard extends Component {
       >
         <div className={classes.paper}>
           <span>Selected date is &nbsp;</span>
-          <SingleDatePicker
+          <DayPickerInput
+            formatDate={formatDate}
+            parseDate={parseDate}
+            format={"YYYY-MM-DD"}
+            placeholder={`${formatDate(new Date())}`}
+            value={this.state.date.format("YYYY-MM-DD")}
             isOutsideRange={() => false}
-            date={this.state.date}
-            onDateChange={this.handleDateChange}
+            //onDateChange={this.handleDateChange}
+            onDayChange={this.handleDateChange}
             focused={this.state.focused}
             onFocusChange={({ focused }) => this.setState({ focused })}
             block={false}
