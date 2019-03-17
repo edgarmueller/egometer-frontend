@@ -9,6 +9,9 @@ const styles = {
   enum: {
     width: "100%",
     height: "100%",
+    maxWidth: 30,
+    maxHeight: 30,
+    borderRadius: 5,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

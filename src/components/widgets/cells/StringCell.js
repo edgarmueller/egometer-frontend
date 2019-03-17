@@ -13,6 +13,9 @@ const styles = {
   stringCell: {
     width: "100%",
     height: "100%",
+    maxWidth: 30,
+    maxHeight: 30,
+    borderRadius: 5,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -50,70 +53,65 @@ export class StringCell extends React.Component {
         updateEntry={updateEntry}
         updateOnChange={false}
       >
-        {({
-          data: value,
-          handleOnChange,
-          reset,
-          submitEntry
-        }) => (
-            <React.Fragment>
-              <div
-                className={classes.stringCell}
-                style={{
-                  backgroundColor: color
-                }}
-                onClick={() => {
-                  if (this.state.open) {
-                    return;
-                  }
-                  this.setState({ open: true });
-                }}
-              />
-              <Dialog
-                open={this.state.open}
-                maxWidth='md'
-                fullWidth
-                onClose={() => {
-                  this.setState({ open: false });
-                }}
-              >
-                <DialogTitle>Add entry</DialogTitle>
-                <DialogContent>
-                  <TextField
-                    multiline
-                    value={value}
-                    onChange={handleOnChange}
-                    rows={10}
-                    variant='outlined'
-                    fullWidth
-                    margin={'dense'}
-                  />
-                </DialogContent>
-                <DialogActions>
-                  <Button
-                    variant="outlined"
-                    onClick={() => {
-                      submitEntry();
-                      this.setState({ open: false });
-                    }}
-                    color='primary'
-                    autoFocus
-                  >
-                    OK
+        {({ data: value, handleOnChange, reset, submitEntry }) => (
+          <React.Fragment>
+            <div
+              className={classes.stringCell}
+              style={{
+                backgroundColor: color
+              }}
+              onClick={() => {
+                if (this.state.open) {
+                  return;
+                }
+                this.setState({ open: true });
+              }}
+            />
+            <Dialog
+              open={this.state.open}
+              maxWidth="md"
+              fullWidth
+              onClose={() => {
+                this.setState({ open: false });
+              }}
+            >
+              <DialogTitle>Add entry</DialogTitle>
+              <DialogContent>
+                <TextField
+                  multiline
+                  value={value}
+                  onChange={handleOnChange}
+                  rows={10}
+                  variant="outlined"
+                  fullWidth
+                  margin={"dense"}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    submitEntry();
+                    this.setState({ open: false });
+                  }}
+                  color="primary"
+                  autoFocus
+                >
+                  OK
                 </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => {
-                      this.setState({ open: false });
-                      reset();
-                    }}
-                  >
-                    Close
+                <Button
+                  variant="outlined"
+                  onClick={() => {
+                    this.setState({ open: false });
+                    reset();
+                  }}
+                >
+                  Close
                 </Button>
-                </DialogActions>
-              </Dialog>
-            </React.Fragment>
-          )}
+              </DialogActions>
+            </Dialog>
+          </React.Fragment>
+        )}
       </ConnectedComponent>
     );
   }
