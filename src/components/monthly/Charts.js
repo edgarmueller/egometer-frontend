@@ -49,7 +49,7 @@ const Charts = ({
               meter={meter}
               data={data}
               schema={schema}
-              days={_.range(1, days + 1)}
+              days={days}
               width={width}
             />
           </div>
@@ -60,7 +60,7 @@ const Charts = ({
 };
 
 Charts.propTypes = {
-  days: PropTypes.number.isRequired,
+  days: PropTypes.array,
   entries: entriesPropType,
   findBySchemaId: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
