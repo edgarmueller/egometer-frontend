@@ -10,7 +10,7 @@ import PropTypes from "prop-types";
 import "react-dates/lib/css/_datepicker.css";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import MonthMatrix from "../../containers/MonthMatrix";
+import MonthMatrix from "./MonthMatrix";
 import {
   getMeters,
   getMeterError,
@@ -24,6 +24,8 @@ import widgets from "../../widgets";
 import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
 import * as actions from "../../actions";
 import Loading from "../common/Loading";
+import MatrixContainer from "../../containers/MatrixContainer";
+import { daysInMonth } from "../../common/date";
 
 const styles = {
   monthMatrix: {
@@ -33,7 +35,7 @@ const styles = {
   }
 };
 
-export class MonthDashboard extends React.Component {
+export class MonthlyDashboard extends React.Component {
   constructor(props) {
     super(props);
     const now = moment();
@@ -91,7 +93,6 @@ export class MonthDashboard extends React.Component {
             year={this.state.year}
             month={this.state.month - 1}
             onChange={(maskedValue, selectedYear, selectedMonth) => {
-              console.log("wattt");
               fetchEntries(
                 `${selectedYear}-${selectedMonth + 1}-${moment().date()}`
               );
@@ -99,10 +100,12 @@ export class MonthDashboard extends React.Component {
             }}
             closeOnSelect={true}
           />
-          <MonthMatrix
+          <MatrixContainer
+            days={daysInMonth(this.state.year, this.state.month)}
             headerHeight={30}
             year={this.state.year}
             month={this.state.month}
+            child={MonthMatrix}
             {...otherProps}
           />
         </div>
@@ -111,18 +114,17 @@ export class MonthDashboard extends React.Component {
   }
 }
 
-MonthDashboard.propTypes = {
+MonthlyDashboard.propTypes = {
   meters: PropTypes.array,
   widgets: PropTypes.array
 };
 
-MonthDashboard.defaultProps = {
+MonthlyDashboard.defaultProps = {
   meters: [],
   widgets: []
 };
 
 const mapStateToProps = state => {
-
   return {
     isLoading:
       state.entries.loadingStatus.isLoading ||
@@ -158,4 +160,4 @@ export default compose(
     mapStateToProps,
     mapDispatchToProps
   )
-)(MonthDashboard);
+)(MonthlyDashboard);

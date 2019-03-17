@@ -1,18 +1,13 @@
 import { connect } from "react-redux";
 import { compose, withProps } from "recompose";
 import React from "react";
-import { AutoSizer } from "react-virtualized";
+import PropTypes from "prop-types";
 import widgets from "../widgets";
 import { updateEntryRequest } from "../actions";
-import MonthMatrix from "../components/monthly/MonthMatrix";
 import { getMeters } from "../reducers";
 import Charts from "../components/monthly/Charts";
 
-function daysInMonth(year, month) {
-  return new Date(year, month, 0).getDate();
-}
-
-class MonthMatrixContainer extends React.Component {
+class MatrixContainer extends React.Component {
   width;
   render() {
     const {
@@ -20,31 +15,17 @@ class MonthMatrixContainer extends React.Component {
       findBySchemaId,
       entries,
       isLoading,
-      month,
-      year
+      days,
+      child
     } = this.props;
     const colorMapping = meters.reduce((acc, m) => {
       acc[m.name] = m.color;
       return acc;
     }, {});
-    const days = daysInMonth(year, month);
+    const Child = child;
     return (
       <React.Fragment>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <AutoSizer disableHeight defaultHeight={768} defaultWidth={1024}>
-            {({ width }) => {
-              return (
-                <React.Fragment>
-                  <MonthMatrix
-                    {...this.props}
-                    colorMapping={colorMapping}
-                    width={width}
-                  />
-                </React.Fragment>
-              );
-            }}
-          </AutoSizer>
-        </div>
+        <Child {...this.props} colorMapping={colorMapping} />
         <Charts
           isLoading={isLoading}
           days={days}
@@ -84,10 +65,14 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
+MatrixContainer.propTypes = {
+  days: PropTypes.number.isRequired
+};
+
 export default compose(
   withProps({ widgets }),
   connect(
     mapStateToProps,
     mapDispatchToProps
   )
-)(MonthMatrixContainer);
+)(MatrixContainer);
