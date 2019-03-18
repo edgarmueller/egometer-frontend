@@ -4,14 +4,10 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { compose, withProps } from "recompose";
 import * as _ from "lodash";
-import "react-dates/initialize";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 
 import "react-day-picker/lib/style.css";
-import MomentLocaleUtils, {
-  formatDate,
-  parseDate
-} from "react-day-picker/moment";
+import { formatDate, parseDate } from "react-day-picker/moment";
 import { withStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
 import { connect } from "react-redux";
@@ -23,7 +19,6 @@ import GridLayout from "../common/GridLayout";
 import widgets from "../../widgets";
 import { fetchEntriesPerMonthRequest, fetchMeters } from "../../actions";
 import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
-import AddMeterDialog from "./AddMeterDialog";
 
 const Wrapper = ({ children, ...props }) => {
   const newChildren = React.Children.map(children, child => {
@@ -84,7 +79,7 @@ export class DailyDashboard extends Component {
   }
 
   handleDateChange = day => {
-    const date = moment(day)
+    const date = moment(day);
     const { history } = this.props;
     const formattedDate = date.format("YYYY-MM-DD");
     this.setState({
@@ -97,23 +92,6 @@ export class DailyDashboard extends Component {
     history.push(
       `/dashboard/${date.year()}/${date.month() + 1}/${date.date()}`
     );
-  };
-
-  handleClick = () => {
-    this.openDialog();
-  };
-
-  openDialog = () => {
-    this.setState({ open: true });
-  };
-
-  closeDialog = () => {
-    this.setState({ open: false });
-  };
-
-  confirmDialog = () => {
-    this.closeDialog();
-    this.props.fetchMeters();
   };
 
   render() {
@@ -170,17 +148,6 @@ export class DailyDashboard extends Component {
             {meterWidgets}
           </GridLayout>
         </div>
-        <div className={classes.button}>
-          <Fab onClick={this.handleClick}>
-            <AddIcon />
-          </Fab>
-        </div>
-        <AddMeterDialog
-          open={this.state.open}
-          onSubmit={this.confirmDialog}
-          handleClose={this.closeDialog}
-          widgets={widgets}
-        />
       </div>
     );
   }

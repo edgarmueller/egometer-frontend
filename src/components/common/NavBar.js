@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Ionicon from "react-ionicons";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
+import Drawer from "@material-ui/core/Drawer";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -12,6 +13,9 @@ import Radium from "radium";
 import { link, logo } from "../../common/styles";
 import { logout } from "../../actions";
 import { visibleOnlyAdmin } from "../../common/auth";
+import AddMeter from "./AddMeter";
+import widgets from "../../widgets";
+import { fetchMeters } from "../../actions";
 
 const styles = () => ({
   appBar: {
@@ -37,7 +41,15 @@ export const LinkButton = withStyles(styles)(({ classes, link, label }) => (
 const AdminLinkButton = visibleOnlyAdmin(props => <LinkButton {...props} />);
 const isDevmode = process.env.NODE_ENV === "development";
 
-export const NavBar = ({ classes, isAuthenticated, logout }) => {
+export const NavBar = ({ classes, isAuthenticated, logout, fetchMeters }) => {
+  const [open, setOpen] = useState(false);
+  const handleClick = useCallback(() => setOpen(true));
+  const handleClose = useCallback(() => setOpen(false));
+  const confirmDialog = () => {
+    handleClose();
+    fetchMeters();
+  };
+
   if (isAuthenticated) {
     return (
       <nav>
@@ -57,8 +69,17 @@ export const NavBar = ({ classes, isAuthenticated, logout }) => {
                 <strong style={{ color: "#FF7043" }}>&nbsp;DEVMODE</strong>
               )}
             </RadiumLink>
+            <Button onClick={handleClick}>Add meter</Button>
           </Toolbar>
         </AppBar>
+        <Drawer open={open} onClose={handleClose}>
+          <AddMeter
+            open={open}
+            onSubmit={confirmDialog}
+            handleClose={handleClose}
+            widgets={widgets}
+          />
+        </Drawer>
       </nav>
     );
   }
@@ -102,6 +123,9 @@ const mapDispatchToProps = dispatch => ({
   },
   logout() {
     dispatch(logout());
+  },
+  fetchMeters() {
+    dispatch(fetchMeters());
   }
 });
 
