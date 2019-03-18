@@ -3,14 +3,9 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { compose, withProps } from "recompose";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
 import Typography from "@material-ui/core/Typography";
 
-import Category from "./Category";
+import Category from "../daily/Category";
 import widgets from "../../widgets";
 import { getSchemas, findBySchemaName } from "../../reducers";
 import * as api from "../../api";
@@ -18,7 +13,7 @@ import * as api from "../../api";
 const filterApplicableWidgets = (widgets, schema) => {
   return _.filter(widgets, widget => widget.isApplicable(schema) > -1);
 };
-export class AddMeterDialog extends React.PureComponent {
+export class AddMeter extends React.PureComponent {
   constructor(props) {
     super(props);
     const applicableWidgets = !_.isEmpty(props.schemas)
@@ -47,13 +42,7 @@ export class AddMeterDialog extends React.PureComponent {
   };
 
   render() {
-    const {
-      findBySchemaName,
-      open,
-      handleClose,
-      widgets,
-      schemas
-    } = this.props;
+    const { findBySchemaName, widgets, schemas } = this.props;
 
     const widgetsByCategory = _.groupBy(
       _.map(widgets, widget => {
@@ -87,59 +76,45 @@ export class AddMeterDialog extends React.PureComponent {
       }, {});
 
     return (
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-schema-title"
-        aria-describedby="alert-schema-description"
-        maxWidth="md"
-        fullWidth
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column"
+        }}
       >
-        <DialogTitle id="alert-schema-title">Add Meter</DialogTitle>
-        <DialogContent>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column"
-            }}
-          >
-            {_.keys(widgetsPerCategory).length > 0 ? (
-              _.map(_.keys(widgetsPerCategory), category => (
-                <Category
-                  key={category}
-                  widgets={widgetsPerCategory[category]}
-                  category={category}
-                  schemas={schemas}
-                  findBySchemaName={findBySchemaName}
-                  handleSubmit={this.handleSubmit}
-                  drawTitle
-                />
-              ))
-            ) : (
-              <Typography variant="body1">
-                Sorry, no widgets seem applicable
-              </Typography>
-            )}
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+        <Typography variant="h4" style={{ fontWeight: "bold" }}>
+          Add meter
+        </Typography>
+        {_.keys(widgetsPerCategory).length > 0 ? (
+          _.map(_.keys(widgetsPerCategory), category => (
+            <Category
+              key={category}
+              widgets={widgetsPerCategory[category]}
+              category={category}
+              schemas={schemas}
+              findBySchemaName={findBySchemaName}
+              handleSubmit={this.handleSubmit}
+              drawTitle
+            />
+          ))
+        ) : (
+          <Typography variant="body1">
+            Sorry, no widgets seem applicable
+          </Typography>
+        )}
+      </div>
     );
   }
 }
 
-AddMeterDialog.propTypes = {
+AddMeter.propTypes = {
   findBySchemaName: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   widgets: PropTypes.array.isRequired
 };
 
-AddMeterDialog.defaultProps = {
+AddMeter.defaultProps = {
   open: false
 };
 
@@ -156,4 +131,4 @@ export default compose(
     mapStateToProps,
     null
   )
-)(AddMeterDialog);
+)(AddMeter);
