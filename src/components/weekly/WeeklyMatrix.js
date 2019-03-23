@@ -19,6 +19,18 @@ const additionalStyles = {
   }
 };
 
+const getColor = (progressEntry, alpha) => {
+  if (progressEntry) {
+    const { progress } = progressEntry;
+    if (progress >= 0.5 && progress < 1) {
+      return `rgba(247, 247, 183, ${alpha})`;
+    } else if (progress >= 1) {
+      return `rgba(144, 238, 144, ${alpha})`;
+    }
+  }
+  return null;
+};
+
 class WeeklyMatrix extends React.PureComponent {
   constructor() {
     super();
@@ -37,13 +49,77 @@ class WeeklyMatrix extends React.PureComponent {
     this._noRowsRenderer = this._noRowsRenderer.bind(this);
     this._onRowCountChange = this._onRowCountChange.bind(this);
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this);
-    this._rowClassName = this._rowClassName.bind(this);
-    this._sort = this._sort.bind(this);
     this.rowRenderer = this.rowRenderer.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    if (!_.isEqual(this.props.entries, prevProps.entries)) {
+      this.calcProgress();
+    }
+  }
+
+  componentDidMount() {
+    this.calcProgress();
+  }
+
+  calcProgress = () => {
+    const { entries, meters, days } = this.props;
+    this.setState({
+      progress: Object.keys(entries).reduce((acc, meterId) => {
+        const foundMeter = _.find(meters, ({ id }) => id === meterId);
+        if (!foundMeter || !foundMeter.weeklyGoal) {
+          return acc;
+        }
+        const entriesSoFar = entries[meterId].filter(entry => {
+          const entryDate = moment(entry.date, "YYYY-MM-DD");
+          return (
+            entryDate.toDate().getTime() >= days[0].getTime() &&
+            entryDate.toDate().getTime() <= days[6].getTime() &&
+            Number(entry.value) >= foundMeter.dailyGoal
+          );
+        });
+        acc[foundMeter.id] = {
+          meter: foundMeter,
+          entries: entriesSoFar,
+          progress: entriesSoFar.length / foundMeter.weeklyGoal
+        };
+        return acc;
+      }, {})
+    });
+  };
+
+  getProgress = (meterId, date) => {
+    if (this.state.progress) {
+      const foundMeter = this.state.progress[meterId];
+      if (foundMeter && date) {
+        const foundEntry = foundMeter.entries.find(e => e.date === date);
+        if (foundEntry) {
+          return { progress: foundEntry.value / foundMeter.meter.dailyGoal };
+        }
+        return undefined;
+      }
+      return this.state.progress[meterId];
+    }
+    return undefined;
+  };
+
   rowRenderer(props) {
-    return <DefaultTableRowRenderer rowKey={props.key} {...props} />;
+    const meterId = props.rowData.meterId;
+    let progressEntry = 0;
+    if (this.state.progress) {
+      progressEntry = this.state.progress[meterId];
+    }
+    return (
+      <DefaultTableRowRenderer
+        rowKey={props.key}
+        {...props}
+        style={{
+          backgroundColor: getColor(progressEntry, 0.2),
+          padding: 5,
+          borderRadius: 3
+        }}
+      />
+    );
   }
 
   render() {
@@ -113,29 +189,20 @@ class WeeklyMatrix extends React.PureComponent {
             }
             dataKey={date}
             cellRenderer={({ cellData, ...props }) => {
-              const isHovered =
-                props.columnIndex === this.state.hoveredColumnIndex ||
-                props.rowIndex === this.state.hoveredRowIndex;
-              const className = isHovered ? "item hoveredItem" : "item";
-
+              const progress = this.getProgress(
+                props.rowData.meterId,
+                props.dataKey
+              );
               return (
-                <div
-                  className={className}
-                  onMouseOver={() => {
-                    this.setState({
-                      hoveredColumnIndex: props.columnIndex,
-                      hoveredRowIndex: props.rowIndex
-                    });
-                  }}
-                  onMouseOut={() => {
-                    this.setState({
-                      hoveredColumnIndex: -1,
-                      hoveredRowIndex: -1
-                    });
-                  }}
-                >
+                <div className={"item"}>
                   <ErrorBoundary>
                     <Cell
+                      style={{
+                        border: progress
+                          ? `2px solid ${getColor(progress, 0.9)}`
+                          : null,
+                        padding: 3
+                      }}
                       color={createColor(
                         colorMapping,
                         year,
@@ -165,29 +232,31 @@ class WeeklyMatrix extends React.PureComponent {
         );
       })
     );
+
     return (
-      <Table
-        ref="Table"
-        disableHeader={disableHeader}
-        headerClassName={styles.headerColumn}
-        onHeaderClick={ev => console.log(ev)}
-        headerHeight={headerHeight}
-        height={height}
-        noRowsRenderer={this._noRowsRenderer}
-        overscanRowCount={overscanRowCount}
-        rowClassName={this._rowClassName}
-        rowHeight={rowHeight}
-        rowGetter={rowGetter}
-        rowCount={rowCount}
-        rowRenderer={this.rowRenderer}
-        scrollToIndex={scrollToIndex}
-        sort={this._sort}
-        sortBy={sortBy}
-        width={768}
-        style={{ margin: "0 auto", width: 768 }}
-      >
-        {React.Children.toArray(columns)}
-      </Table>
+      <React.Fragment>
+        <Table
+          ref="Table"
+          disableHeader={disableHeader}
+          headerClassName={styles.headerColumn}
+          onHeaderClick={ev => console.log(ev)}
+          headerHeight={headerHeight}
+          height={height}
+          noRowsRenderer={this._noRowsRenderer}
+          overscanRowCount={overscanRowCount}
+          rowHeight={rowHeight}
+          rowGetter={rowGetter}
+          rowCount={rowCount}
+          rowRenderer={this.rowRenderer}
+          scrollToIndex={scrollToIndex}
+          sort={this._sort}
+          sortBy={sortBy}
+          width={768}
+          style={{ margin: "0 auto", width: 768 }}
+        >
+          {React.Children.toArray(columns)}
+        </Table>
+      </React.Fragment>
     );
   }
 
@@ -242,20 +311,6 @@ class WeeklyMatrix extends React.PureComponent {
     }
 
     this.setState({ scrollToIndex });
-  }
-
-  _rowClassName({ index }) {
-    if (index < 0) {
-      return styles.headerRow;
-    } else {
-      return index % 2 === 0 ? styles.evenRow : styles.oddRow;
-    }
-  }
-
-  _sort({ sortBy, sortDirection }) {
-    const sortedList = this._sortList({ sortBy, sortDirection });
-
-    this.setState({ sortBy, sortDirection, sortedList });
   }
 }
 
