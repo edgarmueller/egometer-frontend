@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import { compose } from "recompose";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -13,9 +12,6 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
-import AddIcon from "@material-ui/icons/Add";
-import InspectIcon from "@material-ui/icons/FindInPage";
-import CreateMeterDialog from "./CreateMeterDialog";
 import { deleteMeter, updateMeter } from "../../actions";
 import { display1 } from "../../common/styles";
 import {
@@ -24,9 +20,7 @@ import {
   findBySchemaId as _findBySchemaId
 } from "../../reducers";
 
-import * as actions from "../../actions";
-import * as api from "../../api";
-import { Checkbox, Switch } from "@material-ui/core";
+import { Switch } from "@material-ui/core";
 
 const styles = theme => ({
   textField: {
