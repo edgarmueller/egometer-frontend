@@ -59,6 +59,7 @@ export const NavBar = ({ classes, isAuthenticated, logout, fetchMeters }) => {
             <LinkButton link="/matrix" label="Month" />
             <LinkButton link="/weekly" label="Week" />
             <LinkButton link="/dashboard" label="Today" />
+            <LinkButton link="/meters" label="Meters" />
             <Button className={classes.link} onClick={logout}>
               Logout
             </Button>
