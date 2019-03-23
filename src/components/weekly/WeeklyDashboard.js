@@ -23,6 +23,7 @@ import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import WeekPicker from "./WeekPicker";
 import Charts from "../monthly/Charts";
+import { findMonday } from "../../common/date";
 
 const styles = {
   monthMatrix: {
@@ -34,10 +35,12 @@ const styles = {
 function tempGenerateDays(date) {
   const days = [];
   days.push(date);
-  let i = 0;
+  date.setHours(0, 0, 0, 0);
+  let i = 1;
   while (i < 7) {
     date = new Date(date.getTime());
     date.setDate(date.getDate() + 1);
+    date.setHours(0, 0, 0, 0);
     days.push(date);
     i++;
   }
@@ -55,8 +58,8 @@ export class WeeklyDashboard extends React.Component {
     this.state = {
       year: year ? Number(year) : now.year(),
       month: month ? Number(month) : now.month() + 1,
-      date: new Date(),
-      days: tempGenerateDays(new Date())
+      date: findMonday(new Date()),
+      days: tempGenerateDays(findMonday(new Date()))
     };
   }
 
@@ -102,8 +105,13 @@ export class WeeklyDashboard extends React.Component {
           <div style={{ display: "flex", flexDirection: "row" }}>
             <WeekPicker
               onChange={days => {
-                console.log("days", days);
-                this.setState({ days });
+                this.setState({
+                  days: days.map(d => {
+                    d.setDate(d.getDate() + 1);
+                    d.setHours(0, 0, 0, 0);
+                    return d;
+                  })
+                });
               }}
             />
             <MatrixContainer
