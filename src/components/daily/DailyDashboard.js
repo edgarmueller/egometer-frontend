@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import AddIcon from "@material-ui/icons/Add";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { compose, withProps } from "recompose";
@@ -9,7 +8,6 @@ import DayPickerInput from "react-day-picker/DayPickerInput";
 import "react-day-picker/lib/style.css";
 import { formatDate, parseDate } from "react-day-picker/moment";
 import { withStyles } from "@material-ui/core/styles";
-import Fab from "@material-ui/core/Fab";
 import { connect } from "react-redux";
 
 import { getMeters } from "../../reducers";

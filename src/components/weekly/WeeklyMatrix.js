@@ -9,7 +9,7 @@ import ErrorBoundary from "react-error-boundary";
 import Cell from "../cells/Cell";
 import DefaultTableRowRenderer from "../cells/DefaultTableRowRenderer";
 import styles from "../monthly/MonthMatrix.css";
-import { pad, daysOfWeek } from "../../common/date";
+import { pad } from "../../common/date";
 import { createColor } from "../../common/color";
 
 const additionalStyles = {

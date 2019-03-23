@@ -5,19 +5,11 @@ import PropTypes from "prop-types";
 import widgets from "../widgets";
 import { updateEntryRequest } from "../actions";
 import { getMeters } from "../reducers";
-import Charts from "../components/monthly/Charts";
 
 class MatrixContainer extends React.Component {
   width;
   render() {
-    const {
-      meters,
-      findBySchemaId,
-      entries,
-      isLoading,
-      days,
-      child
-    } = this.props;
+    const { meters, child } = this.props;
     const colorMapping = meters.reduce((acc, m) => {
       acc[m.name] = m.color;
       return acc;
