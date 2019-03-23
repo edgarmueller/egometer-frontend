@@ -57,7 +57,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 MatrixContainer.propTypes = {
-  days: PropTypes.number.isRequired
+  days: PropTypes.array.isRequired
 };
 
 export default compose(
