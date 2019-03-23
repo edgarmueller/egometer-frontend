@@ -9,7 +9,8 @@ export class Cell extends React.Component {
     return (
       !_.isEqual(this.props.data, nextProps.data) ||
       (this.props.isLoading && !nextProps.isLoading) ||
-      this.props.isHovered !== nextProps.isHovered
+      this.props.isHovered !== nextProps.isHovered ||
+      !_.isEqual(this.props.style, nextProps.style)
     );
   }
 
@@ -23,7 +24,8 @@ export class Cell extends React.Component {
       updateEntry,
       isLoading,
       color,
-      widget
+      widget,
+      style
     } = this.props;
 
     if (widget === undefined || widget.cell === undefined) {
@@ -43,6 +45,7 @@ export class Cell extends React.Component {
         color={
           data ? color : today === date ? "rgba(246, 246, 31, 0.56)" : null
         }
+        style={style}
       />
     );
   }

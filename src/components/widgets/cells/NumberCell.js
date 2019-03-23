@@ -44,12 +44,12 @@ class NumberInput extends React.PureComponent {
   }
 
   render() {
-    const { classes, data, color } = this.props;
+    const { classes, data, color, style } = this.props;
     return (
       <input
         ref={this.ref}
         className={classes.numberCell}
-        style={{ backgroundColor: color }}
+        style={{ backgroundColor: color, ...style }}
         type={"number"}
         value={data || ""}
         onChange={this.handleOnChange}
@@ -64,7 +64,15 @@ const StyledNumberInput = compose(withStyles(styles))(NumberInput);
 
 class NumberCell extends React.Component {
   render() {
-    const { color, date, data, meterId, updateEntry, isLoading } = this.props;
+    const {
+      color,
+      date,
+      data,
+      meterId,
+      updateEntry,
+      isLoading,
+      style
+    } = this.props;
     return (
       <ConnectedComponent
         data={data}
@@ -75,7 +83,7 @@ class NumberCell extends React.Component {
         isLoading={isLoading}
         fromEvent={ev => _.toNumber(ev.target.value)}
       >
-        {props => <StyledNumberInput {...props} color={color} />}
+        {props => <StyledNumberInput {...props} color={color} style={style} />}
       </ConnectedComponent>
     );
   }
