@@ -30,6 +30,7 @@ export default app;
 
 export const getMeters = state => _getMeters(state.meters);
 export const getMeterError = state => _getMeterError(state.meters);
+export const isFetchingMeters = state => state.meters.isPending;
 export const findMeterById = meterId => state =>
   _findMeterById(meterId)(state.meters);
 

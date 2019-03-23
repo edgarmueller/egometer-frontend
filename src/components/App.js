@@ -55,6 +55,10 @@ const AsyncSchemaList = Loadable({
   loader: () => import("../components/schemas/SchemaList"),
   loading: Loading
 });
+const AsyncMeterList = Loadable({
+  loader: () => import("../components/meters/MeterList"),
+  loading: Loading
+});
 const AsycnMonthlyDashboard = Loadable({
   loader: () => import("../components/monthly/MonthlyDashboard"),
   loading: Loading
@@ -87,6 +91,11 @@ class App extends Component {
               exact
               path="/schemas"
               component={userIsAuthenticated(userIsAdminRedir(AsyncSchemaList))}
+            />
+            <Route
+              exact
+              path="/meters"
+              component={userIsAuthenticated(AsyncMeterList)}
             />
             <Route
               exact
