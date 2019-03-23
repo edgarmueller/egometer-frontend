@@ -3,8 +3,10 @@ import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { moodEntries, moodMeter, moodSchema } from "../__mocks__/testData";
 import { Column, Table } from "react-virtualized";
+import { MatrixContainer } from "../containers/MatrixContainer";
 import MonthMatrix from "../components/monthly/MonthMatrix";
 import widgets from "../widgets";
+import { daysInMonth } from "../common/date";
 configure({ adapter: new Adapter() });
 
 const entries = [moodEntries];
@@ -12,7 +14,8 @@ const entries = [moodEntries];
 describe("MonthMatrix", () => {
   it("should render", () => {
     const wrapper = mount(
-      <MonthMatrix
+      <MatrixContainer
+        child={MonthMatrix}
         entries={entries}
         meters={[moodMeter]}
         findBySchemaId={() => moodSchema.schema}
@@ -21,10 +24,12 @@ describe("MonthMatrix", () => {
         width={800}
         widgets={widgets}
         updateEntry={jest.fn()}
+        days={daysInMonth(2018, 4)}
       />
     );
     expect(wrapper.find(Table).length).toBe(1);
     // meter name column + 30 days of april
+    console.log(wrapper.debug());
     expect(wrapper.find(".ReactVirtualized__Table__headerColumn").length).toBe(
       31
     );
