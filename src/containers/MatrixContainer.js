@@ -6,7 +6,7 @@ import widgets from "../widgets";
 import { updateEntryRequest } from "../actions";
 import { getMeters } from "../reducers";
 
-class MatrixContainer extends React.Component {
+export class MatrixContainer extends React.Component {
   width;
   render() {
     const { meters, child } = this.props;

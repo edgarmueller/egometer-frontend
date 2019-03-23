@@ -30,6 +30,6 @@ describe("NavBar", () => {
         }}
       />
     );
-    expect(wrapper.find(LinkButton).length).toBe(2);
+    expect(wrapper.find(LinkButton).length).toBe(4);
   });
 });
