@@ -1,12 +1,14 @@
-import React, { useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Ionicon from "react-ionicons";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import Drawer from "@material-ui/core/Drawer";
+import AddIcon from "@material-ui/icons/Add";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { routerActions } from "react-router-redux";
 import Radium from "radium";
@@ -27,24 +29,46 @@ const styles = () => ({
   },
   link: {
     ...link,
-    flex: 1
+    borderRadius: 30,
+    color: "rga(145, 145, 145)"
   },
   logo
 });
 
 export const RadiumLink = Radium(Link);
-export const LinkButton = withStyles(styles)(({ classes, link, label }) => (
-  <Button className={classes.link} component={RadiumLink} to={link}>
+export const LinkButton = ({ className, link, label, currentRoute }) => (
+  <Button
+    className={className}
+    component={RadiumLink}
+    to={link}
+    style={{
+      backgroundColor: currentRoute === link ? "rgba(255, 112, 67, 0.4)" : null,
+      color: currentRoute === link ? "#fff" : null
+    }}
+  >
     {label}
   </Button>
-));
+);
 const AdminLinkButton = visibleOnlyAdmin(props => <LinkButton {...props} />);
 const isDevmode = process.env.NODE_ENV === "development";
 
-export const NavBar = ({ classes, isAuthenticated, logout, fetchMeters }) => {
+export const NavBar = ({
+  classes,
+  isAuthenticated,
+  logout,
+  fetchMeters,
+  location,
+  history
+}) => {
   const [open, setOpen] = useState(false);
+  const [currentRoute, setRoute] = useState(location.pathname);
   const handleClick = useCallback(() => setOpen(true));
   const handleClose = useCallback(() => setOpen(false));
+  useEffect(() =>
+    history.listen((location, action) => {
+      setRoute(location.pathname);
+    })
+  );
   const confirmDialog = () => {
     handleClose();
     fetchMeters();
@@ -52,27 +76,82 @@ export const NavBar = ({ classes, isAuthenticated, logout, fetchMeters }) => {
 
   if (isAuthenticated) {
     return (
-      <nav>
-        <AppBar className={classes.appBar} position={"static"}>
-          <Toolbar>
-            <AdminLinkButton link="/schemas" label="Schemas" />
-            <LinkButton link="/matrix" label="Month" />
-            <LinkButton link="/weekly" label="Week" />
-            <LinkButton link="/dashboard" label="Today" />
-            <LinkButton link="/meters" label="Meters" />
+      <div
+        style={{ display: "flex", justifyContent: "center", padding: "0.5rem" }}
+      >
+        <nav>
+          <div
+            style={{
+              display: "inline-block",
+              backgroundColor: "#EAECEC",
+              color: "#fff",
+              borderRadius: 30
+            }}
+          >
+            <AdminLinkButton
+              link="/schemas"
+              label="Schemas"
+              className={classes.link}
+              currentRoute={currentRoute}
+            />
+            <LinkButton
+              link="/matrix"
+              label="Month"
+              className={classes.link}
+              currentRoute={currentRoute}
+            />
+            <LinkButton
+              link="/weekly"
+              label="Week"
+              className={classes.link}
+              currentRoute={currentRoute}
+            />
+            <LinkButton
+              link="/dashboard"
+              label="Today"
+              className={classes.link}
+              currentRoute={currentRoute}
+            />
+            <LinkButton
+              link="/meters"
+              label="Meters"
+              className={classes.link}
+              currentRoute={currentRoute}
+            />
             <Button className={classes.link} onClick={logout}>
               Logout
             </Button>
-            <RadiumLink className={classes.logo} to="/">
-              <Ionicon icon="md-flash" />
-              egometer
-              {isDevmode && (
-                <strong style={{ color: "#FF7043" }}>&nbsp;DEVMODE</strong>
-              )}
-            </RadiumLink>
-            <Button onClick={handleClick}>Add meter</Button>
-          </Toolbar>
-        </AppBar>
+          </div>
+        </nav>
+        <RadiumLink
+          className={classes.logo}
+          to="/"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center"
+          }}
+        >
+          <Ionicon icon="md-flash" />
+          egometer
+          {isDevmode && (
+            <strong style={{ color: "#FF7043" }}>&nbsp;DEVMODE</strong>
+          )}
+        </RadiumLink>
+        <Button
+          variant="extended"
+          size="small"
+          color="primary"
+          aria-label="Add"
+          style={{
+            color: "rgb(65, 102, 170)",
+            borderRadius: 30
+          }}
+          onClick={handleClick}
+        >
+          <AddIcon />
+          Add meter
+        </Button>
         <Drawer open={open} onClose={handleClose}>
           <AddMeter
             open={open}
@@ -81,7 +160,7 @@ export const NavBar = ({ classes, isAuthenticated, logout, fetchMeters }) => {
             widgets={widgets}
           />
         </Drawer>
-      </nav>
+      </div>
     );
   }
 
@@ -135,4 +214,4 @@ export default connect(
     isAuthenticated: s.user.isAuthenticated
   }),
   mapDispatchToProps
-)(withStyles(styles)(NavBar));
+)(withStyles(styles)(withRouter(NavBar)));

@@ -72,9 +72,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div style={navStyle}>
-          <NavBar className={navStyle} />
-        </div>
+        <NavBar className={navStyle} />
         <main style={mainStyle}>
           <ConnectedSwitch>
             <Route
