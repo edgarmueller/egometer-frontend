@@ -10,25 +10,13 @@ import Cell from "../cells/Cell";
 import DefaultTableRowRenderer from "../cells/DefaultTableRowRenderer";
 import styles from "../monthly/MonthMatrix.css";
 import { pad } from "../../common/date";
-import { createColor } from "../../common/color";
+import { createColor, getProgressColor } from "../../common/color";
 
 const additionalStyles = {
   meterColumn: {
     display: "flex",
     alignItems: "center"
   }
-};
-
-const getColor = (progressEntry, alpha) => {
-  if (progressEntry) {
-    const { progress } = progressEntry;
-    if (progress >= 0.5 && progress < 1) {
-      return `rgba(247, 247, 183, ${alpha})`;
-    } else if (progress >= 1) {
-      return `rgba(144, 238, 144, ${alpha})`;
-    }
-  }
-  return null;
 };
 
 class WeeklyMatrix extends React.PureComponent {
@@ -114,7 +102,7 @@ class WeeklyMatrix extends React.PureComponent {
         rowKey={props.key}
         {...props}
         style={{
-          backgroundColor: getColor(progressEntry, 0.2),
+          backgroundColor: getProgressColor(progressEntry, 0.2),
           padding: 5,
           borderRadius: 3
         }}
@@ -199,7 +187,7 @@ class WeeklyMatrix extends React.PureComponent {
                     <Cell
                       style={{
                         border: progress
-                          ? `2px solid ${getColor(progress, 0.9)}`
+                          ? `2px solid ${getProgressColor(progress, 0.9)}`
                           : null,
                         padding: 3
                       }}
