@@ -36,7 +36,8 @@ export const button = {
   },
   alignItems: "center",
   fontSize: "0.8em",
-  letterSpacing: "0.065em"
+  letterSpacing: "0.065em",
+  textTransform: 'uppercase'
 };
 
 export const underline = {
