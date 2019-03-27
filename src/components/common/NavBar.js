@@ -139,7 +139,7 @@ export const NavBar = ({
           )}
         </RadiumLink>
         <Button
-          variant="extended"
+          variant="outlined"
           size="small"
           color="primary"
           aria-label="Add"
