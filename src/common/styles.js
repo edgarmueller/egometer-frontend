@@ -3,7 +3,7 @@ export const link = {
   color: "#fff",
   alignItems: "center",
   "&:hover": {
-    backgroundColor: "rgba(255, 112, 67, 0.4)",
+    backgroundColor: "rgb(65, 102, 170, 0.5)",
     color: "#fff"
   },
   paddingLeft: "1rem",

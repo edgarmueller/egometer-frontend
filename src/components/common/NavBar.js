@@ -30,7 +30,7 @@ const styles = () => ({
   link: {
     ...link,
     borderRadius: 30,
-    color: "rga(145, 145, 145)"
+    color: "rgb(65, 102, 170)"
   },
   logo
 });
@@ -42,7 +42,7 @@ export const LinkButton = ({ className, link, label, currentRoute }) => (
     component={RadiumLink}
     to={link}
     style={{
-      backgroundColor: currentRoute === link ? "rgba(255, 112, 67, 0.4)" : null,
+      backgroundColor: currentRoute === link ? "rgb(65, 102, 170, 0.5)" : null,
       color: currentRoute === link ? "#fff" : null
     }}
   >
