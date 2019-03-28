@@ -20,7 +20,6 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontSize: "1.5em",
-    fontWeight: 700
   },
   dialogTitle: {
     padding: "10px"

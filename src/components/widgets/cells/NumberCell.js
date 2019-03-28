@@ -13,7 +13,6 @@ const styles = {
     borderRadius: 5,
     display: "flex",
     textAlign: "center",
-    fontWeight: 700,
     border: "none"
   }
 };
