@@ -13,8 +13,8 @@ const styles = {
   meterTitle,
   meterTitleContainer: {
     display: "flex",
-    alignItems: "center",
-    justifyContent: "center"
+    //alignItems: "center",
+    //justifyContent: "center"
   },
   settingsButton: {
     float: "right"
@@ -25,8 +25,8 @@ const styles = {
   icon: {
     paddingRight: 10,
     display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end"
+    //alignItems: "center",
+    //justifyContent: "flex-end"
   },
   container: {
     minHeight: 44
@@ -53,13 +53,17 @@ class TitleBar extends React.PureComponent {
       <React.Fragment>
         <div className={classes.container}>
           <Grid container alignItems="center">
+            {
+              /*
             <Grid item xs={1}>
               <DragHandle className="drag-handle" />
             </Grid>
+            */
+            }
             <Grid item xs={2}>
               {icon && <span className={classes.icon}>{icon}</span>}
             </Grid>
-            <Grid item xs={7}>
+            <Grid item xs={10}>
               <div className={classes.meterTitleContainer}>
                 <span
                   key={`${meter.name}-title`}
@@ -70,6 +74,8 @@ class TitleBar extends React.PureComponent {
                 </span>
               </div>
             </Grid>
+            {
+              /*
             <Grid item xs={2}>
               <IconButton
                 aria-label="Settings"
@@ -79,6 +85,8 @@ class TitleBar extends React.PureComponent {
                 <SettingsIcon className={classes.settingsIcon} />
               </IconButton>
             </Grid>
+            */
+            }
           </Grid>
         </div>
         <div
