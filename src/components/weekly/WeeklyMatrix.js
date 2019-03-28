@@ -11,6 +11,7 @@ import DefaultTableRowRenderer from "../cells/DefaultTableRowRenderer";
 import styles from "../monthly/MonthMatrix.css";
 import { pad } from "../../common/date";
 import { createColor, getProgressColor } from "../../common/color";
+import { calcProgress } from "../../common/progress";
 
 const additionalStyles = {
   meterColumn: {
@@ -52,28 +53,7 @@ class WeeklyMatrix extends React.PureComponent {
 
   calcProgress = () => {
     const { entries, meters, days } = this.props;
-    this.setState({
-      progress: Object.keys(entries).reduce((acc, meterId) => {
-        const foundMeter = _.find(meters, ({ id }) => id === meterId);
-        if (!foundMeter || !foundMeter.weeklyGoal) {
-          return acc;
-        }
-        const entriesSoFar = entries[meterId].filter(entry => {
-          const entryDate = moment(entry.date, "YYYY-MM-DD");
-          return (
-            entryDate.toDate().getTime() >= days[0].getTime() &&
-            entryDate.toDate().getTime() <= days[6].getTime() &&
-            Number(entry.value) >= foundMeter.dailyGoal
-          );
-        });
-        acc[foundMeter.id] = {
-          meter: foundMeter,
-          entries: entriesSoFar,
-          progress: entriesSoFar.length / foundMeter.weeklyGoal
-        };
-        return acc;
-      }, {})
-    });
+    this.setState({ progress: calcProgress(entries, meters, days) });
   };
 
   getProgress = (meterId, date) => {

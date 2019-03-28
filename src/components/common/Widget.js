@@ -7,6 +7,7 @@ import Ionicon from "react-ionicons";
 import * as actions from "../../actions";
 import { findBySchemaId, getMeters } from "../../reducers";
 import widgets from "../../widgets";
+import { getProgressColor, createProgressSuccessColor } from "../../common/color";
 
 const NoWidgetFound = ({ requestedWidget, widgetType }) => {
   if (process.env.NODE_ENV === "development") {
@@ -44,10 +45,11 @@ export class Widget extends React.Component {
   };
 
   shouldComponentUpdate(nextProps) {
-    const { data, date, meter, width, height, isLoading } = this.props;
+    const { data, date, meter, width, height, isLoading, progress } = this.props;
     return (
       !_.isEqual(nextProps.data, data) ||
       !_.isEqual(nextProps.meter, meter) ||
+      !_.isEqual(nextProps.progress, progress) ||
       nextProps.date !== date ||
       nextProps.width !== width ||
       nextProps.height !== height ||
@@ -67,13 +69,19 @@ export class Widget extends React.Component {
       isLoading,
       widgetType,
       widgets,
-      meterSchema
+      meterSchema,
+      progress
     } = this.props;
+
+    const succeed = progress ? progress.entries.find(e => e.date === date) !== undefined : undefined;
+    if (progress) {
+      console.log('success', succeed)
+    }
 
     let _schema = schema;
     const widget = widgets.find(widget => widget.name === meter.widget);
     if (widget === undefined) {
-      console.error("No widget found for name", meter.widget);
+      console.error("No widget found for name", meter);
       return null;
     }
     const foundWidget = widget[widgetType];
@@ -98,12 +106,7 @@ export class Widget extends React.Component {
     }
 
     return (
-      <div
-        style={{
-          borderRadius: 5,
-          height: "100%"
-        }}
-      >
+      <div style={{ backgroundColor: succeed ? createProgressSuccessColor(1) : null }}>
         <WidgetComponent
           icon={widget.icon}
           isLoading={isLoading}
@@ -135,7 +138,7 @@ Widget.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     meterId: PropTypes.string
   }),
-  meterSchema: PropTypes.object.isRequired
+  meterSchema: PropTypes.object.isRequired,
 };
 
 Widget.defaultProps = {

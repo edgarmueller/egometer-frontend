@@ -17,16 +17,17 @@ import GridLayout from "../common/GridLayout";
 import widgets from "../../widgets";
 import { fetchEntriesPerMonthRequest, fetchMeters } from "../../actions";
 import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
+import { calcProgress } from "../../common/progress";
 
-const Wrapper = ({ children, ...props }) => {
-  const newChildren = React.Children.map(children, child => {
-    return React.cloneElement(child, {
-      width: props.style.width,
-      height: props.style.height
-    });
-  });
-  return <div {...props}>{newChildren}</div>;
-};
+//const Wrapper = ({ children, ...props }) => {
+//  const newChildren = React.Children.map(children, child => {
+//    return React.cloneElement(child, {
+//      width: props.style.width,
+//      height: props.style.height
+//    });
+//  });
+//  return <div {...props}>{newChildren}</div>;
+//};
 
 const styles = {
   display1: {
@@ -67,8 +68,21 @@ export class DailyDashboard extends Component {
           : moment(),
       year: year ? Number(year) : now.year(),
       month: month ? Number(month) : now.month() + 1,
-      day: day ? Number(day) : now.date()
+      day: day ? Number(day) : now.date(),
+      progress: {}
     };
+  }
+
+  calcProgress = () => {
+    const { entries, meters } = this.props;
+    this.setState({ progress: calcProgress(entries, meters, [this.state.date.toDate()]) });
+  };
+
+  componentDidUpdate(prevProps) {
+    if (!_.isEqual(this.props.entries, prevProps.entries)) {
+      console.log('calcProgress')
+      this.calcProgress();
+    }
   }
 
   componentDidMount() {
@@ -98,16 +112,15 @@ export class DailyDashboard extends Component {
     // TODO: duplicate code, see month dashboard
     const meterWidgets = meters.map((meter, i) => {
       return (
-        <Wrapper key={i}>
-          <Widget
-            id={i}
-            isLoading={isLoading}
-            date={this.state.date.format("YYYY-MM-DD")}
-            meter={meter}
-            data={_.isEmpty(entries) ? [] : entries[meter.id]}
-            widgetType="day"
-          />
-        </Wrapper>
+        <Widget
+          id={i}
+          isLoading={isLoading}
+          date={this.state.date.format("YYYY-MM-DD")}
+          meter={meter}
+          data={_.isEmpty(entries) ? [] : entries[meter.id]}
+          widgetType="day"
+          progress={this.state.progress[meter.id]}
+        />
       );
     });
     const widgetsInUse = meters
@@ -141,10 +154,8 @@ export class DailyDashboard extends Component {
           />
         </div>
         <UpdateEntryErrorSnackbar />
-        <div>
-          <GridLayout items={widgetsInUse.map(v => ({ h: v.h, w: v.w }))}>
-            {meterWidgets}
-          </GridLayout>
+        <div style={{ maxWidth: 600, margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
+          {meterWidgets}
         </div>
       </div>
     );
