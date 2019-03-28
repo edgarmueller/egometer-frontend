@@ -18,16 +18,6 @@ import { fetchEntriesPerMonthRequest, fetchMeters } from "../../actions";
 import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
 import { calcProgress } from "../../common/progress";
 
-//const Wrapper = ({ children, ...props }) => {
-//  const newChildren = React.Children.map(children, child => {
-//    return React.cloneElement(child, {
-//      width: props.style.width,
-//      height: props.style.height
-//    });
-//  });
-//  return <div {...props}>{newChildren}</div>;
-//};
-
 const styles = {
   display1: {
     marginTop: "0.5em",
@@ -106,7 +96,7 @@ export class DailyDashboard extends Component {
   };
 
   render() {
-    const { classes, meters, entries, isLoading, widgets } = this.props;
+    const { classes, meters, entries, isLoading } = this.props;
 
     // TODO: duplicate code, see month dashboard
     const meterWidgets = meters.map((meter, i) => {
@@ -122,9 +112,6 @@ export class DailyDashboard extends Component {
         />
       );
     });
-    const widgetsInUse = meters
-      .map(meter => widgets.find(widget => widget.name === meter.widget))
-      .filter(vis => vis !== undefined);
 
     return (
       <div
@@ -144,7 +131,6 @@ export class DailyDashboard extends Component {
             placeholder={`${formatDate(new Date())}`}
             value={this.state.date.format("YYYY-MM-DD")}
             isOutsideRange={() => false}
-            //onDateChange={this.handleDateChange}
             onDayChange={this.handleDateChange}
             focused={this.state.focused}
             onFocusChange={({ focused }) => this.setState({ focused })}

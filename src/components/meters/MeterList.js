@@ -122,7 +122,7 @@ export class Meters extends React.Component {
   }
 
   render() {
-    const { classes, meters, updateMeter, updateMeterRequest, isFetchingMeters, findBySchemaId } = this.props;
+    const { classes, meters, updateMeter, isFetchingMeters, findBySchemaId } = this.props;
 
     if (isFetchingMeters) {
       return <div>Loading meters</div>;

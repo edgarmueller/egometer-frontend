@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
 import withStyles from "@material-ui/core/styles/withStyles";
-import SettingsIcon from "@material-ui/icons/MoreVert";
-import DragHandle from "@material-ui/icons/DragHandle";
+//import IconButton from "@material-ui/core/IconButton";
+//import SettingsIcon from "@material-ui/icons/MoreVert";
+//import DragHandle from "@material-ui/icons/DragHandle";
 import { meterTitle, underline } from "../../../common/styles";
 import MeterSettingsDialog from "./MeterSettingsDialog";
 

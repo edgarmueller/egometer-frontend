@@ -7,7 +7,7 @@ import Ionicon from "react-ionicons";
 import * as actions from "../../actions";
 import { findBySchemaId, getMeters } from "../../reducers";
 import widgets from "../../widgets";
-import { getProgressColor, createProgressSuccessColor } from "../../common/color";
+import { createProgressSuccessColor } from "../../common/color";
 
 const NoWidgetFound = ({ requestedWidget, widgetType }) => {
   if (process.env.NODE_ENV === "development") {
