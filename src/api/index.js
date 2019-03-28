@@ -38,7 +38,7 @@ export const createMeter = (schemaId, name, widget, color) =>
     {
       schemaId,
       name,
-      visualization: widget,
+      widget,
       color
     },
     createHeaders({
