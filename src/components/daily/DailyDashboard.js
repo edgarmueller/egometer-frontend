@@ -69,7 +69,6 @@ export class DailyDashboard extends Component {
 
   componentDidUpdate(prevProps) {
     if (!_.isEqual(this.props.entries, prevProps.entries)) {
-      console.log('calcProgress')
       this.calcProgress();
     }
   }

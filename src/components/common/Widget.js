@@ -74,9 +74,6 @@ export class Widget extends React.Component {
     } = this.props;
 
     const succeed = progress ? progress.entries.find(e => e.date === date) !== undefined : undefined;
-    if (progress) {
-      console.log('success', succeed)
-    }
 
     let _schema = schema;
     const widget = widgets.find(widget => widget.name === meter.widget);

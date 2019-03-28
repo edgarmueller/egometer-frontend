@@ -14,6 +14,9 @@ describe("NavBar", () => {
         classes={{
           link: ""
         }}
+        location={{
+          pathname: 'weekly'
+        }}
       />
     );
     // logo
@@ -27,6 +30,9 @@ describe("NavBar", () => {
         isAuthenticated={true}
         classes={{
           link: ""
+        }}
+        location={{
+          pathname: 'weekly'
         }}
       />
     );

@@ -2,10 +2,6 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router";
 import { connect } from "react-redux";
 import Loadable from "react-loadable";
-
-import "react-grid-layout/css/styles.css";
-import "react-resizable/css/styles.css";
-
 import "./App.css";
 import NavBar from "./common/NavBar";
 import {

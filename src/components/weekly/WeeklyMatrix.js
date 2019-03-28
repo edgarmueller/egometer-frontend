@@ -207,7 +207,6 @@ class WeeklyMatrix extends React.PureComponent {
           ref="Table"
           disableHeader={disableHeader}
           headerClassName={styles.headerColumn}
-          onHeaderClick={ev => console.log(ev)}
           headerHeight={headerHeight}
           height={height}
           noRowsRenderer={this._noRowsRenderer}

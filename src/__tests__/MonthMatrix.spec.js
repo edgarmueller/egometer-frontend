@@ -29,7 +29,6 @@ describe("MonthMatrix", () => {
     );
     expect(wrapper.find(Table).length).toBe(1);
     // meter name column + 30 days of april
-    console.log(wrapper.debug());
     expect(wrapper.find(".ReactVirtualized__Table__headerColumn").length).toBe(
       31
     );
