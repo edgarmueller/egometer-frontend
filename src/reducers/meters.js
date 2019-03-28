@@ -4,13 +4,18 @@ import {
   FETCH_METERS_SUCCESS,
   FETCH_METERS_FAILURE,
   UPDATE_METER_SUCCESS,
-  FETCH_METERS_REQUEST
+  FETCH_METERS_REQUEST,
+  UPDATE_METER_REQUEST
 } from "../actions";
 
 const initialState = {
   error: undefined,
   meters: [],
-  isLoading: false
+  isLoading: false,
+  updatingStatus: {
+    isFetching: false,
+    meterId: undefined
+  }
 };
 
 const findMeter = (meters, meterId) =>
@@ -27,6 +32,15 @@ const updateMeterById = (meters, meterId, updateFn) => {
 
 export const metersReducer = (state = initialState, action) => {
   switch (action.type) {
+    case UPDATE_METER_REQUEST:
+      return {
+        ...state,
+        error: undefined,
+        updatingStatus: {
+          isFetching: true,
+          meterId: action.meter.id
+        }
+      };
     case UPDATE_METER_SUCCESS:
       return {
         error: undefined,

@@ -13,6 +13,7 @@ export const FETCH_SCHEMAS_FAILURE = "FETCH_SCHEMAS_FAILURE";
 export const DELETE_METER_SUCCESS = "DELETE_METER_SUCCESS";
 export const DELETE_METER_FAILURE = "DELETE_METER_FAILURE";
 
+export const UPDATE_METER_REQUEST = "UPDATE_METER_REQUEST";
 export const UPDATE_METER_SUCCESS = "UPDATE_METER_SUCCESS";
 export const UPDATE_METER_FAILURE = "UPDATE_METER_FAILURE";
 
@@ -135,6 +136,11 @@ export const fetchEntriesPerMonthRequest = (date, meterId = undefined) => ({
   type: FETCH_ENTRIES_REQUEST,
   date,
   meterId
+});
+
+export const updateMeterRequest = (meter) => ({
+  type: UPDATE_METER_REQUEST,
+  meter
 });
 
 export const receiveEntries = entries => ({

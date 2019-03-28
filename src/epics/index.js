@@ -22,7 +22,10 @@ import {
   UPDATE_ENTRY_SUCCESS,
   USER_LOGIN_SUCCESS,
   FETCH_SCHEMAS_REQUEST,
-  FETCH_METERS_REQUEST
+  FETCH_METERS_REQUEST,
+  UPDATE_METER_REQUEST,
+  UPDATE_METER_SUCCESS,
+  UPDATE_METER_FAILURE
 } from "../actions";
 
 export function fetchSchemasEpic(action$, store, deps) {
@@ -120,11 +123,34 @@ export function updateEntryDebounceEpic(action$, store, deps) {
     });
 }
 
+export function updateMeterDebounceEpic(action$, store, deps) {
+  return action$
+    .ofType(UPDATE_METER_REQUEST)
+    .debounceTime(250)
+    .switchMap(({ meter }) => {
+      return Observable.fromPromise(deps.api.updateMeter(meter))
+        .flatMap(resp => {
+          return Observable.of({
+            type: UPDATE_METER_SUCCESS,
+            meter: resp.data
+          });
+        })
+        .catch(error => {
+          return Observable.of({
+            type: UPDATE_METER_FAILURE,
+            meterId: meter.id,
+            error: error.message
+          });
+        });
+    });
+}
+
 export const rootEpic = combineEpics(
   fetchSchemasEpic,
   fetchMetersEpic,
   fetchEntriesEpic,
   updateEntryEpic,
   updateEntryDebounceEpic,
+  updateMeterDebounceEpic,
   fetchAllAfterLogin
 );

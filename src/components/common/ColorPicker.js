@@ -1,4 +1,5 @@
-import React from "react";
+import React, { Fragment  } from "react";
+import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { SketchPicker } from "react-color";
 import reactCSS from "reactcss";
@@ -56,7 +57,7 @@ export class ColorPicker extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <Fragment>
         <div style={styles.swatch} onClick={this.handleClick}>
           <div
             style={{
@@ -78,12 +79,18 @@ export class ColorPicker extends React.Component {
                 this.handleChange(color);
                 event.stopPropagation();
               }}
+              onChangeComplete={this.handleChangeComplete}
             />
           </div>
         ) : null}
-      </React.Fragment>
+      </Fragment>
     );
   }
+}
+
+ColorPicker.propTypes = {
+  onChange: PropTypes.func,
+  onChangeComplete: PropTypes.func
 }
 
 export default withStyles(styles)(ColorPicker);

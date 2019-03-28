@@ -1,4 +1,5 @@
 import React from "react";
+import _ from "lodash";
 import { connect } from "react-redux";
 import { compose } from "recompose";
 import IconButton from "@material-ui/core/IconButton";
@@ -12,7 +13,10 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { deleteMeter, updateMeter } from "../../actions";
+import { Switch } from "@material-ui/core";
+import ColorPicker from "../common/ColorPicker";
+import { deleteMeter, updateMeter, updateMeterRequest } from "../../actions";
+import * as api from "../../api";
 import { display1 } from "../../common/styles";
 import {
   getMeters,
@@ -20,7 +24,6 @@ import {
   findBySchemaId as _findBySchemaId
 } from "../../reducers";
 
-import { Switch } from "@material-ui/core";
 
 const styles = theme => ({
   textField: {
@@ -31,7 +34,6 @@ const styles = theme => ({
   },
   display1,
   root: {
-    width: 720,
     marginTop: theme.spacing.unit * 3,
     overflowX: "auto",
     margin: "0 auto"
@@ -53,31 +55,76 @@ const isNumberSchema = schema => {
 };
 
 export class Meters extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
       name: undefined,
       editSchema: undefined,
-      open: false
+      open: false,
+      names: {}
     };
     this.deleteMeter = this.deleteMeter.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
+
+  handleUpdateName = meter => ev => {
+    this.setState({
+      names: {
+        ...this.state.names,
+        [meter.id]: ev.target.value
+      }
+    })
+    this.props.updateMeterRequest({
+      ...meter,
+      name: ev.target.value
+    })
+  }
+
+  updateMeter = (meter) => {
+    return api.updateMeter(meter)
+      .then(() => {
+        this.setState({
+          updating: false
+        })
+      })
+  }
+
+  updateColor = color => {
+    this.setState({ color });
+  };
 
   deleteMeter(meter) {
     this.props.deleteMeter(meter.id);
   }
 
   handleClose() {
-    this.setState({
-      open: false
-    });
+    this.setState({ open: false });
+  }
+
+  updateNames = () => {
+    const names = this.props.meters.reduce((acc, m) => {
+      acc[m.id] = m.name;
+      return acc
+    }, {})
+    this.setState({ names })
+  }
+
+  componentDidMount(prevProps) {
+
+    this.updateNames();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!_.isEqual(prevProps.meters, this.props.meters)) {
+      this.updateNames();
+    }
   }
 
   render() {
-    const { classes, meters } = this.props;
+    const { classes, meters, updateMeter, updateMeterRequest, isFetchingMeters, findBySchemaId } = this.props;
 
-    if (this.props.isFetchingMeters) {
+    if (isFetchingMeters) {
       return <div>Loading meters</div>;
     }
 
@@ -90,10 +137,13 @@ export class Meters extends React.Component {
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell>Meter name</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
                 <TableCell>Actions</TableCell>
                 <TableCell>Daily Goal</TableCell>
                 <TableCell>Weekly Goal</TableCell>
+                <TableCell>Color</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -101,8 +151,13 @@ export class Meters extends React.Component {
                 meters.map(meter => {
                   return (
                     <TableRow key={meter.id}>
-                      <TableCell>
-                        <strong>{meter.name}</strong>
+                      <TableCell colSpan={3}>
+                        <TextField
+                          margin="dense"
+                          variant="outlined"
+                          value={_.has(this.state.names, meter.id) ? this.state.names[meter.id] : ''}
+                          onChange={this.handleUpdateName(meter)}
+                        />
                       </TableCell>
                       <TableCell>
                         <IconButton
@@ -113,9 +168,7 @@ export class Meters extends React.Component {
                         </IconButton>
                       </TableCell>
                       <TableCell>
-                        {isNumberSchema(
-                          this.props.findBySchemaId(meter.schemaId)
-                        ) ? (
+                        {isNumberSchema(findBySchemaId(meter.schemaId)) ? (
                           <TextField
                             value={meter.dailyGoal || ""}
                             onChange={ev => {
@@ -126,25 +179,37 @@ export class Meters extends React.Component {
                             }}
                           />
                         ) : (
-                          <Switch
-                            checked={meter.dailyGoal > 0}
-                            onChange={(ev, value) => {
-                              this.props.updateMeter({
-                                ...meter,
-                                dailyGoal: value ? 1 : 0
-                              });
-                            }}
-                          />
-                        )}
+                            <Switch
+                              checked={meter.dailyGoal > 0}
+                              onChange={(ev, value) => {
+                                updateMeter({
+                                  ...meter,
+                                  dailyGoal: value ? 1 : 0
+                                });
+                              }}
+                            />
+                          )}
                       </TableCell>
                       <TableCell>
                         <TextField
                           value={meter.weeklyGoal || ""}
                           onChange={ev => {
-                            this.props.updateMeter({
+                            updateMeter({
                               ...meter,
                               weeklyGoal: Number(ev.target.value)
                             });
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <ColorPicker
+                          color={meter.color}
+                          onChange={this.updateColor}
+                          onChangeComplete={color => {
+                            updateMeter({
+                              ...meter,
+                              color
+                            })
                           }}
                         />
                       </TableCell>
@@ -152,10 +217,10 @@ export class Meters extends React.Component {
                   );
                 })
               ) : (
-                <TableRow>
-                  <TableCell>No meters defined yet</TableCell>
-                </TableRow>
-              )}
+                  <TableRow>
+                    <TableCell>No meters defined yet</TableCell>
+                  </TableRow>
+                )}
             </TableBody>
           </Table>
         </Paper>
@@ -181,7 +246,8 @@ export default compose(
     mapStateToProps,
     {
       deleteMeter,
-      updateMeter
+      updateMeter,
+      updateMeterRequest
     }
   ),
   withStyles(styles)
