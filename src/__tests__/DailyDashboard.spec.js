@@ -5,7 +5,6 @@ import Adapter from "enzyme-adapter-react-16";
 import { DailyDashboard } from "../components/daily/DailyDashboard";
 import { moodEntries, moodMeter, moodMeterId } from "../__mocks__/testData";
 import Widget from "../components/common/Widget";
-import GridLayout from "../components/common/GridLayout";
 import mood from "../widgets/day/mood";
 
 configure({ adapter: new Adapter() });
@@ -26,7 +25,6 @@ describe("Dashboard", () => {
       />
     );
     // Dashboard title
-    expect(wrapper.find(GridLayout).length).toEqual(1);
     expect(wrapper.find(Widget).length).toEqual(1);
   });
 });

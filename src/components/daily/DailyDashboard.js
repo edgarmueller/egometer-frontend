@@ -13,7 +13,6 @@ import { connect } from "react-redux";
 import { getMeters } from "../../reducers";
 
 import Widget from "../../components/common/Widget";
-import GridLayout from "../common/GridLayout";
 import widgets from "../../widgets";
 import { fetchEntriesPerMonthRequest, fetchMeters } from "../../actions";
 import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
