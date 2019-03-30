@@ -11,9 +11,15 @@ import NoWidgetFound from './NoWidgetFound';
 
 export class Widget extends React.Component {
 
-  state = {
-    widget: undefined,
-    dailyGoalHit: false
+  constructor(props) {
+    super(props);
+    const { date, widgets, meter, progress, widgetType } = props;
+    const widget = widgets.find(widget => widget.name === meter.widget);
+    const dailyGoalHit = progress && progress.entries.find(e => e.date === date) !== undefined
+    this.state = {
+      widget: widget[widgetType],
+      dailyGoalHit
+    }
   }
 
   updateEntry = (value, shouldDebounce) => {
@@ -80,7 +86,7 @@ export class Widget extends React.Component {
     if (schema === undefined) {
       return null;
     }
-    if (_.isEmpty(widget)) {
+    if (widget === null || widget === undefined) {
       return (
         <NoWidgetFound widgetType={widgetType} requestedWidget={meter.widget} />
       );

@@ -1,10 +1,10 @@
 import React from "react";
-import moment from "moment";
-import { configure, shallow } from "enzyme";
+import { configure, shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { counterSchema } from "../__mocks__/testData";
 
 import { Widget } from "../components/common/Widget";
+import NoWidgetFound from "../components/common/NoWidgetFound";
 
 configure({ adapter: new Adapter() });
 
@@ -16,26 +16,22 @@ describe("Widget", () => {
       name: "counter",
       widget: "CounterWidget"
     };
-    const widgets = [
-      {
-        name: "CounterWidget",
-        month: FakeWidget
-      }
-    ];
-    const wrapper = shallow(
+    const widgets = [{
+      name: "CounterWidget",
+      day: FakeWidget
+    }];
+    const wrapper = mount(
       <Widget
-        date={moment()}
+        date="2019-03-30"
         data={[]}
         meter={counterMeter}
-        onSubmit={jest.fn()}
-        width={"400"}
-        height={"300"}
         updateEntry={jest.fn()}
-        widgetType="month"
+        widgetType="day"
         widgets={widgets}
-        meterSchema={counterSchema}
+        schema={counterSchema}
       />
     );
     expect(wrapper.find(FakeWidget).length).toBe(1);
+    wrapper.unmount()
   });
 });
