@@ -101,6 +101,7 @@ export class DailyDashboard extends Component {
     const meterWidgets = meters.map((meter, i) => {
       return (
         <Widget
+          key={meter.id}
           id={i}
           isLoading={isLoading}
           date={this.state.date.format("YYYY-MM-DD")}
