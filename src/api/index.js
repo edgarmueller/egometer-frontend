@@ -59,7 +59,7 @@ export const updateMeter = meter =>
     `${BASE_URL}/meters/${meter.id}`,
     {
       ...meter,
-      visualization: meter.widget
+      widget: meter.widget
     },
     createHeaders({
       [contentType]: applicationJson
