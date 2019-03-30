@@ -83,9 +83,10 @@ export const NavBar = ({
           <div
             style={{
               display: "inline-block",
-              backgroundColor: "#EAECEC",
+              backgroundColor: "#fff",
               color: "#fff",
-              borderRadius: 30
+              borderRadius: 30,
+              border: '1px solid rgb(65, 102, 170, 0.5)'
             }}
           >
             <AdminLinkButton
