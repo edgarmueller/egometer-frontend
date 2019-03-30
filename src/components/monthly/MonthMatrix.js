@@ -20,7 +20,7 @@ const additionalStyles = {
   }
 };
 
-class MonthMatrix extends React.PureComponent {
+class MonthMatrix extends React.Component {
   constructor() {
     super();
     const sortBy = "index";
@@ -38,7 +38,6 @@ class MonthMatrix extends React.PureComponent {
     this._noRowsRenderer = this._noRowsRenderer.bind(this);
     this._onRowCountChange = this._onRowCountChange.bind(this);
     this._onScrollToRowChange = this._onScrollToRowChange.bind(this);
-    this._rowClassName = this._rowClassName.bind(this);
     this._sort = this._sort.bind(this);
     this.rowRenderer = this.rowRenderer.bind(this);
   }
@@ -47,9 +46,49 @@ class MonthMatrix extends React.PureComponent {
     return <DefaultTableRowRenderer rowKey={props.key} {...props} />;
   }
 
+  cellRenderer = date => ({ cellData, columnIndex, rowIndex, rowData }) => {
+    const {
+      colorMapping,
+      month,
+      year,
+      widgets,
+      isLoading,
+      updateEntry
+    } = this.props;
+    return (
+      <div className='item'>
+        <ErrorBoundary>
+          <Cell
+            color={createColor(
+              colorMapping,
+              year,
+              month,
+              rowData,
+              columnIndex
+            )}
+            widget={_.find(
+              widgets,
+              widget =>
+                widget.name === rowData.widget &&
+                _.has(widget, "cell")
+            )}
+            rowData={rowData}
+            isLoading={isLoading}
+            date={date}
+            data={cellData}
+            updateEntry={updateEntry(rowData.meterId, date)}
+          />
+        </ErrorBoundary>
+      </div>
+    );
+  }
+
+  rowGetter = ({ index }) => {
+    return this._getDatum(index);
+  };
+
   render() {
     const {
-      disableHeader,
       headerHeight,
       overscanRowCount,
       rowHeight,
@@ -59,26 +98,17 @@ class MonthMatrix extends React.PureComponent {
 
     const {
       classes,
-      colorMapping,
       meters,
-      month,
-      year,
-      widgets,
-      isLoading,
-      updateEntry,
       days
     } = this.props;
+
+    console.log('month rendering..');
 
     // if specified in this order the json reponse contains HTML
     // TODO updateEntry={updateEntry(date, props.rowData.meterId)}
     // TODO: 60 per meter + header
     const height = meters.length * 60 + 60;
     const rowCount = meters.length;
-    //const days = daysInMonth(year, month);
-
-    const rowGetter = ({ index }) => {
-      return this._getDatum(index);
-    };
 
     const meterColumn = [
       <Column
@@ -87,7 +117,7 @@ class MonthMatrix extends React.PureComponent {
         dataKey={"meterName"}
         width={300}
         className={classes.meterColumn}
-        cellRenderer={({ cellData, ...props }) => (
+        cellRenderer={({ cellData }) => (
           <div
             style={{
               whiteSpace: "nowrap",
@@ -101,67 +131,21 @@ class MonthMatrix extends React.PureComponent {
       />
     ];
     const columns = meterColumn.concat(
-      _.range(1, days + 1).map(day => {
-        const date = `${year}-${pad(month.toString())}-${pad(day.toString())}`;
-        const dayName = moment(date, "YYYY-MM-DD").format("dddd");
+      days.map((day, idx) => {
+        const date = `${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`;
+        const dayName = moment(day, "YYYY-MM-DD").format("dddd");
 
         return (
           <Column
-            key={day}
+            key={date}
             label={
               <div>
                 <div>{dayName.substr(0, 3)}</div>
-                {day}
+                {day.getDate()}
               </div>
             }
             dataKey={date}
-            cellRenderer={({ cellData, ...props }) => {
-              const isHovered =
-                props.columnIndex === this.state.hoveredColumnIndex ||
-                props.rowIndex === this.state.hoveredRowIndex;
-              const className = isHovered ? "item hoveredItem" : "item";
-
-              return (
-                <div
-                  className={className}
-                  onMouseOver={() => {
-                    this.setState({
-                      hoveredColumnIndex: props.columnIndex,
-                      hoveredRowIndex: props.rowIndex
-                    });
-                  }}
-                  onMouseOut={() => {
-                    this.setState({
-                      hoveredColumnIndex: -1,
-                      hoveredRowIndex: -1
-                    });
-                  }}
-                >
-                  <ErrorBoundary>
-                    <Cell
-                      color={createColor(
-                        colorMapping,
-                        year,
-                        month,
-                        props.rowData,
-                        props.columnIndex
-                      )}
-                      widget={_.find(
-                        widgets,
-                        widget =>
-                          widget.name === props.rowData.widget &&
-                          _.has(widget, "cell")
-                      )}
-                      rowData={props.rowData}
-                      isLoading={isLoading}
-                      date={date}
-                      data={cellData}
-                      updateEntry={updateEntry(props.rowData.meterId, date)}
-                    />
-                  </ErrorBoundary>
-                </div>
-              );
-            }}
+            cellRenderer={this.cellRenderer(date)}
             disableSort
             width={120}
           />
@@ -173,21 +157,19 @@ class MonthMatrix extends React.PureComponent {
         {({ width }) => (
           <Table
             ref="Table"
-            disableHeader={disableHeader}
             headerClassName={styles.headerColumn}
             headerHeight={headerHeight}
             height={height}
             noRowsRenderer={this._noRowsRenderer}
             overscanRowCount={overscanRowCount}
-            rowClassName={this._rowClassName}
             rowHeight={rowHeight}
-            rowGetter={rowGetter}
+            rowGetter={this.rowGetter}
             rowCount={rowCount}
             rowRenderer={this.rowRenderer}
             scrollToIndex={scrollToIndex}
             sort={this._sort}
             sortBy={sortBy}
-            width={width > 0 ? width : 100} // tests cause the width to become negative
+            width={width > 0 ? width : 100} // during tests the width is negative
           >
             {React.Children.toArray(columns)}
           </Table>
@@ -231,7 +213,6 @@ class MonthMatrix extends React.PureComponent {
 
   _onRowCountChange(event) {
     const rowCount = parseInt(event.target.value, 10) || 0;
-
     this.setState({ rowCount });
   }
 
@@ -249,17 +230,8 @@ class MonthMatrix extends React.PureComponent {
     this.setState({ scrollToIndex });
   }
 
-  _rowClassName({ index }) {
-    if (index < 0) {
-      return styles.headerRow;
-    } else {
-      return index % 2 === 0 ? styles.evenRow : styles.oddRow;
-    }
-  }
-
   _sort({ sortBy, sortDirection }) {
     const sortedList = this._sortList({ sortBy, sortDirection });
-
     this.setState({ sortBy, sortDirection, sortedList });
   }
 }

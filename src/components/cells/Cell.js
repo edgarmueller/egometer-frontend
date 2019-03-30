@@ -9,7 +9,6 @@ export class Cell extends React.Component {
     return (
       !_.isEqual(this.props.data, nextProps.data) ||
       (this.props.isLoading && !nextProps.isLoading) ||
-      this.props.isHovered !== nextProps.isHovered ||
       !_.isEqual(this.props.style, nextProps.style)
     );
   }

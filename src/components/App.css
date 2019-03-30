@@ -7,7 +7,6 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 0;
 }
 
 .App-title {
@@ -22,6 +21,10 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
+}
+
+#dashboard { 
+  padding: 1rem;
 }
 
 *,
@@ -50,6 +53,13 @@ body,
 .ReactVirtualized__Table__headerColumn,
 .ReactVirtualized__Table__rowColumn {
   margin: 0;
+}
+
+.ReactVirtualized__Table__rowColumn:hover {
+}
+
+.ReactVirtualized__Table__row:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 input[contenteditable] {

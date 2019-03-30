@@ -23,7 +23,7 @@ import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
 import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import MatrixContainer from "../../containers/MatrixContainer";
-import { daysInMonth } from "../../common/date";
+import { daysOfMonth } from "../../common/date";
 
 const styles = {
   monthMatrix: {
@@ -99,7 +99,7 @@ export class MonthlyDashboard extends React.Component {
             closeOnSelect={true}
           />
           <MatrixContainer
-            days={daysInMonth(this.state.year, this.state.month)}
+            days={daysOfMonth(this.state.year, this.state.month)}
             headerHeight={30}
             year={this.state.year}
             month={this.state.month}
@@ -144,11 +144,10 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = dispatch => ({
   fetchEntries(date) {
     dispatch(actions.fetchEntriesPerMonthRequest(date));
-  },
-  ...ownProps
+  }
 });
 
 export default compose(
