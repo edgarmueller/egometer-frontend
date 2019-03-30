@@ -1,14 +1,40 @@
 import _ from "lodash";
 
 export const pad = s => {
+  if (_.isNumber(s)) {
+    s = s.toString();
+  }
   while (s.length < 2) {
     s = "0" + s;
   }
   return s;
 };
 
-export function daysInMonth(year, month) {
-  return new Date(year, month, 0).getDate();
+// month in 1-based index
+export function daysOfMonth(year, month) {
+  const days = [];
+  const lastDay = new Date(year, month, 0).getDate();
+  for (let i = 1; i <= lastDay; i++) {
+    const d = new Date(year, month - 1, i);
+    days.push(d)
+  }
+  return days;
+}
+
+export function daysOfWeek(date) {
+  const days = [];
+  days.push(date);
+  date.setHours(0, 0, 0, 0);
+  let i = 1;
+  while (i < 7) {
+    date = new Date(date.getTime());
+    date.setDate(date.getDate() + 1);
+    date.setHours(0, 0, 0, 0);
+    days.push(date);
+    i++;
+  }
+
+  return days;
 }
 
 export const findMonday = date => {
@@ -20,20 +46,20 @@ export const findMonday = date => {
   return findMonday(d);
 };
 
-export function daysOfWeek(d) {
-  let week = [];
-  const date = findMonday(d);
-  week.push(date);
-
-  for (let i = 1; i <= 7; i++) {
-    //let first = date.getDate() - date.getDay() + i;
-    const d = new Date(date.getTime());
-    d.setDate(date.getDate() + i);
-    week.push(d);
-  }
-
-  return week;
-}
+//export function daysOfWeek(d) {
+//  let week = [];
+//  const date = findMonday(d);
+//  week.push(date);
+//
+//  for (let i = 1; i <= 7; i++) {
+//    //let first = date.getDate() - date.getDay() + i;
+//    const d = new Date(date.getTime());
+//    d.setDate(date.getDate() + i);
+//    week.push(d);
+//  }
+//
+//  return week;
+//}
 
 export function findByDate(data, desiredDate) {
   return _.find(data, ({ date }) => {

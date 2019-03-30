@@ -23,7 +23,7 @@ import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import WeekPicker from "./WeekPicker";
 import Charts from "../monthly/Charts";
-import { findMonday } from "../../common/date";
+import { findMonday, daysOfWeek } from "../../common/date";
 
 const styles = {
   monthMatrix: {
@@ -31,22 +31,6 @@ const styles = {
     padding: "1em"
   }
 };
-
-function daysOfWeek(date) {
-  const days = [];
-  days.push(date);
-  date.setHours(0, 0, 0, 0);
-  let i = 1;
-  while (i < 7) {
-    date = new Date(date.getTime());
-    date.setDate(date.getDate() + 1);
-    date.setHours(0, 0, 0, 0);
-    days.push(date);
-    i++;
-  }
-
-  return days;
-}
 
 export class WeeklyDashboard extends React.Component {
   constructor(props) {
