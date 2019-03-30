@@ -52,7 +52,7 @@ export class Cell extends React.Component {
 
 Cell.propTypes = {
   data: PropTypes.any,
-  rowData: PropTypes.object.isRequired,
+  rowData: PropTypes.array.isRequired,
   date: PropTypes.string.isRequired,
   updateEntry: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,

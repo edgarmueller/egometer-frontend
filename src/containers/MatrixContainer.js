@@ -7,7 +7,6 @@ import { updateEntryRequest } from "../actions";
 import { getMeters } from "../reducers";
 
 export class MatrixContainer extends React.Component {
-  width;
   render() {
     const { meters, child } = this.props;
     const colorMapping = meters.reduce((acc, m) => {
@@ -23,11 +22,10 @@ export class MatrixContainer extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
   const meters = getMeters(state);
 
   return {
-    entries: ownProps.entries,
     isLoading: state.entries.loadingStatus.isLoading,
     meters
   };

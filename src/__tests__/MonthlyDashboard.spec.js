@@ -2,21 +2,24 @@ import React from "react";
 import { configure, mount } from "enzyme";
 import { Provider } from "react-redux";
 import Adapter from "enzyme-adapter-react-16";
-import MonthlyDashboard from "../components/monthly/MonthlyDashboard";
-import { moodEntries, moodMeter, moodSchema } from "../__mocks__/testData";
+import { MonthlyDashboard } from "../components/monthly/MonthlyDashboard";
+import { moodEntries, moodMeter, moodSchema, moodMeterId } from "../__mocks__/testData";
 import mood from "../widgets/day/mood";
 import configureStore from "../store/configureStore";
+import MonthMatrix from "../components/monthly/MonthMatrix";
 
 configure({ adapter: new Adapter() });
 
-describe("Dashboard", () => {
-  it("should render widget of a meter", () => {
+describe("Monthly Dashboard", () => {
+  it("should render monthly matrix component", () => {
     const store = configureStore({
       meters: {
         meters: [moodMeter]
       },
       entries: {
-        entries: [moodEntries],
+        entries: {
+          [moodMeter.id]: moodEntries
+        },
         loadingStatus: {
           isLoading: false
         }
@@ -28,11 +31,14 @@ describe("Dashboard", () => {
     const wrapper = mount(
       <Provider store={store}>
         <MonthlyDashboard
+          isLoading={false}
+          entries={{
+            [moodMeter.id]: moodEntries
+          }}
           meters={[moodMeter]}
           classes={{
             monthMatrix: ""
           }}
-          fetchEntries={jest.fn()}
           widgets={[mood]}
           match={{
             params: {
@@ -40,12 +46,13 @@ describe("Dashboard", () => {
               month: 2
             }
           }}
+          fetchEntries={jest.fn()}
+          findBySchemaId={jest.fn()}
         />
       </Provider>
     );
-    const rows = wrapper.find(".ReactVirtualized__Table__row");
-    // one row (class appears twice)
-    expect(rows.length).toEqual(2);
+    const matrix = wrapper.find(MonthMatrix);
+    expect(matrix.length).toEqual(1);
     wrapper.unmount();
   });
 });
