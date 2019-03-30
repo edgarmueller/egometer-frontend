@@ -32,7 +32,7 @@ const styles = {
   }
 };
 
-function tempGenerateDays(date) {
+function daysOfWeek(date) {
   const days = [];
   days.push(date);
   date.setHours(0, 0, 0, 0);
@@ -59,7 +59,7 @@ export class WeeklyDashboard extends React.Component {
       year: year ? Number(year) : now.year(),
       month: month ? Number(month) : now.month() + 1,
       date: findMonday(new Date()),
-      days: tempGenerateDays(findMonday(new Date()))
+      days: daysOfWeek(findMonday(new Date()))
     };
   }
 
