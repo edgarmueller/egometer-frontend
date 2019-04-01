@@ -19,7 +19,7 @@ import {
   isMetersLoading
 } from "../../reducers";
 import widgets from "../../widgets";
-import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
+import ErrorSnackbar from "../common/ErrorSnackbar";
 import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import MatrixContainer from "../../containers/MatrixContainer";
@@ -77,7 +77,7 @@ export class MonthlyDashboard extends React.Component {
 
     return (
       <div>
-        <UpdateEntryErrorSnackbar />
+        <ErrorSnackbar />
         <div id={"dashboard"} className={classes.monthMatrix}>
           <MonthPickerInput
             inputProps={{

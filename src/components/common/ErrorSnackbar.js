@@ -32,7 +32,7 @@ const styles = theme => ({
   }
 });
 
-const MySnackbarContent = props => {
+const ClientSnackbar = props => {
   const { classes, className, message, onClose, variant, ...other } = props;
   const Icon = ErrorIcon;
 
@@ -61,9 +61,9 @@ const MySnackbarContent = props => {
     />
   );
 };
-const MySnackbarContentWrapper = withStyles(styles)(MySnackbarContent);
+const StyledSnackbar = withStyles(styles)(ClientSnackbar);
 
-const MeterUpdateErrorSnackbar = ({ error, resetError }) => {
+export const ErrorSnackbar = ({ error, resetError }) => {
   const hasError = error && error.message;
 
   return (
@@ -78,10 +78,7 @@ const MeterUpdateErrorSnackbar = ({ error, resetError }) => {
         resetError();
       }}
     >
-      <MySnackbarContentWrapper
-        onClose={() => {
-          resetError();
-        }}
+      <StyledSnackbar onClose={() => resetError()}
         variant="error"
         message={hasError && error.message}
       />
@@ -89,7 +86,7 @@ const MeterUpdateErrorSnackbar = ({ error, resetError }) => {
   );
 };
 
-MeterUpdateErrorSnackbar.propTypes = {
+ErrorSnackbar.propTypes = {
   error: PropTypes.object,
   resetError: PropTypes.func.isRequired
 };
@@ -109,4 +106,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(MeterUpdateErrorSnackbar);
+)(ErrorSnackbar);

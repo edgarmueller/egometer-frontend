@@ -18,7 +18,7 @@ import {
   isMetersLoading
 } from "../../reducers";
 import widgets from "../../widgets";
-import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
+import ErrorSnackbar from "../common/ErrorSnackbar";
 import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import WeekPicker from "./WeekPicker";
@@ -81,7 +81,7 @@ export class WeeklyDashboard extends React.Component {
 
     return (
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <UpdateEntryErrorSnackbar />
+        <ErrorSnackbar />
         <div
           style={{ display: "flex", flexDirection: "column" }}
           className={classes.monthMatrix}

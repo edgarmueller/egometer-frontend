@@ -15,7 +15,7 @@ import { getMeters } from "../../reducers";
 import Widget from "../../components/common/Widget";
 import widgets from "../../widgets";
 import { fetchEntriesPerMonthRequest, fetchMeters } from "../../actions";
-import UpdateEntryErrorSnackbar from "../common/UpdateEntryErrorSnackbar";
+import ErrorSnackbar from "../common/ErrorSnackbar";
 import { calcProgress } from "../../common/progress";
 
 const styles = {
@@ -138,7 +138,7 @@ export class DailyDashboard extends Component {
             small={true}
           />
         </div>
-        <UpdateEntryErrorSnackbar />
+        <ErrorSnackbar />
         <div style={{ maxWidth: 600, margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
           {meterWidgets}
         </div>
