@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useCallback, useState, useReducer } from "react";
 import _ from "lodash";
 import { connect } from "react-redux";
 import { compose } from "recompose";
@@ -16,13 +16,14 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import { Switch } from "@material-ui/core";
 import ColorPicker from "../common/ColorPicker";
 import { deleteMeter, updateMeter, updateMeterRequest } from "../../actions";
-import * as api from "../../api";
 import { display1 } from "../../common/styles";
 import {
   getMeters,
   isFetchingMeters,
-  findBySchemaId as _findBySchemaId
+  getMeterError,
 } from "../../reducers";
+import { findBySchemaId } from "../../reducers/schemas";
+import { ErrorSnackbar } from "../common/ErrorSnackbar";
 
 
 const styles = theme => ({
@@ -54,191 +55,148 @@ const isNumberSchema = schema => {
   return schema && schema.type === "number";
 };
 
-export class Meters extends React.Component {
+const metersById = meters => {
+  return meters.reduce((acc, m) => {
+    acc[m.id] = m;
+    return acc
+  }, {})
+}
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: undefined,
-      editSchema: undefined,
-      open: false,
-      names: {}
-    };
-    this.deleteMeter = this.deleteMeter.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+const UPDATE_ALL = 'UPDATE_ALL'
+const UPDATE_SINGLE = 'UPDATE_SINGLE'
+
+const updateLocalMeter = (state, meterId, propName, propValue) => {
+  return {
+    ...state,
+    [meterId]: {
+      ...state[meterId],
+      [propName]: propValue
+    }
   }
+}
 
-  handleUpdateName = meter => ev => {
-    this.setState({
-      names: {
-        ...this.state.names,
-        [meter.id]: ev.target.value
-      }
-    })
-    this.props.updateMeterRequest({
+const localMeterReducer = (state, action) => {
+  switch (action.type) {
+    case UPDATE_ALL:
+      return action.payload;
+    case UPDATE_SINGLE:
+      return updateLocalMeter(state, action.id, action.propName, action.payload);
+    default:
+      return state;
+  }
+}
+
+const valueOf = state => (meterId, propName) => {
+  return _.get(state, [meterId + '', propName]) || '';
+}
+
+export const Meters = ({ classes, deleteMeter, meters, updateMeterRequest, isFetchingMeters, schemas, meterError }) => {
+
+  const [state, dispatch] = useReducer(localMeterReducer, {
+    meterById: metersById(meters)
+  });
+  const [open, setOpen] = useState(false);
+  const handleUpdateMeter = useCallback((meter, propName, propValue) => {
+    dispatch({ type: UPDATE_SINGLE, id: meter.id, propName, payload: propValue });
+    updateMeterRequest({
       ...meter,
-      name: ev.target.value
+      [propName]: propValue
     })
+  })
+
+  const handleDeleteMeter = useCallback(meter => () => deleteMeter(meter.id))
+  useEffect(() => dispatch({ type: UPDATE_ALL, payload: metersById(meters) }), [meters])
+
+  if (isFetchingMeters) {
+    return <div>Loading meters</div>;
   }
 
-  updateMeter = (meter) => {
-    return api.updateMeter(meter)
-      .then(() => {
-        this.setState({
-          updating: false
-        })
-      })
-  }
-
-  updateColor = color => {
-    this.setState({ color });
-  };
-
-  deleteMeter(meter) {
-    this.props.deleteMeter(meter.id);
-  }
-
-  handleClose() {
-    this.setState({ open: false });
-  }
-
-  updateNames = () => {
-    const names = this.props.meters.reduce((acc, m) => {
-      acc[m.id] = m.name;
-      return acc
-    }, {})
-    this.setState({ names })
-  }
-
-  componentDidMount(prevProps) {
-
-    this.updateNames();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (!_.isEqual(prevProps.meters, this.props.meters)) {
-      this.updateNames();
-    }
-  }
-
-  render() {
-    const { classes, meters, updateMeter, isFetchingMeters, findBySchemaId } = this.props;
-
-    if (isFetchingMeters) {
-      return <div>Loading meters</div>;
-    }
-
-    return (
-      <div>
-        <Typography variant="display1" className={classes.display1}>
-          Manage Meters
+  return (
+    <div>
+      <ErrorSnackbar error={meterError} resetError={() => { }} />
+      <Typography variant="display1" className={classes.display1}>
+        Manage Meters
         </Typography>
-        <Paper className={classes.root}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell>Actions</TableCell>
-                <TableCell>Daily Goal</TableCell>
-                <TableCell>Weekly Goal</TableCell>
-                <TableCell>Color</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {meters ? (
-                meters.map(meter => {
-                  return (
-                    <TableRow key={meter.id}>
-                      <TableCell colSpan={3}>
+      <Paper className={classes.root}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell>Actions</TableCell>
+              <TableCell>Daily Goal</TableCell>
+              <TableCell>Weekly Goal</TableCell>
+              <TableCell>Color</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {meters ? (
+              meters.map(meter => {
+                return (
+                  <TableRow key={meter.id}>
+                    <TableCell colSpan={3}>
+                      <TextField
+                        margin="dense"
+                        variant="outlined"
+                        value={valueOf(state)(meter.id, 'name')}
+                        onChange={ev => handleUpdateMeter(meter, 'name', ev.target.value)}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <IconButton
+                        aria-label="Delete meter"
+                        onClick={handleDeleteMeter(meter)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>
+                      {isNumberSchema(findBySchemaId(schemas, meter.schemaId)) ? (
                         <TextField
-                          margin="dense"
-                          variant="outlined"
-                          value={_.has(this.state.names, meter.id) ? this.state.names[meter.id] : ''}
-                          onChange={this.handleUpdateName(meter)}
+                          value={valueOf(state)(meter.id, 'dailyGoal')}
+                          onChange={ev => handleUpdateMeter(meter, 'dailyGoal', ev.target.value)}
                         />
-                      </TableCell>
-                      <TableCell>
-                        <IconButton
-                          aria-label="Delete meter"
-                          onClick={() => this.deleteMeter(meter)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                      <TableCell>
-                        {isNumberSchema(findBySchemaId(meter.schemaId)) ? (
-                          <TextField
-                            value={meter.dailyGoal || ""}
-                            onChange={ev => {
-                              this.props.updateMeter({
-                                ...meter,
-                                dailyGoal: Number(ev.target.value)
-                              });
-                            }}
+                      ) : (
+                          <Switch
+                            checked={valueOf(state)(meter.id, 'dailyGoal') > 0}
+                            onChange={(ev, goal) => handleUpdateMeter(meter, 'dailyGoal', goal ? 1 : 0)}
                           />
-                        ) : (
-                            <Switch
-                              checked={meter.dailyGoal > 0}
-                              onChange={(ev, value) => {
-                                updateMeter({
-                                  ...meter,
-                                  dailyGoal: value ? 1 : 0
-                                });
-                              }}
-                            />
-                          )}
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          value={meter.weeklyGoal || ""}
-                          onChange={ev => {
-                            updateMeter({
-                              ...meter,
-                              weeklyGoal: Number(ev.target.value)
-                            });
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <ColorPicker
-                          color={meter.color}
-                          onChange={this.updateColor}
-                          onChangeComplete={color => {
-                            updateMeter({
-                              ...meter,
-                              color
-                            })
-                          }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })
-              ) : (
-                  <TableRow>
-                    <TableCell>No meters defined yet</TableCell>
+                        )}
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        value={valueOf(state)(meter.id, 'weeklyGoal')}
+                        onChange={ev => handleUpdateMeter(meter, 'weeklyGoal', Number(ev.target.value))}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <ColorPicker
+                        color={valueOf(state)(meter.id, 'color')}
+                        onChange={() => { }}
+                        onChangeComplete={color => handleUpdateMeter(meter, 'color', color)}
+                      />
+                    </TableCell>
                   </TableRow>
-                )}
-            </TableBody>
-          </Table>
-        </Paper>
-      </div>
-    );
-  }
+                );
+              })
+            ) : (
+                <TableRow>
+                  <TableCell>No meters defined yet</TableCell>
+                </TableRow>
+              )}
+          </TableBody>
+        </Table>
+      </Paper>
+    </div>
+  );
 }
 
 const mapStateToProps = state => ({
   meters: getMeters(state),
   isFetchingMeters: isFetchingMeters(state),
-  findBySchemaId(schemaId) {
-    const foundSchema = _findBySchemaId(schemaId)(state);
-    if (foundSchema !== undefined) {
-      return foundSchema.schema;
-    }
-    return undefined;
-  }
+  schemas: state.schemas,
+  meterError: getMeterError(state)
 });
 
 export default compose(

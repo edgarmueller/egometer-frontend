@@ -1,4 +1,4 @@
-import React, { Fragment  } from "react";
+import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { SketchPicker } from "react-color";
@@ -37,6 +37,12 @@ export class ColorPicker extends React.Component {
       open: false,
       color: props.color
     };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.color !== prevProps.color) {
+      this.setState({ color: this.props.color })
+    }
   }
 
   handleClick = () => {
