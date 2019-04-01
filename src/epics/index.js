@@ -126,7 +126,7 @@ export function updateEntryDebounceEpic(action$, store, deps) {
 export function updateMeterDebounceEpic(action$, store, deps) {
   return action$
     .ofType(UPDATE_METER_REQUEST)
-    .debounceTime(250)
+    .debounceTime(500)
     .switchMap(({ meter }) => {
       return Observable.fromPromise(deps.api.updateMeter(meter))
         .flatMap(resp => {
