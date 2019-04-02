@@ -7,19 +7,19 @@ import * as actions from "../../actions";
 import { findBySchemaId, getMeters } from "../../reducers";
 import widgets from "../../widgets";
 import { createProgressSuccessColor } from "../../common/color";
-import NoWidgetFound from './NoWidgetFound';
+import NoWidgetFound from "./NoWidgetFound";
 
 export class Widget extends React.Component {
-
   constructor(props) {
     super(props);
     const { date, widgets, meter, progress, widgetType } = props;
     const widget = widgets.find(widget => widget.name === meter.widget);
-    const dailyGoalHit = progress && progress.entries.find(e => e.date === date) !== undefined
+    const dailyGoalHit =
+      progress && progress.entries.find(e => e.date === date) !== undefined;
     this.state = {
-      widget: widget[widgetType],
+      widget: _.has(widget, widgetType) ? widget[widgetType] : undefined,
       dailyGoalHit
-    }
+    };
   }
 
   updateEntry = (value, shouldDebounce) => {
@@ -28,7 +28,15 @@ export class Widget extends React.Component {
   };
 
   shouldComponentUpdate(nextProps) {
-    const { data, date, meter, width, height, isLoading, progress } = this.props;
+    const {
+      data,
+      date,
+      meter,
+      width,
+      height,
+      isLoading,
+      progress
+    } = this.props;
     return (
       !_.isEqual(nextProps.data, data) ||
       !_.isEqual(nextProps.meter, meter) ||
@@ -43,17 +51,21 @@ export class Widget extends React.Component {
   updateWidget = () => {
     const { meter, widgetType, widgets } = this.props;
     const widget = widgets.find(widget => widget.name === meter.widget);
-    this.setState({ widget: widget[widgetType] })
-  }
+    if (widget) {
+      this.setState({ widget: widget[widgetType] });
+    } else {
+      this.setState({ widget: undefined });
+    }
+  };
 
   updateGoal = () => {
     const { date, progress } = this.props;
     if (progress) {
       this.setState({
         dailyGoalHit: progress.entries.find(e => e.date === date) !== undefined
-      })
+      });
     }
-  }
+  };
 
   componentDidMount() {
     this.updateWidget();
@@ -68,18 +80,11 @@ export class Widget extends React.Component {
 
     if (!_.isEqual(progress, prevProps.progress) || date !== prevProps.date) {
       this.updateGoal();
-    };
+    }
   }
 
   render() {
-    const {
-      date,
-      data,
-      meter,
-      schema,
-      isLoading,
-      widgetType,
-    } = this.props;
+    const { date, data, meter, schema, isLoading, widgetType } = this.props;
 
     const { dailyGoalHit, widget } = this.state;
 
@@ -95,7 +100,11 @@ export class Widget extends React.Component {
     const WidgetComponent = widget;
 
     return (
-      <div style={{ backgroundColor: dailyGoalHit ? createProgressSuccessColor(1) : null }}>
+      <div
+        style={{
+          backgroundColor: dailyGoalHit ? createProgressSuccessColor(1) : null
+        }}
+      >
         <WidgetComponent
           icon={widget.icon}
           isLoading={isLoading}
@@ -121,7 +130,7 @@ Widget.propTypes = {
   loadingStatus: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
     meterId: PropTypes.string
-  }),
+  })
 };
 
 Widget.defaultProps = {
@@ -132,7 +141,7 @@ const mapStateToProps = (state, ownProps) => {
   const foundSchema = findBySchemaId(ownProps.meter.schemaId)(state);
   return {
     meters: getMeters(state),
-    schema: _.get(foundSchema, 'schema'),
+    schema: _.get(foundSchema, "schema"),
     ...ownProps
   };
 };
