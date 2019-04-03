@@ -78,7 +78,6 @@ export const MoodMeter = {
   month: labelProvider(EnumLineChart),
   cell: withMoodImageAndLabelProvider(EnumCell),
   isApplicable: schema => (isString(schema) && isEnum(schema) ? 2 : -1),
-  h: 1
 };
 
 export default MoodMeter;

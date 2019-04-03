@@ -31,8 +31,8 @@ The monthly dashboard actually consists of two components, one is a calendar-lik
 
 ## Meter format
 
-A meter basically describes what data format is used (via a reference to a schema, see the `schemaId` proeprty) and how it should be displayed (via the `visualization` and `color` properties).
-Meters are displayed on the client via what is called a 'widget'. A widget is linked to a meter instance via its `schemaId` and `name` properties. These properties must match the `schemaId` and `visualization` properties of the meter.
+A meter basically describes what data format is used (via a reference to a schema, see the `schemaId` proeprty) and how it should be displayed (via the `widget` and `color` properties).
+Meters are displayed on the client via what is called a 'widget'. A widget is linked to a meter instance via its `schemaId` and `name` properties. These properties must match the `schemaId` and `widget` properties of the meter.
 
 ## Widget format
 
@@ -44,11 +44,10 @@ The following is a list of all available properites of a widget:
 - `month`: the visualization component for the monthly dashboard; typically used for displaying the data in an aggregated view
 - `cell`: the visualization component that is used per cell within the calendar view of a month
 - `isApplicable`: determines whether the widget can display a given schema (currently unused)
-- `h`: configures the height of the widget on the daily dashboard
 - `name`: the name of the widget
 - `label`: the label that is used to display the widget within the `AddMeterDialog`
 - `icon`: a React element that displays an icon for the widget within the `AddMeterDialog`
-- `category`: the category this widget belongs to, e.g. 'health' or 'work'. This is used within the `AddMeterDialog` to categorize meters
+- `category`: the category this widget belongs to, e.g. 'health' or 'work'. Used while adding a meter to categorize meters
 
 All available meters for the entire app are configured within `widgets/index.js`.
 

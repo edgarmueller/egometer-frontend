@@ -13,8 +13,7 @@ export const journalVis = {
   day: StringWidget,
   month: undefined,
   cell: StringCell,
-  isApplicable: s => (isString(s) ? 1 : -1),
-  h: 2
+  isApplicable: s => (isString(s) ? 1 : -1)
 };
 
 export default journalVis;

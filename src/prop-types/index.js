@@ -40,7 +40,6 @@ export const widgetPropTypes = PropTypes.shape({
   cell: componentPropType,
   day: componentPropType,
   month: componentPropType,
-  h: PropTypes.number,
   icon: PropTypes.node,
   isApplicable: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,

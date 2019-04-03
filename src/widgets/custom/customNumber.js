@@ -6,8 +6,7 @@ const CustomNumberWidget = {
   ...numberWidget,
   name: "Number",
   label: "number",
-  icon: <Icon />,
-  category: "Custom"
+  icon: <Icon />
 };
 
 export default CustomNumberWidget;

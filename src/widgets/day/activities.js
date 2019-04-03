@@ -64,8 +64,7 @@ const ActivitiesMeter = {
   cell: withImageProvider(
     withLabels(defaultLiteralLabelProvider)(MultiEnumCell)
   ),
-  isApplicable: s => (isArray(s) ? 1 : -1),
-  h: 2.5
+  isApplicable: s => (isArray(s) ? 1 : -1)
 };
 
 export default ActivitiesMeter;
