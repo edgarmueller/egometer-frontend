@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import * as _ from "lodash";
 import { compose, withProps } from "recompose";
+import Ionicon from "react-ionicons";
 import * as actions from "../../actions";
 import { findBySchemaId, getMeters } from "../../reducers";
 import widgets from "../../widgets";
@@ -106,7 +107,9 @@ export class Widget extends React.Component {
         }}
       >
         <WidgetComponent
-          icon={widget.icon}
+          icon={
+            widget.icon || (meter.icon ? <Ionicon icon={meter.icon} /> : null)
+          }
           isLoading={isLoading}
           meter={meter}
           date={date}
