@@ -9,12 +9,14 @@ export const createErrorMsg = msgs => {
 
 export const checkToken = dispatch => {
   const token = localStorage.getItem("egometer.token");
+  const role = localStorage.getItem("egometer.role");
   if (token) {
     api.testToken(token).then(
       () =>
         dispatch({
           type: USER_LOGIN_SUCCESS,
-          token
+          token,
+          role
         }),
       () => {
         console.log("Token outdated, removing it.", token);
