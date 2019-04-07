@@ -153,7 +153,7 @@ const icons = [
   "md-thermometer",
   "md-thumbs-down",
   "md-thumbs-up",
-  "md-thunderstorem",
+  "md-thunderstorm",
   "md-time",
   "md-train",
   "md-transgender",
