@@ -36,13 +36,6 @@ const schemaReducer = (state = initialState, action) => {
 
 export const getSchemas = state => state.schemas;
 export const getSchemaError = state => state.error;
-export const findBySchemaId = schemaId => state => {
-  const result = _.filter(state.schemas, schema => schema.id === schemaId);
-  if (result.length > 0) {
-    return _.head(result);
-  }
-  return undefined;
-};
 export const getIsSchemasLoading = state => state.isPending;
 export const findBySchemaName = schemaName => state => {
   const result = _.filter(state.schemas, schema => schema.name === schemaName);

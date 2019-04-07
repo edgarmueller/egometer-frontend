@@ -41,6 +41,11 @@ const Charts = ({
       {meterWidgets.map(({ meter, widget }) => {
         const data = entries[meter.id];
         const schema = findBySchemaId(meter.schemaId);
+
+        if (schema === undefined) {
+          return null;
+        }
+
         const Chart = widget;
         return (
           <div key={meter.name}>

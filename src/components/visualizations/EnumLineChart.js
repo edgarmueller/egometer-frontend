@@ -44,7 +44,7 @@ class EnumLineChart extends React.Component {
           <XAxis
             title="Date"
             tickValues={days.map((d, i) => i)}
-            tickFormat={(value, index) => labels[index] }
+            tickFormat={(value, index) => labels[index]}
           />
           <YAxis
             title={meter.name}

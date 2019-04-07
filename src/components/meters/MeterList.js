@@ -29,7 +29,7 @@ import ColorPicker from "../common/ColorPicker";
 import { deleteMeter, updateMeter, updateMeterRequest } from "../../actions";
 import { display1 } from "../../common/styles";
 import { getMeters, isFetchingMeters, getMeterError } from "../../reducers";
-import { findBySchemaId } from "../../reducers/schemas";
+import { findBySchemaId } from "../../utils";
 import { ErrorSnackbar } from "../common/ErrorSnackbar";
 
 const icons = [
@@ -280,7 +280,7 @@ export const Meters = ({
 
   return (
     <div>
-      <ErrorSnackbar error={meterError} resetError={() => {}} />
+      <ErrorSnackbar error={meterError} resetError={() => { }} />
       <Typography variant="display1" className={classes.display1}>
         Manage Meters
       </Typography>
@@ -325,24 +325,24 @@ export const Meters = ({
                       {isNumberSchema(
                         findBySchemaId(schemas, meter.schemaId)
                       ) ? (
-                        <TextField
-                          value={valueOf(state)(meter.id, "dailyGoal")}
-                          onChange={ev =>
-                            handleUpdateMeter(
-                              meter,
-                              "dailyGoal",
-                              ev.target.value
-                            )
-                          }
-                        />
-                      ) : (
-                        <Switch
-                          checked={valueOf(state)(meter.id, "dailyGoal") > 0}
-                          onChange={(ev, goal) =>
-                            handleUpdateMeter(meter, "dailyGoal", goal ? 1 : 0)
-                          }
-                        />
-                      )}
+                          <TextField
+                            value={valueOf(state)(meter.id, "dailyGoal")}
+                            onChange={ev =>
+                              handleUpdateMeter(
+                                meter,
+                                "dailyGoal",
+                                ev.target.value
+                              )
+                            }
+                          />
+                        ) : (
+                          <Switch
+                            checked={valueOf(state)(meter.id, "dailyGoal") > 0}
+                            onChange={(ev, goal) =>
+                              handleUpdateMeter(meter, "dailyGoal", goal ? 1 : 0)
+                            }
+                          />
+                        )}
                     </TableCell>
                     <TableCell>
                       <TextField
@@ -359,7 +359,7 @@ export const Meters = ({
                     <TableCell>
                       <ColorPicker
                         color={valueOf(state)(meter.id, "color")}
-                        onChange={() => {}}
+                        onChange={() => { }}
                         onChangeComplete={color =>
                           handleUpdateMeter(meter, "color", color)
                         }
@@ -375,18 +375,18 @@ export const Meters = ({
                         {meter.icon ? (
                           <Ionicon icon={meter.icon} />
                         ) : (
-                          "Set icon"
-                        )}
+                            "Set icon"
+                          )}
                       </Button>
                     </TableCell>
                   </TableRow>
                 );
               })
             ) : (
-              <TableRow>
-                <TableCell>No meters defined yet</TableCell>
-              </TableRow>
-            )}
+                <TableRow>
+                  <TableCell>No meters defined yet</TableCell>
+                </TableRow>
+              )}
           </TableBody>
         </Table>
         <Dialog

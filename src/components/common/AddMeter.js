@@ -7,8 +7,9 @@ import Typography from "@material-ui/core/Typography";
 
 import Category from "../daily/Category";
 import widgets from "../../widgets";
-import { getSchemas, findBySchemaName } from "../../reducers";
+import { getSchemas } from "../../reducers";
 import * as api from "../../api";
+import { findBySchemaName } from "../../utils";
 
 const filterApplicableWidgets = (widgets, schema) => {
   return _.filter(widgets, widget => widget.isApplicable(schema) > -1);
@@ -41,8 +42,12 @@ export class AddMeter extends React.PureComponent {
     );
   };
 
+  findSchema = (schemaName) => {
+    return findBySchemaName(this.props.schemas, schemaName);
+  }
+
   render() {
-    const { findBySchemaName, widgets, schemas } = this.props;
+    const { widgets, schemas } = this.props;
 
     const widgetsByCategory = _.groupBy(
       _.map(widgets, widget => {
@@ -93,23 +98,22 @@ export class AddMeter extends React.PureComponent {
               widgets={widgetsPerCategory[category]}
               category={category}
               schemas={schemas}
-              findBySchemaName={findBySchemaName}
+              findBySchemaName={this.findSchema}
               handleSubmit={this.handleSubmit}
               drawTitle
             />
           ))
         ) : (
-          <Typography variant="body1">
-            Sorry, no widgets seem applicable
+            <Typography variant="body1">
+              Sorry, no widgets seem applicable
           </Typography>
-        )}
+          )}
       </div>
     );
   }
 }
 
 AddMeter.propTypes = {
-  findBySchemaName: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   widgets: PropTypes.array.isRequired
 };
@@ -119,10 +123,7 @@ AddMeter.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  schemas: getSchemas(state),
-  findBySchemaName(schemaName) {
-    return findBySchemaName(schemaName)(state);
-  }
+  schemas: getSchemas(state)
 });
 
 export default compose(

@@ -5,7 +5,8 @@ import * as _ from "lodash";
 import { compose, withProps } from "recompose";
 import Ionicon from "react-ionicons";
 import * as actions from "../../actions";
-import { findBySchemaId, getMeters } from "../../reducers";
+import { getMeters, getSchemas } from "../../reducers";
+import { findBySchemaId } from "../../utils"
 import widgets from "../../widgets";
 import { createProgressSuccessColor } from "../../common/color";
 import NoWidgetFound from "./NoWidgetFound";
@@ -141,10 +142,10 @@ Widget.defaultProps = {
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const foundSchema = findBySchemaId(ownProps.meter.schemaId)(state);
+  const foundSchema = findBySchemaId(getSchemas(state), ownProps.meter.schemaId);
   return {
     meters: getMeters(state),
-    schema: _.get(foundSchema, "schema"),
+    schema: foundSchema,
     ...ownProps
   };
 };

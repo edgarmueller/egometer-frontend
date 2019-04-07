@@ -13,8 +13,6 @@ import {
   getMeters,
   getMeterError,
   getSchemaError,
-  findMeterById as _findMeterById,
-  findBySchemaId as _findBySchemaId,
   isSchemasLoading,
   isMetersLoading
 } from "../../reducers";
@@ -24,6 +22,8 @@ import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import MatrixContainer from "../../containers/MatrixContainer";
 import { daysOfMonth } from "../../common/date";
+import { findBySchemaId } from "../../utils"
+import { getSchemas } from "../../reducers";
 
 const styles = {
   monthMatrix: {
@@ -50,6 +50,10 @@ export class MonthlyDashboard extends React.Component {
     this.props.fetchEntries(
       `${this.state.year}-${this.state.month}-${moment().date()}`
     );
+  }
+
+  findSchema = (schemaId) => {
+    return findBySchemaId(this.props.schemas, schemaId);
   }
 
   render() {
@@ -104,6 +108,7 @@ export class MonthlyDashboard extends React.Component {
             year={this.state.year}
             month={this.state.month}
             child={MonthMatrix}
+            findBySchemaId={this.findSchema}
             {...otherProps}
           />
         </div>
@@ -130,17 +135,8 @@ const mapStateToProps = state => {
       isSchemasLoading(state),
     meters: getMeters(state),
     entries: state.entries.entries,
-    findMeterById(meterId) {
-      return _findMeterById(meterId)(state);
-    },
-    error: getMeterError(state) || getSchemaError(state),
-    findBySchemaId(schemaId) {
-      const foundSchema = _findBySchemaId(schemaId)(state);
-      if (foundSchema !== undefined) {
-        return foundSchema.schema;
-      }
-      return undefined;
-    }
+    schemas: getSchemas(state),
+    error: getMeterError(state) || getSchemaError(state)
   };
 };
 

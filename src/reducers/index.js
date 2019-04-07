@@ -7,7 +7,6 @@ import {
   getIsMetersLoading
 } from "./meters";
 import {
-  findBySchemaId as _findBySchemaId,
   findBySchemaName as _findBySchemaName,
   getSchemaError as _getSchemaError,
   getIsSchemasLoading
@@ -37,8 +36,6 @@ export const findMeterById = meterId => state =>
 export const getSchemas = state => state.schemas.schemas;
 export const getSchemaError = state => _getSchemaError(state.schemas);
 export const isFetchingSchemas = state => state.schemas.isPending;
-export const findBySchemaId = schemaId => state =>
-  _findBySchemaId(schemaId)(state.schemas);
 export const findBySchemaName = schemaName => state =>
   _findBySchemaName(schemaName)(state.schemas);
 

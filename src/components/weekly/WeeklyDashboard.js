@@ -12,11 +12,10 @@ import {
   getMeters,
   getMeterError,
   getSchemaError,
-  findMeterById as _findMeterById,
-  findBySchemaId as _findBySchemaId,
   isSchemasLoading,
   isMetersLoading
 } from "../../reducers";
+import { findBySchemaId } from "../../utils"
 import widgets from "../../widgets";
 import ErrorSnackbar from "../common/ErrorSnackbar";
 import * as actions from "../../actions";
@@ -24,6 +23,7 @@ import Loading from "../common/Loading";
 import WeekPicker from "./WeekPicker";
 import Charts from "../monthly/Charts";
 import { findMonday, daysOfWeek } from "../../common/date";
+import { getSchemas } from "../../reducers";
 
 const styles = {
   monthMatrix: {
@@ -53,6 +53,10 @@ export class WeeklyDashboard extends React.Component {
     );
   }
 
+  findSchema = (schemaId) => {
+    return findBySchemaId(this.props.schemas, schemaId)
+  }
+
   render() {
     const {
       classes,
@@ -62,7 +66,6 @@ export class WeeklyDashboard extends React.Component {
       isLoading,
       meters,
       entries,
-      findBySchemaId,
       ...otherProps
     } = this.props;
 
@@ -105,7 +108,7 @@ export class WeeklyDashboard extends React.Component {
               year={this.state.year}
               month={this.state.month}
               child={WeeklyMatrix}
-              findBySchemaId={findBySchemaId}
+              findBySchemaId={this.findSchema}
               meters={meters}
               entries={entries}
               {...otherProps}
@@ -115,7 +118,7 @@ export class WeeklyDashboard extends React.Component {
             isLoading={isLoading}
             days={this.state.days}
             entries={entries}
-            findBySchemaId={findBySchemaId}
+            findBySchemaId={this.findSchema}
             meters={meters}
             widgets={widgets}
             width={window.innerWidth / 2}
@@ -144,17 +147,8 @@ const mapStateToProps = state => {
       isSchemasLoading(state),
     meters: getMeters(state),
     entries: state.entries.entries,
-    findMeterById(meterId) {
-      return _findMeterById(meterId)(state);
-    },
     error: getMeterError(state) || getSchemaError(state),
-    findBySchemaId(schemaId) {
-      const foundSchema = _findBySchemaId(schemaId)(state);
-      if (foundSchema !== undefined) {
-        return foundSchema.schema;
-      }
-      return undefined;
-    }
+    schemas: getSchemas(state)
   };
 };
 
