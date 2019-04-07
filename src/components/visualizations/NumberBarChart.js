@@ -33,10 +33,24 @@ class NumberBarChart extends React.Component {
         y: entry ? entry.value : 0
       };
     });
+    const valuesOnly = values.map(({ x, y }) => y);
     const labels = days.map(day => day.getDate().toString());
 
     return (
-      <div>
+      <div style={{ display: "flex" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center"
+          }}
+        >
+          <span>
+            <strong>Average</strong>: {_.round(_.sum(valuesOnly) / valuesOnly.length, 2)}
+          </span>
+          <span><strong>Min</strong>: {_.min(valuesOnly)}</span>
+          <span><strong>Max</strong>: {_.max(valuesOnly)}</span>
+        </div>
         <XYPlot width={width} height={250} color="#20211f">
           <HorizontalGridLines />
           <VerticalGridLines />
