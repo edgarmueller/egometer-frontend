@@ -35,12 +35,13 @@ export class ConnectedComponent extends React.PureComponent {
     }
   };
 
+  handleOnBlur() {
+    this.submitEntry();
+  }
+
   handleOnKeyDown = ev => {
-    const { updateEntry, fromEvent, shouldDebounce } = this.props;
+    const { fromEvent } = this.props;
     const newValue = fromEvent(ev);
-    if (ev.key === "Enter") {
-      updateEntry(newValue, shouldDebounce);
-    }
     this.setState({ text: newValue });
   };
 
@@ -61,6 +62,7 @@ export class ConnectedComponent extends React.PureComponent {
         {children({
           handleOnChange: this.handleOnChange,
           handleOnKeyDown: this.handleOnKeyDown,
+          handleOnBlur: this.handleOnBlur,
           data: this.state.text,
           submitEntry: this.submitEntry,
           reset: this.reset

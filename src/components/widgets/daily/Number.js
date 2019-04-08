@@ -48,7 +48,7 @@ export class DailyNumber extends React.Component {
         updateOnChange
         updateEntry={updateEntry}
       >
-        {({ handleOnChange, data: number }) => {
+        {({ handleOnChange, handleOnBlur, data: number }) => {
           return (
             <div
               style={{
@@ -63,6 +63,7 @@ export class DailyNumber extends React.Component {
                 variant="outlined"
                 value={number}
                 onChange={handleOnChange}
+                onBlur={handleOnBlur}
                 inputProps={{
                   pattern: "[0-9]+([.,][0-9]+)?"
                 }}

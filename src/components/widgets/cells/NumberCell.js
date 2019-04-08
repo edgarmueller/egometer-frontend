@@ -20,27 +20,18 @@ const styles = {
 class NumberInput extends React.PureComponent {
   ref = React.createRef();
 
-  constructor(props) {
-    super(props);
-    this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
-    this.handleOnBlur = this.handleOnBlur.bind(this);
-    this.handleOnChange = this.handleOnChange.bind(this);
-  }
-
-  handleOnKeyDown(ev) {
+  handleOnKeyDown = ev => {
     this.props.handleOnKeyDown(ev);
     ev.key === "Enter" && this.ref.current.blur();
-  }
+  };
 
-  handleOnBlur() {
-    if (_.isNumber(this.props.data)) {
-      this.props.submitEntry();
-    }
-  }
-
-  handleOnChange(ev) {
+  handleOnChange = ev => {
     this.props.handleOnChange(ev);
-  }
+  };
+
+  handleOnBlur = ev => {
+    this.props.handleOnBlur(ev);
+  };
 
   render() {
     const { classes, data, color, style } = this.props;
@@ -81,6 +72,7 @@ class NumberCell extends React.Component {
         updateOnChange={false}
         isLoading={isLoading}
         fromEvent={ev => _.toNumber(ev.target.value)}
+        shouldDebounce
       >
         {props => <StyledNumberInput {...props} color={color} style={style} />}
       </ConnectedComponent>

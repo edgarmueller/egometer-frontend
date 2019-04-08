@@ -60,7 +60,9 @@ describe("Generic Cell", () => {
     );
     wrapper
       .find("input")
-      .simulate("keydown", { key: "Enter", target: { value: "42" } });
+      .simulate('focus')
+      .simulate("keydown", { key: "Enter", target: { value: "42" } })
+      .simulate('blur')
     expect(didUpdate).toBe(true);
     wrapper.unmount();
   });
