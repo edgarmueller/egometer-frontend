@@ -12,6 +12,40 @@ import {
   VerticalBarSeries
 } from "react-vis";
 import { findByDate } from "../../common/date";
+import { green, red } from "../../common/color";
+
+const Stats = ({ meter, values }) => {
+  const nonZeros = values.filter(x => x > 0);
+  const avg = _.round(_.sum(values) / nonZeros.length, 2);
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center"
+      }}
+    >
+      <span
+        style={{
+          color: isNaN(avg) ? null : avg > meter.dailyGoal ? green : red
+        }}
+      >
+        <strong>Average</strong>: {_.isNaN(avg) ? "N/A" : avg}
+      </span>
+      <span>
+        <strong>Min</strong>: {nonZeros.length > 0 ? _.min(nonZeros) : "N/A"}
+      </span>
+      <span>
+        <strong>Max</strong>: {nonZeros.length > 0 ? _.max(nonZeros) : "N/A"}
+      </span>
+    </div>
+  );
+};
+
+Stats.propTypes = {
+  meter: PropTypes.object.isRequired,
+  values: PropTypes.array
+};
 
 class NumberBarChart extends React.Component {
   shouldComponentUpdate(nextProps) {
@@ -33,24 +67,11 @@ class NumberBarChart extends React.Component {
         y: entry ? entry.value : 0
       };
     });
-    const valuesOnly = values.map(({ x, y }) => y);
     const labels = days.map(day => day.getDate().toString());
 
     return (
       <div style={{ display: "flex" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center"
-          }}
-        >
-          <span>
-            <strong>Average</strong>: {_.round(_.sum(valuesOnly) / valuesOnly.length, 2)}
-          </span>
-          <span><strong>Min</strong>: {_.min(valuesOnly)}</span>
-          <span><strong>Max</strong>: {_.max(valuesOnly)}</span>
-        </div>
+        <Stats meter={meter} values={values.map(({ x, y }) => y)} />
         <XYPlot width={width} height={250} color="#20211f">
           <HorizontalGridLines />
           <VerticalGridLines />

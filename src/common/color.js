@@ -58,16 +58,20 @@ export const createColor = (
   return "#fff";
 };
 
-export const createProgressSuccessColor = alpha => `rgba(144, 238, 144, ${alpha})`;
+export const createProgressSuccessColor = alpha =>
+  `rgba(129, 199, 132, ${alpha})`;
 
 export const getProgressColor = (progressEntry, alpha) => {
   if (progressEntry) {
     const { progress } = progressEntry;
     if (progress >= 0.5 && progress < 1) {
-      return `rgba(247, 247, 183, ${alpha})`;
+      return `rgba(244, 67, 54, ${alpha})`;
     } else if (progress >= 1) {
-      return createProgressSuccessColor(alpha)
+      return createProgressSuccessColor(alpha);
     }
   }
   return null;
 };
+
+export const green = "#81c784";
+export const red = "#f44336";
