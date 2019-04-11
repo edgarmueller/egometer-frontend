@@ -16,7 +16,7 @@ export function daysOfMonth(year, month) {
   const lastDay = new Date(year, month, 0).getDate();
   for (let i = 1; i <= lastDay; i++) {
     const d = new Date(year, month - 1, i);
-    days.push(d)
+    days.push(d);
   }
   return days;
 }
@@ -66,4 +66,8 @@ export function findByDate(data, desiredDate) {
     const day = Number(date.substr(date.lastIndexOf("-") + 1, date.length));
     return day === desiredDate;
   });
+}
+
+export function lastDayOfMonth(month, year) {
+  return new Date(year, month, 0).getDate();
 }
