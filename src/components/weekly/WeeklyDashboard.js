@@ -121,6 +121,7 @@ export class WeeklyDashboard extends React.Component {
             findBySchemaId={this.findSchema}
             meters={meters}
             widgets={widgets}
+            widgetType='week'
             width={window.innerWidth / 2}
           />
         </div>

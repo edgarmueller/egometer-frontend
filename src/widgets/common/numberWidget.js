@@ -6,6 +6,7 @@ import NumberCell from "../../components/widgets/cells/NumberCell";
 const NumberWidget = {
   schemaId: "Number",
   day: DailyNumber,
+  week: NumberBarChart,
   month: NumberBarChart,
   cell: NumberCell,
   isApplicable: s => (isNumber(s) ? 1 : -1),

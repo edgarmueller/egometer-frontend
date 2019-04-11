@@ -24,6 +24,7 @@ import MatrixContainer from "../../containers/MatrixContainer";
 import { daysOfMonth } from "../../common/date";
 import { findBySchemaId } from "../../utils";
 import { getSchemas } from "../../reducers";
+import Charts from "./Charts";
 
 const styles = {
   monthMatrix: {
@@ -38,11 +39,13 @@ export class MonthlyDashboard extends React.Component {
     super(props);
     const now = moment();
     const { match } = props;
-    const year = _.get(match, "params.year");
-    const month = _.get(match, "params.month");
+    const matchedYear = _.get(match, "params.year");
+    const matchedMonth = _.get(match, "params.month");
+    const year = matchedYear ? Number(matchedYear) : now.year();
+    const month = matchedMonth ? Number(matchedMonth) : now.month() + 1;
     this.state = {
-      year: year ? Number(year) : now.year(),
-      month: month ? Number(month) : now.month() + 1
+      year,
+      month
     };
   }
 
@@ -63,6 +66,8 @@ export class MonthlyDashboard extends React.Component {
       error,
       history,
       isLoading,
+      entries,
+      meters,
       ...otherProps
     } = this.props;
 
@@ -108,7 +113,20 @@ export class MonthlyDashboard extends React.Component {
             month={this.state.month}
             child={MonthMatrix}
             findBySchemaId={this.findSchema}
+            meters={meters}
+            entries={entries}
+            schemas={otherProps.schemas}
             {...otherProps}
+          />
+          <Charts
+            isLoading={isLoading}
+            days={daysOfMonth(this.state.year, this.state.month)}
+            entries={entries}
+            findBySchemaId={this.findSchema}
+            meters={meters}
+            widgets={widgets}
+            widgetType="month"
+            width={window.innerWidth / 2}
           />
         </div>
       </div>
@@ -152,11 +170,11 @@ MonthlyDashboard.propTypes = {
   entries: PropTypes.object.isRequired,
   schemas: PropTypes.array.isRequired,
   error: PropTypes.string
-}
+};
 
 MonthlyDashboard.defaultProps = {
   error: undefined
-}
+};
 
 export default compose(
   withProps({ widgets }),

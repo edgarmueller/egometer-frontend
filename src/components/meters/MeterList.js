@@ -307,7 +307,6 @@ export const Meters = ({
             {meters ? (
               meters.map(meter => {
                 const schema = findBySchemaId(schemas, meter.schemaId);
-                console.log("schema", schemas);
                 return (
                   <TableRow key={meter.id}>
                     <TableCell colSpan={3}>

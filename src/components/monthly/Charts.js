@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Typography from "@material-ui/core/Typography";
 import _ from "lodash";
 import {
   entriesPropType,
@@ -14,7 +15,8 @@ const Charts = ({
   isLoading,
   meters,
   widgets,
-  width
+  width,
+  widgetType
 }) => {
   if (isLoading) {
     // parent show loading indicator
@@ -29,7 +31,7 @@ const Charts = ({
     .map(meter => {
       const widget = widgets.find(widget => widget.name === meter.widget);
       return {
-        widget: widget && widget.month,
+        widget: widget && widget[widgetType],
         meter
       };
     })
@@ -49,7 +51,9 @@ const Charts = ({
         const Chart = widget;
         return (
           <div key={meter.name}>
-            <strong>{meter.name}</strong>
+            <Typography style={{ fontWeight: 600 }} variant="h6">
+              {meter.name}
+            </Typography>
             <Chart
               meter={meter}
               data={data}
@@ -71,6 +75,7 @@ Charts.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   meters: PropTypes.arrayOf(meterPropTypes),
   widgets: PropTypes.arrayOf(widgetPropTypes),
+  widgetType: PropTypes.oneOf(["month", "week"]),
   width: PropTypes.number.isRequired
 };
 

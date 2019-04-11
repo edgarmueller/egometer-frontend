@@ -11,6 +11,7 @@ export const journalVis = {
   label: "Journal",
   icon: <BookIcon />,
   day: StringWidget,
+  week: undefined,
   month: undefined,
   cell: StringCell,
   isApplicable: s => (isString(s) ? 1 : -1)

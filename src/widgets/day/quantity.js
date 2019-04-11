@@ -40,6 +40,7 @@ export const quantityEnumWidget = {
   label: "Quantity",
   category: "Custom",
   icon: <Assessment />,
+  week: undefined,
   month: undefined,
   cell: quantityLabels(quantityImages(EnumCell)),
   // TODO: also check for enum? why do we need this at all?

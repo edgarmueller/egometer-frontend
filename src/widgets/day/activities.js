@@ -60,6 +60,7 @@ const ActivitiesMeter = {
   category: "General",
   icon: <Icon />,
   day: withImageProvider(withLabels(defaultLiteralLabelProvider)(MultiEnum)),
+  week: MultiEnumPieChart,
   month: MultiEnumPieChart,
   cell: withImageProvider(
     withLabels(defaultLiteralLabelProvider)(MultiEnumCell)

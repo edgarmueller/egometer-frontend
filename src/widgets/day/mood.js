@@ -75,6 +75,7 @@ export const MoodMeter = {
   icon: <SentimentSatisfiedRounded />,
   category: "General",
   day: withMoodImageAndLabelProvider(DailyEnum),
+  week: labelProvider(EnumLineChart),
   month: labelProvider(EnumLineChart),
   cell: withMoodImageAndLabelProvider(EnumCell),
   isApplicable: schema => (isString(schema) && isEnum(schema) ? 2 : -1),

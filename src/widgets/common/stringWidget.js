@@ -5,6 +5,7 @@ import { isString } from "../../common/testers";
 const StringWidget = {
   schemaId: "String",
   day: DailyString,
+  week: undefined,
   month: undefined,
   cell: GenericCell,
   isApplicable: s => (isString(s) ? 1 : -1),

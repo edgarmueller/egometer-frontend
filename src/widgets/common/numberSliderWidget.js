@@ -4,6 +4,7 @@ import NumberCell from "../../components/widgets/cells/NumberCell";
 
 export default {
   schemaId: "Number",
+  week: NumberBarChart,
   month: NumberBarChart,
   cell: NumberCell,
   isApplicable: s => (isNumber(s) ? 1 : -1),
