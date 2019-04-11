@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import MeterTable from "../common/MeterTable";
 
 class MonthMatrix extends React.Component {
-
   render() {
     const {
       meters,

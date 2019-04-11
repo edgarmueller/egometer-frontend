@@ -15,6 +15,7 @@ it("should open dialog for strings", () => {
       meterId={moodMeterId}
       date={testDate}
       updateEntry={jest.fn()}
+      isLoading={false}
     />
   );
   // by default, string cells do not display any content,

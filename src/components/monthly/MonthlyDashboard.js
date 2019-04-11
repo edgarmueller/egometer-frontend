@@ -1,11 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 import _ from "lodash";
 import { connect } from "react-redux";
 import moment from "moment";
 import MonthPickerInput from "react-month-picker-input";
 import "../../react-month-picker-input.css";
 import { compose, withProps } from "recompose";
-import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import MonthMatrix from "./MonthMatrix";
@@ -22,7 +22,7 @@ import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import MatrixContainer from "../../containers/MatrixContainer";
 import { daysOfMonth } from "../../common/date";
-import { findBySchemaId } from "../../utils"
+import { findBySchemaId } from "../../utils";
 import { getSchemas } from "../../reducers";
 
 const styles = {
@@ -52,9 +52,9 @@ export class MonthlyDashboard extends React.Component {
     );
   }
 
-  findSchema = (schemaId) => {
+  findSchema = schemaId => {
     return findBySchemaId(this.props.schemas, schemaId);
-  }
+  };
 
   render() {
     const {
@@ -104,7 +104,6 @@ export class MonthlyDashboard extends React.Component {
           />
           <MatrixContainer
             days={daysOfMonth(this.state.year, this.state.month)}
-            headerHeight={30}
             year={this.state.year}
             month={this.state.month}
             child={MonthMatrix}
@@ -145,6 +144,19 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actions.fetchEntriesPerMonthRequest(date));
   }
 });
+
+MonthlyDashboard.propTypes = {
+  fetchEntries: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  meters: PropTypes.array.isRequired,
+  entries: PropTypes.object.isRequired,
+  schemas: PropTypes.array.isRequired,
+  error: PropTypes.string
+}
+
+MonthlyDashboard.defaultProps = {
+  error: undefined
+}
 
 export default compose(
   withProps({ widgets }),

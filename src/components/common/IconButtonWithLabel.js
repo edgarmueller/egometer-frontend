@@ -34,7 +34,7 @@ class IconButtonWithLabel extends React.Component {
 
 IconButtonWithLabel.propTypes = {
   label: PropTypes.string.isRequired,
-  icon: PropTypes.node.isRequired,
+  icon: PropTypes.node,
   onSubmit: PropTypes.func
 };
 

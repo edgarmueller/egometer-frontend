@@ -9,7 +9,11 @@ configure({ adapter: new Adapter() });
 describe("ConnectedComponent", () => {
   it("should render its input component", () => {
     const wrapper = shallow(
-      <ConnectedComponent date={testDate} updateEntry={jest.fn()}>
+      <ConnectedComponent
+        date={testDate}
+        updateEntry={jest.fn()}
+        isLoading={false}
+      >
         {() => <div>Test</div>}
       </ConnectedComponent>
     );
@@ -24,6 +28,7 @@ describe("ConnectedComponent", () => {
         date={testDate}
         updateEntry={() => (didUpdate = true)}
         updateOnChange
+        isLoading={false}
       >
         {() => <div>Test</div>}
       </ConnectedComponent>
@@ -41,6 +46,7 @@ describe("ConnectedComponent", () => {
         date={testDate}
         updateEntry={() => (didUpdate = true)}
         updateOnChange={false}
+        isLoading={false}
       >
         {() => <div>Test</div>}
       </ConnectedComponent>
@@ -56,6 +62,7 @@ describe("ConnectedComponent", () => {
         date={testDate}
         updateEntry={() => (didUpdate = true)}
         updateOnChange={false}
+        isLoading={false}
       >
         {({ reset, submitEntry }) => submitEntry()}
       </ConnectedComponent>
@@ -71,6 +78,7 @@ describe("ConnectedComponent", () => {
         date={testDate}
         updateEntry={() => (didUpdate = true)}
         updateOnChange={false}
+        isLoading={false}
       >
         {({ reset }) => {
           doReset = reset;
@@ -84,7 +92,12 @@ describe("ConnectedComponent", () => {
 
   it("should update via key", () => {
     const wrapper = shallow(
-      <ConnectedComponent data={"init"} date={testDate} updateEntry={jest.fn()}>
+      <ConnectedComponent
+        data={"init"}
+        date={testDate}
+        updateEntry={jest.fn()}
+        isLoading={false}
+      >
         {jest.fn}
       </ConnectedComponent>
     );
@@ -92,13 +105,14 @@ describe("ConnectedComponent", () => {
     expect(wrapper.state().text).toBe("test");
   });
 
-  it("should update via key when pressed enter", () => {
+  it("should update on blur", () => {
     let didUpdate = false;
     const wrapper = shallow(
       <ConnectedComponent
         data={"init"}
         date={testDate}
         updateEntry={() => (didUpdate = true)}
+        isLoading={false}
       >
         {jest.fn}
       </ConnectedComponent>
@@ -116,7 +130,12 @@ describe("ConnectedComponent", () => {
   // Expectation: state.text prop should not update
   it("data prop should provide initial data", () => {
     const wrapper = shallow(
-      <ConnectedComponent data={"init"} date={testDate} updateEntry={jest.fn()}>
+      <ConnectedComponent
+        data={"init"}
+        date={testDate}
+        updateEntry={jest.fn()}
+        isLoading={false}
+      >
         {jest.fn}
       </ConnectedComponent>
     );
@@ -126,7 +145,12 @@ describe("ConnectedComponent", () => {
 
   it("data prop should only update state if date differs", () => {
     const wrapper = shallow(
-      <ConnectedComponent data={"init"} date={testDate} updateEntry={jest.fn()}>
+      <ConnectedComponent
+        data={"init"}
+        date={testDate}
+        updateEntry={jest.fn()}
+        isLoading={false}
+      >
         {jest.fn}
       </ConnectedComponent>
     );

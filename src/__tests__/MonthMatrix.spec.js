@@ -25,7 +25,7 @@ describe("MonthMatrix", () => {
         month={4}
         width={800}
         widgets={widgets}
-        updateEntry={jest.fn()}
+        updateEntry={() => jest.fn()}
         days={daysOfMonth(2018, 4)}
       />
     );
@@ -49,7 +49,7 @@ describe("MonthMatrix", () => {
         width={800}
         days={daysOfMonth(2018, 4)}
         findBySchemaId={() => moodSchema.schema}
-        updateEntry={jest.fn()}
+        updateEntry={() => jest.fn()}
         widgets={widgets}
       />
     );

@@ -3,7 +3,7 @@ import { configure, mount } from "enzyme";
 import { Provider } from "react-redux";
 import Adapter from "enzyme-adapter-react-16";
 import { MonthlyDashboard } from "../components/monthly/MonthlyDashboard";
-import { moodEntries, moodMeter, moodSchema, moodMeterId } from "../__mocks__/testData";
+import { moodEntries, moodMeter, moodSchema } from "../__mocks__/testData";
 import mood from "../widgets/day/mood";
 import configureStore from "../store/configureStore";
 import MonthMatrix from "../components/monthly/MonthMatrix";
@@ -32,6 +32,7 @@ describe("Monthly Dashboard", () => {
       <Provider store={store}>
         <MonthlyDashboard
           isLoading={false}
+          schemas={[moodSchema]}
           entries={{
             [moodMeter.id]: moodEntries
           }}
