@@ -27,7 +27,7 @@ const Stats = ({ meter, values }) => {
     >
       <span
         style={{
-          color: isNaN(avg) ? null : avg > meter.dailyGoal ? green : red
+          color: isNaN(avg) ? null : avg >= meter.dailyGoal ? green : red
         }}
       >
         <strong>Average</strong>: {_.isNaN(avg) ? "N/A" : avg}

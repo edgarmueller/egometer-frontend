@@ -50,7 +50,7 @@ class MultiEnumPieChart extends React.Component {
       };
     });
 
-    if (data.length > 0) {
+    if (data.length === 0) {
       return <div>No data</div>;
     }
 
