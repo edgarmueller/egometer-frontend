@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useState, useReducer } from "react";
-import _ from "lodash";
+import toNumber from "lodash/toNumber";
+import get from "lodash/get";
 import { connect } from "react-redux";
 import { compose } from "recompose";
 import IconButton from "@material-ui/core/IconButton";
@@ -244,7 +245,7 @@ const localMeterReducer = (state, action) => {
 };
 
 const valueOf = state => (meterId, propName) => {
-  return _.get(state, [meterId + "", propName]) || "";
+  return get(state, [meterId + "", propName]) || "";
 };
 
 export const Meters = ({
@@ -335,7 +336,7 @@ export const Meters = ({
                             handleUpdateMeter(
                               meter,
                               "dailyGoal",
-                              ev.target.value
+                              toNumber(ev.target.value)
                             )
                           }
                         />
