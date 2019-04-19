@@ -3,6 +3,8 @@ import { BASE_URL } from "../constants";
 
 const contentType = "Content-Type";
 const applicationJson = "application/json";
+const API_VERSION = "v1";
+const API_BASE_URL = `${BASE_URL}/api/${API_VERSION}`;
 
 const createHeaders = headers => ({
   headers: {
@@ -12,11 +14,11 @@ const createHeaders = headers => ({
 });
 
 export const fetchMeters = () =>
-  Axios.get(`${BASE_URL}/meters`, createHeaders());
+  Axios.get(`${API_BASE_URL}/meters`, createHeaders());
 
 export const fetchSchemas = () =>
   Axios.get(
-    `${BASE_URL}/schemas`,
+    `${API_BASE_URL}/schemas`,
     createHeaders({
       [contentType]: applicationJson
     })
@@ -25,8 +27,8 @@ export const fetchSchemas = () =>
 export const fetchEntriesPerMonth = (date, meterId) =>
   Axios.get(
     meterId === undefined
-      ? `${BASE_URL}/entries/${date}`
-      : `${BASE_URL}/entries/${date}/${meterId}`,
+      ? `${API_BASE_URL}/entries/${date}`
+      : `${API_BASE_URL}/entries/${date}/${meterId}`,
     createHeaders({
       [contentType]: applicationJson
     })
@@ -34,7 +36,7 @@ export const fetchEntriesPerMonth = (date, meterId) =>
 
 export const createMeter = (schemaId, name, widget, color) =>
   Axios.post(
-    `${BASE_URL}/meters`,
+    `${API_BASE_URL}/meters`,
     {
       schemaId,
       name,
@@ -48,7 +50,7 @@ export const createMeter = (schemaId, name, widget, color) =>
 
 export const deleteMeter = meterId =>
   Axios.delete(
-    `${BASE_URL}/meters/${meterId}`,
+    `${API_BASE_URL}/meters/${meterId}`,
     createHeaders({
       [contentType]: applicationJson
     })
@@ -56,7 +58,7 @@ export const deleteMeter = meterId =>
 
 export const updateMeter = meter =>
   Axios.post(
-    `${BASE_URL}/meters/${meter.id}`,
+    `${API_BASE_URL}/meters/${meter.id}`,
     {
       ...meter,
       widget: meter.widget
@@ -68,7 +70,7 @@ export const updateMeter = meter =>
 
 export const deleteSchema = schema =>
   Axios.delete(
-    `${BASE_URL}/schemas/${schema.id}`,
+    `${API_BASE_URL}/schemas/${schema.id}`,
     createHeaders({
       [contentType]: applicationJson
     })
@@ -76,7 +78,7 @@ export const deleteSchema = schema =>
 
 export const updateEntry = ({ meterId, date, value }) => {
   return Axios.post(
-    `${BASE_URL}/entries/${date}/${meterId}`,
+    `${API_BASE_URL}/entries/${date}/${meterId}`,
     { value },
     createHeaders({
       [contentType]: applicationJson
@@ -85,9 +87,9 @@ export const updateEntry = ({ meterId, date, value }) => {
 };
 
 // TODO: this should overwrite the value on the server
-export const submitSchema = (name, schema) => {
-  return Axios.post(
-    `${BASE_URL}/schemas`,
+export const submitSchema = (name, schema) =>
+  Axios.post(
+    `${API_BASE_URL}/schemas`,
     {
       name,
       schema
@@ -96,34 +98,22 @@ export const submitSchema = (name, schema) => {
       [contentType]: applicationJson
     })
   );
-};
-
-export const verifyToken = zi => {
-  return Axios.post(
-    `${BASE_URL}/verify/google`,
-    zi,
-    createHeaders({
-      [contentType]: applicationJson
-    })
-  );
-};
 
 export const loginUser = (email, password, rememberMe) =>
   Axios.post(
-    `${BASE_URL}/sign-in`,
+    `${API_BASE_URL}/sign-in`,
     { email, password, rememberMe: true },
     createHeaders()
   );
 
-export const logout = () => {
-  return Axios.get(`${BASE_URL}/sign-out`, createHeaders()).then(() =>
+export const logout = () =>
+  Axios.post(`${API_BASE_URL}/sign-out`, createHeaders()).then(() =>
     localStorage.removeItem("egometer.token")
   );
-};
 
 export const signUpWithEmail = (name, email, password) => {
   return Axios.post(
-    `${BASE_URL}/sign-up`,
+    `${API_BASE_URL}/sign-up`,
     { name, email, password },
     createHeaders({
       [contentType]: applicationJson
@@ -131,19 +121,18 @@ export const signUpWithEmail = (name, email, password) => {
   );
 };
 
-export const recoverPassword = email => {
-  return Axios.post(
-    `${BASE_URL}/password/recovery`,
+export const recoverPassword = email =>
+  Axios.post(
+    `${API_BASE_URL}/password/recovery`,
     { email },
     {
       [contentType]: applicationJson
     }
   );
-};
 
 export const resetPassword = (token, password) => {
   return Axios.post(
-    `${BASE_URL}/password/recovery/${token}`,
+    `${API_BASE_URL}/password/recovery/${token}`,
     { password },
     {
       [contentType]: applicationJson
@@ -152,11 +141,13 @@ export const resetPassword = (token, password) => {
 };
 
 export const validateToken = token =>
-  Axios.get(`${BASE_URL}/password/recovery/${token}`);
+  Axios.get(`${API_BASE_URL}/password/recovery/${token}`);
 
 export const activateAccount = token => {
-  return Axios.get(`${BASE_URL}/account/activation/${token}`);
+  return Axios.get(`${API_BASE_URL}/account/activation/${token}`);
 };
 
 export const testToken = token =>
-  Axios.get(`${BASE_URL}/is-signed-in`, { headers: { "X-Auth-Token": token } });
+  Axios.get(`${API_BASE_URL}/is-signed-in`, {
+    headers: { "X-Auth-Token": token }
+  });
