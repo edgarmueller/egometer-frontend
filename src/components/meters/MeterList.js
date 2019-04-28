@@ -14,20 +14,16 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { Emoji } from 'emoji-mart'
 import {
   Switch,
   Dialog,
   DialogTitle,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Button,
-  Avatar
 } from "@material-ui/core";
-import Ionicon from "react-ionicons";
 import ColorPicker from "../common/ColorPicker";
-import { deleteMeter, updateMeter, updateMeterRequest } from "../../actions";
+import { Picker } from 'emoji-mart'
+import { deleteMeter, resetMetersError, updateMeter, updateMeterRequest } from "../../actions";
 import { display1 } from "../../common/styles";
 import {
   getMeters,
@@ -37,147 +33,6 @@ import {
 } from "../../reducers";
 import { findBySchemaId } from "../../utils";
 import { ErrorSnackbar } from "../common/ErrorSnackbar";
-
-const icons = [
-  "md-alarm",
-  "md-american-football",
-  "md-appstore",
-  "md-at",
-  "md-attach",
-  "md-baseball",
-  "md-basket",
-  "md-basketball",
-  "md-beer",
-  "md-bicycle",
-  "md-boat",
-  "md-body",
-  "md-bonfire",
-  "md-book",
-  "md-briefcase",
-  "md-brush",
-  "md-bulb",
-  "md-bus",
-  "md-cafe",
-  "md-calculator",
-  "md-calendar",
-  "md-call",
-  "md-camera",
-  "md-car",
-  "md-card",
-  "md-cart",
-  "md-cash",
-  "md-chatbubbles",
-  "md-clock",
-  "md-cloud",
-  "md-cloudy-night",
-  "md-cloudy",
-  "md-color-fill",
-  "md-contact",
-  "md-contacts",
-  "md-create",
-  "md-cube",
-  "md-cut",
-  "md-desktop",
-  "md-disc",
-  "md-document",
-  "md-done-all",
-  "md-download",
-  "md-egg",
-  "md-exit",
-  "md-eye",
-  "md-female",
-  "md-film",
-  "md-flash",
-  "md-flower",
-  "md-football",
-  "md-game-controller-b",
-  "md-glasses",
-  "md-globe",
-  "md-hammer",
-  "md-happy",
-  "md-headset",
-  "md-heart",
-  "md-home",
-  "md-ice-cream",
-  "md-jet",
-  "md-key",
-  "md-laptop",
-  "md-leaf",
-  "md-mail",
-  "md-male",
-  "md-man",
-  "md-map",
-  "md-medal",
-  "md-medical",
-  "md-medkit",
-  "md-mic",
-  "md-moon",
-  "md-musical-note",
-  "md-no-smoking",
-  "md-notifications",
-  "md-nuclear",
-  "md-nutrition",
-  "md-outlet",
-  "md-paper-plane",
-  "md-paper",
-  "md-partly-sunny",
-  "md-pause",
-  "md-paw",
-  "md-people",
-  "md-person",
-  "md-phone-portrait",
-  "md-photos",
-  "md-pie",
-  "md-pint",
-  "md-pizza",
-  "md-plane",
-  "md-planet",
-  "md-play",
-  "md-power",
-  "md-pricetag",
-  "md-pricetags",
-  "md-print",
-  "md-pulse",
-  "md-radio",
-  "md-rainy",
-  "md-restaurant",
-  "md-ribbon",
-  "md-rose",
-  "md-sad",
-  "md-school",
-  "md-search",
-  "md-send",
-  "md-settings",
-  "md-shirt",
-  "md-snow",
-  "md-speedometer",
-  "md-star",
-  "md-stopwatch",
-  "md-subway",
-  "md-sunny",
-  "md-tennisball",
-  "md-thermometer",
-  "md-thumbs-down",
-  "md-thumbs-up",
-  "md-thunderstorm",
-  "md-time",
-  "md-train",
-  "md-transgender",
-  "md-trash",
-  "md-trending-down",
-  "md-trending-up",
-  "md-trophy",
-  "md-umbrella",
-  "md-videocam",
-  "md-volume-up",
-  "md-walk",
-  "md-warning",
-  "md-watch",
-  "md-water",
-  "md-wifi",
-  "md-wine",
-  "md-woman"
-];
 
 const styles = theme => ({
   textField: {
@@ -255,7 +110,8 @@ export const Meters = ({
   updateMeterRequest,
   isFetchingMeters,
   schemas,
-  meterError
+  meterError,
+  resetMetersError
 }) => {
   const [state, dispatch] = useReducer(localMeterReducer, {
     meterById: metersById(meters)
@@ -286,7 +142,10 @@ export const Meters = ({
 
   return (
     <div>
-      <ErrorSnackbar error={meterError} resetError={() => {}} />
+      <ErrorSnackbar
+        error={meterError}
+        resetError={resetMetersError}
+      />
       <Typography variant="display1" className={classes.display1}>
         Manage Meters
       </Typography>
@@ -341,13 +200,13 @@ export const Meters = ({
                           }
                         />
                       ) : (
-                        <Switch
-                          checked={valueOf(state)(meter.id, "dailyGoal") > 0}
-                          onChange={(ev, goal) =>
-                            handleUpdateMeter(meter, "dailyGoal", goal ? 1 : 0)
-                          }
-                        />
-                      )}
+                          <Switch
+                            checked={valueOf(state)(meter.id, "dailyGoal") > 0}
+                            onChange={(ev, goal) =>
+                              handleUpdateMeter(meter, "dailyGoal", goal ? 1 : 0)
+                            }
+                          />
+                        )}
                     </TableCell>
                     <TableCell>
                       <TextField
@@ -364,7 +223,7 @@ export const Meters = ({
                     <TableCell>
                       <ColorPicker
                         color={valueOf(state)(meter.id, "color")}
-                        onChange={() => {}}
+                        onChange={() => { }}
                         onChangeComplete={color =>
                           handleUpdateMeter(meter, "color", color)
                         }
@@ -378,20 +237,19 @@ export const Meters = ({
                         }}
                       >
                         {meter.icon ? (
-                          <Ionicon icon={meter.icon} />
-                        ) : (
-                          "Set icon"
-                        )}
+                          <Emoji emoji={meter.icon} size={24} set='emojione' />
+                        ) : "Set icon"
+                        }
                       </Button>
                     </TableCell>
                   </TableRow>
                 );
               })
             ) : (
-              <TableRow>
-                <TableCell>No meters defined yet</TableCell>
-              </TableRow>
-            )}
+                <TableRow>
+                  <TableCell>No meters defined yet</TableCell>
+                </TableRow>
+              )}
           </TableBody>
         </Table>
         <Dialog
@@ -404,26 +262,14 @@ export const Meters = ({
         >
           <DialogTitle id="simple-dialog-title">Set icon</DialogTitle>
           <div>
-            <List>
-              {icons.map(icon => (
-                <ListItem
-                  button
-                  key={icon}
-                  onClick={() => {
-                    handleUpdateMeter(editedMeter, "icon", icon);
-                    setEditedMeter(undefined);
-                    setOpen(false);
-                  }}
-                >
-                  <ListItemAvatar>
-                    <Avatar className={classes.avatar}>
-                      <Ionicon icon={icon} color="#fff" />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary={icon} />
-                </ListItem>
-              ))}
-            </List>
+            <Picker
+              set='emojione'
+              onClick={(emoji) => {
+                handleUpdateMeter(editedMeter, "icon", emoji.id);
+                setEditedMeter(undefined);
+                setOpen(false);
+              }}
+            />
           </div>
         </Dialog>
       </Paper>
@@ -442,6 +288,7 @@ export default compose(
   connect(
     mapStateToProps,
     {
+      resetMetersError,
       deleteMeter,
       updateMeter,
       updateMeterRequest

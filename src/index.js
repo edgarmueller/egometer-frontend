@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { ConnectedRouter } from "react-router-redux";
 import Typography from "typography";
 import grandViewTheme from "typography-theme-grand-view";
+import 'emoji-mart/css/emoji-mart.css'
 import "./index.css";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";

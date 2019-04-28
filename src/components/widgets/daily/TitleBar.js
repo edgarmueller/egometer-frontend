@@ -2,9 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
-//import IconButton from "@material-ui/core/IconButton";
-//import SettingsIcon from "@material-ui/icons/MoreVert";
-//import DragHandle from "@material-ui/icons/DragHandle";
+import { Emoji } from 'emoji-mart'
 import { meterTitle, underline } from "../../../common/styles";
 import MeterSettingsDialog from "./MeterSettingsDialog";
 
@@ -13,8 +11,6 @@ const styles = {
   meterTitle,
   meterTitleContainer: {
     display: "flex",
-    //alignItems: "center",
-    //justifyContent: "center"
   },
   settingsButton: {
     float: "right"
@@ -25,8 +21,6 @@ const styles = {
   icon: {
     paddingRight: 10,
     display: "flex",
-    //alignItems: "center",
-    //justifyContent: "flex-end"
   },
   container: {
     minHeight: 44
@@ -61,7 +55,9 @@ class TitleBar extends React.PureComponent {
             */
             }
             <Grid item xs={2}>
-              {icon && <span className={classes.icon}>{icon}</span>}
+              {icon && <span className={classes.icon}>
+                <Emoji emoji={icon} size={24} set='emojione' />
+              </span>}
             </Grid>
             <Grid item xs={10}>
               <div className={classes.meterTitleContainer}>

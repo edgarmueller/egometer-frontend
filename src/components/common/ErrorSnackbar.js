@@ -64,7 +64,7 @@ const ClientSnackbar = props => {
 const StyledSnackbar = withStyles(styles)(ClientSnackbar);
 
 export const ErrorSnackbar = ({ error, resetError }) => {
-  const hasError = error && error.message;
+  const hasError = error && error.message !== undefined;
 
   return (
     <Snackbar
@@ -74,9 +74,7 @@ export const ErrorSnackbar = ({ error, resetError }) => {
       }}
       open={hasError}
       autoHideDuration={2000}
-      onClose={() => {
-        resetError();
-      }}
+      onClose={() => resetError()}
     >
       <StyledSnackbar onClose={() => resetError()}
         variant="error"

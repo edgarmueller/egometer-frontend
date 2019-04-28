@@ -5,6 +5,7 @@ import moment from "moment";
 import { Column, Table } from "react-virtualized";
 import ErrorBoundary from "react-error-boundary";
 import { withStyles } from "@material-ui/core";
+import { Emoji } from 'emoji-mart'
 import Cell from "../cells/Cell";
 import styles from "../monthly/MonthMatrix.css";
 import { pad } from "../../common/date";
@@ -20,6 +21,13 @@ const additonalStyles = {
   meterColumn: {
     display: "flex",
     alignItems: "center"
+  },
+  title: {
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    overflow: "hidden",
+    fontWeight: 'bold',
+    paddingLeft: '0.15rem'
   }
 };
 
@@ -50,6 +58,7 @@ class MeterTable extends React.Component {
     const e = _.values(entries);
     if (e && index < meters.length) {
       const meter = meters[index];
+
       const meterEntries = _.flatten(e.filter(e => e[0].meterId === meter.id));
       const schema = findBySchemaId(meter.schemaId);
       if (schema === undefined) {
@@ -61,7 +70,7 @@ class MeterTable extends React.Component {
           return acc;
         },
         {
-          meterName: meter.name,
+          meter,
           meterId: meter.id,
           schema,
           widget: meter.widget
@@ -106,20 +115,22 @@ class MeterTable extends React.Component {
       <Column
         key="meterColumn"
         label="Meter"
-        dataKey={"meterName"}
+        dataKey={"meter"}
         width={200}
         className={classes.meterColumn}
-        cellRenderer={({ cellData, ...props }) => (
-          <div
-            style={{
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-              overflow: "hidden"
-            }}
-          >
-            {cellData}
-          </div>
-        )}
+        cellRenderer={({ cellData: meter }) => {
+          if (meter === undefined) {
+            return null;
+          }
+          return (
+            <div style={{ display: 'flex' }}>
+              {meter.icon && <Emoji emoji={meter.icon} size={24} set='emojione' />}
+              <div className={classes.title}>
+                {meter.name}
+              </div>
+            </div >
+          )
+        }}
       />
     ];
     return meterColumn.concat(

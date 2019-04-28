@@ -52,8 +52,8 @@ export const createColor = (
 ) => {
   const streak = calcStreak(rowData, year, month, columnIndex);
   const alpha = 0.4 + streak / 10;
-  if (colorMapping && colorMapping[rowData.meterName]) {
-    return hexToRgba(colorMapping[rowData.meterName], alpha);
+  if (colorMapping && rowData.meter && colorMapping[rowData.meter.name]) {
+    return hexToRgba(colorMapping[rowData.meter.name], alpha);
   }
   return "#fff";
 };
