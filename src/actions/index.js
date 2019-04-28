@@ -10,6 +10,8 @@ export const FETCH_SCHEMAS_REQUEST = "FETCH_SCHEMAS_REQUEST";
 export const FETCH_SCHEMAS_SUCCESS = "FETCH_SCHEMAS_SUCCESS";
 export const FETCH_SCHEMAS_FAILURE = "FETCH_SCHEMAS_FAILURE";
 
+export const RESET_METERS_ERROR = 'RESET_METERS_ERROR'
+
 export const DELETE_METER_SUCCESS = "DELETE_METER_SUCCESS";
 export const DELETE_METER_FAILURE = "DELETE_METER_FAILURE";
 
@@ -36,6 +38,10 @@ export const setMeters = meters => {
 export const setMetersError = error => ({
   type: FETCH_METERS_FAILURE,
   error: error.message
+});
+
+export const resetMetersError = () => ({
+  type: RESET_METERS_ERROR
 });
 
 export const setSchemas = schemas => ({

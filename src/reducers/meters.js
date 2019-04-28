@@ -6,7 +6,8 @@ import {
   UPDATE_METER_SUCCESS,
   FETCH_METERS_REQUEST,
   UPDATE_METER_REQUEST,
-  UPDATE_METER_FAILURE
+  UPDATE_METER_FAILURE,
+  RESET_METERS_ERROR
 } from "../actions";
 
 const initialState = {
@@ -63,6 +64,11 @@ export const metersReducer = (state = initialState, action) => {
         ...state,
         isLoading: true
       };
+    case RESET_METERS_ERROR:
+      return {
+        ...state,
+        error: undefined
+      }
     case FETCH_METERS_SUCCESS:
       return {
         error: undefined,
