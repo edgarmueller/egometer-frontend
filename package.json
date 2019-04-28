@@ -9,6 +9,7 @@
     "axios": "^0.18.0",
     "dotenv": "^6.1.0",
     "email-validator": "^2.0.4",
+    "emoji-mart": "^2.11.0",
     "hex-to-rgba": "^1.0.1",
     "history": "^4.7.2",
     "jwt-decode": "^2.2.0",
