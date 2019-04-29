@@ -107,7 +107,7 @@ export const loginUser = (email, password, rememberMe) =>
   );
 
 export const logout = () =>
-  Axios.post(`${API_BASE_URL}/sign-out`, createHeaders()).then(() =>
+  Axios.post(`${API_BASE_URL}/sign-out`, undefined, createHeaders()).then(() =>
     localStorage.removeItem("egometer.token")
   );
 
