@@ -138,10 +138,11 @@ export const RESET_ENTRIES_ERROR = "RESET_ENTRIES_ERROR";
  * @param meterId optional meter id, if omitted, data of all meters is fetched
  * @returns {{type: string, date: *, meterId: *}}
  */
-export const fetchEntriesPerMonthRequest = (date, meterId = undefined) => ({
+export const fetchEntriesRequest = (date, days, meterId = undefined) => ({
   type: FETCH_ENTRIES_REQUEST,
   date,
-  meterId
+  meterId,
+  days
 });
 
 export const updateMeterRequest = (meter) => ({

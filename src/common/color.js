@@ -24,13 +24,12 @@ export function shadeColor2(color, percent) {
   );
 }
 
-const calcStreak = (year, m, rowData, startIndex) => {
+const calcStreak = (rowData, date, startIndex) => {
   let i = startIndex;
   let streak = 0;
   while (i >= 0) {
-    const month = pad(m.toString());
     const day = pad(i.toString());
-    const key = `${year}-${month}-${day}`;
+    const key = `${date.getFullYear()}-${date.getMonth() + 1}-${day}`;
 
     if (_.has(rowData, key)) {
       streak += 1;
@@ -45,12 +44,11 @@ const calcStreak = (year, m, rowData, startIndex) => {
 
 export const createColor = (
   colorMapping,
-  year,
-  month,
+  date,
   rowData,
   columnIndex
 ) => {
-  const streak = calcStreak(rowData, year, month, columnIndex);
+  const streak = calcStreak(rowData, date, columnIndex);
   const alpha = 0.4 + streak / 10;
   if (colorMapping && rowData.meter && colorMapping[rowData.meter.name]) {
     return hexToRgba(colorMapping[rowData.meter.name], alpha);
@@ -61,9 +59,8 @@ export const createColor = (
 export const createProgressSuccessColor = alpha =>
   `rgba(129, 199, 132, ${alpha})`;
 
-export const getProgressColor = (progressEntry, alpha) => {
-  if (progressEntry) {
-    const { progress } = progressEntry;
+export const getProgressColor = (progress, alpha) => {
+  if (progress) {
     if (progress >= 0.5 && progress < 1) {
       return `rgba(244, 67, 54, ${alpha})`;
     } else if (progress >= 1) {

@@ -54,7 +54,7 @@ describe("MonthMatrix", () => {
       />
     );
     expect(wrapper.find(".ReactVirtualized__Table__headerRow").length).toBe(1);
-    expect(wrapper.find(".ReactVirtualized__Table__row").length).toBe(1);
+    expect(wrapper.find(".ReactVirtualized__Table__row").length).toBe(2);
     wrapper.unmount();
   });
 });

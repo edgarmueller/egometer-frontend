@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import "rxjs/add/operator/toArray";
 import { ActionsObservable } from "redux-observable";
 import {
-  fetchEntriesPerMonthRequest,
+  fetchEntriesRequest,
   updateEntryRequest,
   UPDATE_ENTRY_SUCCESS,
   FETCH_ENTRIES_REQUEST,
@@ -75,14 +75,14 @@ describe("fetchEntriesEpic", () => {
   it("should fetch entries", done => {
     const deps = {
       api: {
-        fetchEntriesPerMonth: () => {
+        fetchEntriesByDate: () => {
           return Promise.resolve(counterEntries);
         }
       }
     };
     // passed date doesn't really matter
     const action$ = ActionsObservable.of(
-      fetchEntriesPerMonthRequest("2018-07-06")
+      fetchEntriesRequest("2018-07-06")
     );
     const output$ = fetchEntriesEpic(action$, null, deps);
     output$.toArray().subscribe(actions => {
@@ -94,14 +94,14 @@ describe("fetchEntriesEpic", () => {
   it("should be capable to fail when fetching entries", done => {
     const deps = {
       api: {
-        fetchEntriesPerMonth: () => {
+        fetchEntriesByDate: () => {
           return Promise.reject({ message: "expected failure" });
         }
       }
     };
     // passed date doesn't really matter
     const action$ = ActionsObservable.of(
-      fetchEntriesPerMonthRequest("2018-07-06")
+      fetchEntriesRequest("2018-07-06")
     );
     const output$ = fetchEntriesEpic(action$, null, deps);
     output$.toArray().subscribe(actions => {
@@ -116,7 +116,7 @@ describe("fetchAllAfterLogin", () => {
   it("should trigger fetching of schema, meters & entries after login", done => {
     const deps = {
       api: {
-        fetchEntriesPerMonth: () => Promise.resolve(counterEntries),
+        fetchEntriesRequest: () => Promise.resolve(counterEntries),
         fetchSchemas: () => Promise.resolve({ data: [counterSchema] }),
         fetchMeters: () => Promise.resolve({ data: [counterMeter] })
       }

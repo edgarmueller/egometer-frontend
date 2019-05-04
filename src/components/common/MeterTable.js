@@ -46,7 +46,8 @@ class MeterTable extends React.Component {
 
   calcProgress = () => {
     const { entries, meters, days } = this.props;
-    this.setState({ progress: calcProgress(entries, meters, days) });
+    const progress = calcProgress(entries, meters, days);
+    this.setState({ progress });
   };
 
   _noRowsRenderer = () => {
@@ -85,17 +86,16 @@ class MeterTable extends React.Component {
 
   _rowGetter = ({ index }) => this._getDatum(index);
 
-  _getProgress = (meterId, date) => {
-    if (this.state.progress) {
-      const foundMeter = this.state.progress[meterId];
-      if (foundMeter && date) {
-        const foundEntry = foundMeter.entries.find(e => e.date === date);
+  _getDailyProgress = (meterId, date) => {
+    if (this.props.entries) {
+      const meter = this.props.meters.find(m => m.id === meterId);
+      const foundEntries = this.props.entries[meterId];
+      if (foundEntries && date) {
+        const foundEntry = foundEntries.find(e => e.date === date);
         if (foundEntry) {
-          return { progress: foundEntry.value / foundMeter.meter.dailyGoal };
+          return foundEntry.value / meter.dailyGoal;
         }
-        return undefined;
       }
-      return this.state.progress[meterId];
     }
     return undefined;
   };
@@ -107,8 +107,6 @@ class MeterTable extends React.Component {
       days,
       isLoading,
       widgets,
-      month,
-      year,
       updateEntry
     } = this.props;
     const meterColumn = [
@@ -136,7 +134,7 @@ class MeterTable extends React.Component {
     return meterColumn.concat(
       days.map(d => {
         const day = d.getDate();
-        const date = `${year}-${pad(month.toString())}-${pad(day.toString())}`;
+        const date = `${d.getFullYear()}-${pad((d.getMonth() + 1).toString())}-${pad(day.toString())}`;
         const dayName = moment(date, "YYYY-MM-DD").format("dddd");
 
         return (
@@ -150,27 +148,27 @@ class MeterTable extends React.Component {
             }
             dataKey={date}
             cellRenderer={({ cellData, ...props }) => {
-              const progress = this._getProgress(
+              const dailyProgress = this._getDailyProgress(
                 props.rowData.meterId,
                 props.dataKey
               );
+              const color = createColor(
+                colorMapping,
+                d,
+                props.rowData,
+                props.columnIndex
+              );
+              const progressColor = getProgressColor(dailyProgress, 0.9)
               return (
                 <div className={"item"}>
                   <ErrorBoundary>
                     <Cell
                       style={{
-                        border: progress
-                          ? `2px solid ${getProgressColor(progress, 0.9)}`
+                        border: dailyProgress
+                          ? `2px solid ${progressColor}`
                           : null,
-                        padding: 3
                       }}
-                      color={createColor(
-                        colorMapping,
-                        year,
-                        month,
-                        props.rowData,
-                        props.columnIndex
-                      )}
+                      color={color}
                       widget={_.find(
                         widgets,
                         widget =>
@@ -196,17 +194,14 @@ class MeterTable extends React.Component {
   };
 
   _rowRenderer = props => {
-    const meterId = props.rowData.meterId;
-    let progressEntry = 0;
-    if (this.state.progress) {
-      progressEntry = this.state.progress[meterId];
-    }
+    const weeklyProgressPerMeter = calcProgress(this.props.entries, this.props.meters, this.props.days);
+    const weeklyProgress = weeklyProgressPerMeter[props.rowData.meterId]
     return (
       <DefaultTableRowRenderer
         rowKey={props.key}
         {...props}
         style={{
-          backgroundColor: getProgressColor(progressEntry, 0.2),
+          backgroundColor: getProgressColor(weeklyProgress, 0.2),
           padding: 5,
           borderRadius: 3
         }}
@@ -234,7 +229,7 @@ class MeterTable extends React.Component {
         rowHeight={ROW_HEIGHT}
         rowGetter={this._rowGetter}
         rowCount={rowCount}
-        rowRenderer={this.rowRenderer}
+        rowRenderer={this._rowRenderer}
         sort={this._sort}
         sortBy="index"
         width={width}
@@ -249,8 +244,6 @@ MeterTable.propTypes = {
   entries: PropTypes.object,
   meters: PropTypes.arrayOf(PropTypes.object),
   findBySchemaId: PropTypes.func.isRequired,
-  month: PropTypes.number.isRequired,
-  year: PropTypes.number.isRequired,
   days: PropTypes.array,
   colorMapping: PropTypes.object,
   updateEntry: PropTypes.func.isRequired,

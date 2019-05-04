@@ -8,36 +8,15 @@ export const calcProgress = (entries, meters, days) => {
         }
         const entriesSoFar = entries[meterId].filter(entry => {
             const entryDate = new Date(entry.date)
-            let first;
-            let last;
-            if (days.length === 1) {
-                first = new Date(_.first(days));
-                first.setHours(0, 0, 0, 0);
-                last = new Date(_.first(days));
-                last.setDate(_.first(days).getDate() + 1);
-                last.setHours(0, 0, 0, 0)
-                return (
-                    entryDate.getTime() >= first.getTime() &&
-                    entryDate.getTime() <= last.getTime() &&
-                    Number(entry.value) >= foundMeter.dailyGoal
-                );
-            } else {
-                first = new Date(_.first(days));
-                last = new Date(_.last(days));
-                first.setHours(0, 0, 0, 0);
-                last.setHours(0, 0, 0, 0);
-                return (
-                    entryDate.getTime() >= first.getTime() &&
-                    entryDate.getTime() <= last.getTime() &&
-                    Number(entry.value) >= foundMeter.dailyGoal
-                );
-            }
+            const first = _.first(days);
+            const last = _.last(days);
+            return (
+                entryDate.getTime() >= first.getTime() &&
+                entryDate.getTime() <= last.getTime() &&
+                Number(entry.value) >= foundMeter.dailyGoal
+            );
         });
-        acc[foundMeter.id] = {
-            meter: foundMeter,
-            entries: entriesSoFar,
-            progress: entriesSoFar.length / foundMeter.weeklyGoal
-        };
+        acc[foundMeter.id] = entriesSoFar.length / foundMeter.weeklyGoal;
         return acc;
     }, {})
 };

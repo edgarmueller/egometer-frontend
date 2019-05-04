@@ -14,7 +14,7 @@ import { getMeters } from "../../reducers";
 
 import Widget from "../../components/common/Widget";
 import widgets from "../../widgets";
-import { fetchEntriesPerMonthRequest, fetchMeters } from "../../actions";
+import { fetchEntriesRequest, fetchMeters } from "../../actions";
 import ErrorSnackbar from "../common/ErrorSnackbar";
 import { calcProgress } from "../../common/progress";
 
@@ -159,8 +159,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchEntries(date) {
-    dispatch(fetchEntriesPerMonthRequest(date));
+  fetchEntries(date, days) {
+    dispatch(fetchEntriesRequest(date, days));
   },
   fetchMeters() {
     dispatch(fetchMeters());

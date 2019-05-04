@@ -54,7 +54,8 @@ export class MonthlyDashboard extends React.Component {
 
   componentDidMount() {
     this.props.fetchEntries(
-      `${this.state.year}-${this.state.month}-${moment().date()}`
+      `${this.state.year}-${this.state.month}-${moment().date()}`,
+      moment().daysInMonth()
     );
   }
 
@@ -146,7 +147,6 @@ MonthlyDashboard.defaultProps = {
   meters: [],
   widgets: []
 };
-
 const mapStateToProps = state => {
   return {
     isLoading:
@@ -161,8 +161,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchEntries(date) {
-    dispatch(actions.fetchEntriesPerMonthRequest(date));
+  fetchEntries(date, days) {
+    dispatch(actions.fetchEntriesRequest(date));
   }
 });
 

@@ -64,9 +64,9 @@ export function fetchEntriesEpic(action$, store, deps) {
   return action$
     .ofType(FETCH_ENTRIES_REQUEST)
     .debounceTime(250)
-    .switchMap(({ date, meterId }) => {
+    .switchMap(({ date, meterId, days }) => {
       return Observable.fromPromise(
-        deps.api.fetchEntriesPerMonth(date, meterId)
+        deps.api.fetchEntriesByDate(date, meterId, days)
       );
     })
     .map(resp => receiveEntries(resp.data))

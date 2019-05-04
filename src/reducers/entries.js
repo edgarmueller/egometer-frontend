@@ -60,12 +60,12 @@ export default (state = initialState, action) => {
     case FETCH_ENTRIES_SUCCESS:
       if (state.loadingStatus.isLoading && state.loadingStatus.meterId) {
         // TODO:
-        const clone = _.cloneDeep(state.entries);
-        clone[state.loadingStatus.meterId] =
+        const clonedEntries = _.cloneDeep(state.entries);
+        clonedEntries[state.loadingStatus.meterId] =
           action.entries[state.loadingStatus.meterId];
         return {
           // TODO: data accessor necessary
-          entries: clone,
+          entries: clonedEntries,
           loadingStatus: {
             isLoading: false,
             meterId: undefined

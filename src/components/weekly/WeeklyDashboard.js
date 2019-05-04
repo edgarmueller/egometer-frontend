@@ -48,8 +48,9 @@ export class WeeklyDashboard extends React.Component {
   }
 
   componentDidMount() {
+    const { date } = this.state;
     this.props.fetchEntries(
-      `${this.state.year}-${this.state.month}-${moment().date()}`
+      `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
     );
   }
 
@@ -155,7 +156,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchEntries(date) {
-    dispatch(actions.fetchEntriesPerMonthRequest(date));
+    dispatch(actions.fetchEntriesRequest(date, 7));
   },
   ...ownProps
 });

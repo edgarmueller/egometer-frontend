@@ -23,8 +23,8 @@ export function daysOfMonth(year, month) {
 
 export function daysOfWeek(date) {
   const days = [];
-  days.push(date);
   date.setHours(0, 0, 0, 0);
+  days.push(date);
   let i = 1;
   while (i < 7) {
     date = new Date(date.getTime());
