@@ -16,7 +16,11 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontSize: "1.5em",
-    fontWeight: 700
+    fontWeight: 700,
+    "&:hover": {
+      backgroundColor: "rgb(65, 102, 170, 0.5)",
+      color: "#fff"
+    },
   }
 };
 
@@ -90,11 +94,11 @@ class EnumCellRenderer extends React.Component {
           onClick={this.handleOnOpenClick}
         >
           {// use black as color (== unselected)
-          showImage
-            ? imageProvider
-              ? imageProvider(color, false, data)
-              : label
-            : null}
+            showImage
+              ? imageProvider
+                ? imageProvider(color, false, data)
+                : label
+              : null}
         </div>
         <EnumSelectionDialog
           schema={schema}

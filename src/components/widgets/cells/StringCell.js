@@ -20,6 +20,10 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontSize: "1.5em",
+    "&:hover": {
+      backgroundColor: "rgb(65, 102, 170, 0.5)",
+      color: "#fff"
+    },
   },
   dialogTitle: {
     padding: "10px"

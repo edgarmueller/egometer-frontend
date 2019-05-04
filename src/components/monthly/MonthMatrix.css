@@ -34,13 +34,6 @@
   align-items: center;
 }
 
-.item:hover {
-  background-color: rgba(0, 0, 0, 0.2);
-}
-.hoveredItem {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
 input,
 textarea {
   background-color: transparent;

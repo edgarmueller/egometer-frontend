@@ -13,7 +13,11 @@ const styles = {
     borderRadius: 5,
     display: "flex",
     textAlign: "center",
-    border: "none"
+    border: "none",
+    "&:hover": {
+      backgroundColor: "rgb(65, 102, 170, 0.5)",
+      color: "#fff"
+    }
   }
 };
 
