@@ -32,6 +32,7 @@ export class Cell extends React.Component {
     }
 
     const Cell = widget.cell;
+    const hasData = !_.isEmpty(data);
 
     return (
       <Cell
@@ -42,7 +43,7 @@ export class Cell extends React.Component {
         updateEntry={updateEntry}
         meterId={rowData.meterId}
         color={
-          data ? color : today === date ? "rgba(246, 246, 31, 0.56)" : null
+          hasData ? color : today === date ? "rgba(246, 246, 31, 0.56)" : null
         }
         style={style}
       />
