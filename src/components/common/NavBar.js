@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, Fragment } from "react";
 import { Link } from "react-router-dom";
 import Ionicon from "react-ionicons";
 import AppBar from "@material-ui/core/AppBar";
@@ -12,6 +12,7 @@ import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { routerActions } from "react-router-redux";
 import Radium from "radium";
+import Media from "react-media";
 import { link, logo } from "../../common/styles";
 import { logout } from "../../actions";
 import { visibleOnlyAdmin } from "../../common/auth";
@@ -76,92 +77,120 @@ export const NavBar = ({
 
   if (isAuthenticated) {
     return (
-      <div
-        style={{ display: "flex", justifyContent: "center", padding: "0.5rem" }}
-      >
-        <nav>
-          <div
-            style={{
-              display: "inline-block",
-              backgroundColor: "#fff",
-              color: "#fff",
-              borderRadius: 30,
-              border: '1px solid rgb(65, 102, 170, 0.5)'
-            }}
-          >
-            <AdminLinkButton
-              link="/schemas"
-              label="Schemas"
-              className={classes.link}
-              currentRoute={currentRoute}
-            />
-            <LinkButton
-              link="/matrix"
-              label="Month"
-              className={classes.link}
-              currentRoute={currentRoute}
-            />
-            <LinkButton
-              link="/weekly"
-              label="Week"
-              className={classes.link}
-              currentRoute={currentRoute}
-            />
-            <LinkButton
-              link="/dashboard"
-              label="Today"
-              className={classes.link}
-              currentRoute={currentRoute}
-            />
-            <LinkButton
-              link="/meters"
-              label="Meters"
-              className={classes.link}
-              currentRoute={currentRoute}
-            />
-            <Button className={classes.link} onClick={logout}>
-              Logout
-            </Button>
-          </div>
-        </nav>
-        <RadiumLink
-          className={classes.logo}
-          to="/"
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center"
-          }}
-        >
-          <Ionicon icon="md-flash" />
-          egometer
-          {isDevmode && (
-            <strong style={{ color: "#FF7043" }}>&nbsp;DEVMODE</strong>
-          )}
-        </RadiumLink>
-        <Button
-          variant="outlined"
-          size="small"
-          color="primary"
-          aria-label="Add"
-          style={{
-            color: "rgb(65, 102, 170)",
-            borderRadius: 30
-          }}
-          onClick={handleClick}
-        >
-          <AddIcon />
-          Add meter
-        </Button>
-        <Drawer open={open} onClose={handleClose}>
-          <AddMeter
-            open={open}
-            onSubmit={confirmDialog}
-            handleClose={handleClose}
-            widgets={widgets}
-          />
-        </Drawer>
-      </div>
+      <Media query="(max-width: 1199px)">
+        {lt1200 =>
+          lt1200 ? (
+            <Fragment>
+              <LinkButton
+                link="/dashboard"
+                label="Today"
+                className={classes.link}
+                currentRoute={currentRoute}
+              />
+              <LinkButton
+                link="/meters"
+                label="Meters"
+                className={classes.link}
+                currentRoute={currentRoute}
+              />
+              <Button className={classes.link} onClick={logout}>
+                Logout
+              </Button>
+            </Fragment>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "0.5rem"
+              }}
+            >
+              <nav>
+                <div
+                  style={{
+                    display: "inline-block",
+                    backgroundColor: "#fff",
+                    color: "#fff",
+                    borderRadius: 30,
+                    border: "1px solid rgb(65, 102, 170, 0.5)"
+                  }}
+                >
+                  <AdminLinkButton
+                    link="/schemas"
+                    label="Schemas"
+                    className={classes.link}
+                    currentRoute={currentRoute}
+                  />
+                  <LinkButton
+                    link="/matrix"
+                    label="Month"
+                    className={classes.link}
+                    currentRoute={currentRoute}
+                  />
+                  <LinkButton
+                    link="/weekly"
+                    label="Week"
+                    className={classes.link}
+                    currentRoute={currentRoute}
+                  />
+                  <LinkButton
+                    link="/dashboard"
+                    label="Today"
+                    className={classes.link}
+                    currentRoute={currentRoute}
+                  />
+                  <LinkButton
+                    link="/meters"
+                    label="Meters"
+                    className={classes.link}
+                    currentRoute={currentRoute}
+                  />
+                  <Button className={classes.link} onClick={logout}>
+                    Logout
+                  </Button>
+                </div>
+              </nav>
+              <RadiumLink
+                className={classes.logo}
+                to="/"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center"
+                }}
+              >
+                <Ionicon icon="md-flash" />
+                egometer
+                {isDevmode && (
+                  <strong style={{ color: "#FF7043" }}>&nbsp;DEVMODE</strong>
+                )}
+              </RadiumLink>
+              <Button
+                variant="outlined"
+                size="small"
+                color="primary"
+                aria-label="Add"
+                style={{
+                  color: "rgb(65, 102, 170)",
+                  borderRadius: 30
+                }}
+                onClick={handleClick}
+              >
+                <AddIcon />
+                Add meter
+              </Button>
+              <Drawer open={open} onClose={handleClose}>
+                <AddMeter
+                  open={open}
+                  onSubmit={confirmDialog}
+                  handleClose={handleClose}
+                  widgets={widgets}
+                />
+              </Drawer>
+            </div>
+          )
+        }
+      </Media>
     );
   }
 
