@@ -1,4 +1,5 @@
 import _ from "lodash";
+import moment from "moment";
 
 export const pad = s => {
   if (_.isNumber(s)) {
@@ -71,3 +72,21 @@ export function findByDate(data, desiredDate) {
 export function lastDayOfMonth(month, year) {
   return new Date(year, month, 0).getDate();
 }
+
+export const weekToDate = week =>
+  moment()
+    .startOf("isoweek")
+    .week(week)
+    .toDate();
+
+export const getCurrentWeek = () => {
+  var currentDate = moment();
+  return currentDate
+    .clone()
+    .startOf("isoweek")
+    .week();
+};
+
+export const getWeek = function(date) {
+  return moment(date).week();
+};

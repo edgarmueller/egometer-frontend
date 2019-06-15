@@ -28,10 +28,13 @@ function getWeekRange(date) {
 }
 
 export default class WeekPicker extends React.Component {
-  state = {
-    hoverRange: undefined,
-    selectedDays: []
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      hoverRange: undefined,
+      selectedDays: getWeekDays(getWeekRange(this.props.date).from)
+    };
+  }
 
   handleDayChange = date => {
     const selectedDays = getWeekDays(getWeekRange(date).from);
@@ -59,7 +62,6 @@ export default class WeekPicker extends React.Component {
 
   render() {
     const { hoverRange, selectedDays } = this.state;
-
     const daysAreSelected = selectedDays.length > 0;
 
     const modifiers = {
@@ -78,6 +80,7 @@ export default class WeekPicker extends React.Component {
       <div className="SelectedWeekExample">
         <DayPicker
           selectedDays={selectedDays}
+          month={this.props.date}
           showWeekNumbers
           showOutsideDays
           modifiers={modifiers}

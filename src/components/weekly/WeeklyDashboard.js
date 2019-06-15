@@ -15,14 +15,19 @@ import {
   isSchemasLoading,
   isMetersLoading
 } from "../../reducers";
-import { findBySchemaId } from "../../utils"
+import { findBySchemaId } from "../../utils";
 import widgets from "../../widgets";
 import ErrorSnackbar from "../common/ErrorSnackbar";
 import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import WeekPicker from "./WeekPicker";
 import Charts from "../monthly/Charts";
-import { findMonday, daysOfWeek } from "../../common/date";
+import {
+  daysOfWeek,
+  getWeek,
+  weekToDate,
+  getCurrentWeek
+} from "../../common/date";
 import { getSchemas } from "../../reducers";
 
 const styles = {
@@ -38,12 +43,15 @@ export class WeeklyDashboard extends React.Component {
     const now = moment();
     const { match } = props;
     const year = _.get(match, "params.year");
-    const month = _.get(match, "params.month");
+    const week = _.get(match, "params.week");
+    const month = week && weekToDate(week).getMonth() + 1;
+    const w = week || getCurrentWeek();
+    const m = month || weekToDate(w).getMonth() + 1;
     this.state = {
+      date: weekToDate(w),
       year: year ? Number(year) : now.year(),
-      month: month ? Number(month) : now.month() + 1,
-      date: findMonday(new Date()),
-      days: daysOfWeek(findMonday(new Date()))
+      month: m,
+      days: daysOfWeek(weekToDate(w))
     };
   }
 
@@ -54,9 +62,9 @@ export class WeeklyDashboard extends React.Component {
     );
   }
 
-  findSchema = (schemaId) => {
-    return findBySchemaId(this.props.schemas, schemaId)
-  }
+  findSchema = schemaId => {
+    return findBySchemaId(this.props.schemas, schemaId);
+  };
 
   render() {
     const {
@@ -84,7 +92,7 @@ export class WeeklyDashboard extends React.Component {
     }
 
     return (
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <ErrorSnackbar />
         <div
           style={{ display: "flex", flexDirection: "column" }}
@@ -92,14 +100,15 @@ export class WeeklyDashboard extends React.Component {
         >
           <div style={{ display: "flex", flexDirection: "row" }}>
             <WeekPicker
+              date={this.state.date}
               onChange={days => {
-                this.setState({
-                  days: days.map(d => {
-                    d.setDate(d.getDate() + 1);
-                    d.setHours(0, 0, 0, 0);
-                    return d;
-                  })
-                });
+                const week = getWeek(days[0]);
+                const year = days[0].getFullYear();
+                const month = days[0].getMonth() + 1;
+                // TODO: we do not fetch each time
+                fetchEntries(`${year}-${month}-${moment().date()}`);
+                // TODO: can we just update the URL without reloading?
+                history.push(`/weekly/${year}/${week}`);
               }}
             />
             <MatrixContainer
@@ -122,7 +131,7 @@ export class WeeklyDashboard extends React.Component {
             findBySchemaId={this.findSchema}
             meters={meters}
             widgets={widgets}
-            widgetType='week'
+            widgetType="week"
             width={window.innerWidth / 2}
           />
         </div>

@@ -98,7 +98,7 @@ class App extends Component {
             />
             <Route
               exact
-              path="/weekly/:year(\d{4})?/:month(0?[1-9]|1[012])?"
+              path="/weekly/:year(\d{4})?/:week(0?[1-9]|[0-9]{2})?"
               component={userIsAuthenticated(AsycnWeeklyDashboard)}
             />
             <Route
