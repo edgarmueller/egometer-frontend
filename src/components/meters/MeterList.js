@@ -156,6 +156,7 @@ export const Meters = ({
               <TableCell>Name</TableCell>
               <TableCell />
               <TableCell />
+              <TableCell>Type</TableCell>
               <TableCell>Actions</TableCell>
               <TableCell>Daily Goal</TableCell>
               <TableCell>Weekly Goal</TableCell>
@@ -179,6 +180,7 @@ export const Meters = ({
                         }
                       />
                     </TableCell>
+                    <TableCell>{meter.widget}</TableCell>
                     <TableCell>
                       <IconButton
                         aria-label="Delete meter"
