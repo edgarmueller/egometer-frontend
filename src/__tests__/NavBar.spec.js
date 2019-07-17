@@ -1,5 +1,4 @@
 import React from "react";
-import Media from "react-media";
 import { configure, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
@@ -36,11 +35,7 @@ describe("NavBar", () => {
           pathname: "weekly"
         }}
       />
-    )
-      .find(Media)
-      .renderProp("children")();
-
-    console.log(wrapper);
+    );
 
     expect(wrapper.find(LinkButton).length).toBe(4);
   });
