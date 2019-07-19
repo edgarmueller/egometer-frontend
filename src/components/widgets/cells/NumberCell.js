@@ -8,6 +8,7 @@ const styles = {
   numberCell: {
     width: "100%",
     height: "100%",
+    fontSize: '0.75rem',
     maxWidth: 30,
     maxHeight: 30,
     borderRadius: 5,
@@ -49,6 +50,7 @@ class NumberInput extends React.PureComponent {
         onChange={this.handleOnChange}
         onKeyDown={this.handleOnKeyDown}
         onBlur={this.handleOnBlur}
+        step={0.01}
       />
     );
   }
