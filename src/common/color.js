@@ -1,6 +1,4 @@
-import _ from "lodash";
 import hexToRgba from "hex-to-rgba";
-import { pad } from "./date";
 
 // via https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
 export function shadeColor2(color, percent) {
@@ -24,32 +22,14 @@ export function shadeColor2(color, percent) {
   );
 }
 
-const calcStreak = (rowData, date, startIndex) => {
-  let i = startIndex;
-  let streak = 0;
-  while (i >= 0) {
-    const day = pad(i.toString());
-    const key = `${date.getFullYear()}-${date.getMonth() + 1}-${day}`;
-
-    if (_.has(rowData, key)) {
-      streak += 1;
-      i -= 1;
-    } else {
-      return streak;
-    }
-  }
-
-  return streak;
-};
-
-export const createColor = (
-  colorMapping,
-  date,
-  rowData,
-  columnIndex
-) => {
-  const streak = calcStreak(rowData, date, columnIndex);
-  const alpha = 0.4 + streak / 10;
+/**
+ * Calculate a color based on the given color mapping and row data.
+ *  
+ * @param {*} colorMapping 
+ * @param {*} rowData 
+ */
+export const createColor = (colorMapping, rowData) => {
+  const alpha = 0.4;
   if (colorMapping && rowData.meter && colorMapping[rowData.meter.name]) {
     return hexToRgba(colorMapping[rowData.meter.name], alpha);
   }
@@ -66,6 +46,7 @@ export const getProgressColor = (progress, alpha) => {
     } else if (progress >= 1) {
       return createProgressSuccessColor(alpha);
     }
+    return `rgba(244, 67, 54, ${alpha})`;
   }
   return null;
 };

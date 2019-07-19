@@ -152,21 +152,17 @@ class MeterTable extends React.Component {
                 props.rowData.meterId,
                 props.dataKey
               );
+              const progressColor = getProgressColor(dailyProgress, 0.9)
               const color = createColor(
                 colorMapping,
-                d,
                 props.rowData,
-                props.columnIndex
               );
-              const progressColor = getProgressColor(dailyProgress, 0.9)
               return (
                 <div className={"item"}>
                   <ErrorBoundary>
                     <Cell
                       style={{
-                        border: dailyProgress
-                          ? `2px solid ${progressColor}`
-                          : null,
+                        border: dailyProgress ? `2px solid ${progressColor}` : null
                       }}
                       color={color}
                       widget={_.find(
