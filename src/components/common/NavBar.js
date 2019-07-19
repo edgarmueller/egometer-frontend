@@ -63,8 +63,8 @@ export const NavBar = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [currentRoute, setRoute] = useState(location.pathname);
-  const handleClick = useCallback(() => setOpen(true));
-  const handleClose = useCallback(() => setOpen(false));
+  const handleClick = useCallback(() => setOpen(true), [setOpen]);
+  const handleClose = useCallback(() => setOpen(false), [setOpen]);
   useEffect(() =>
     history.listen((location, action) => {
       setRoute(location.pathname);

@@ -129,9 +129,9 @@ export const Meters = ({
       ...meter,
       [propName]: propValue
     });
-  });
+  }, [updateMeterRequest]);
 
-  const handleDeleteMeter = useCallback(meter => () => deleteMeter(meter.id));
+  const handleDeleteMeter = useCallback(meter => () => deleteMeter(meter.id), [deleteMeter]);
   useEffect(() => dispatch({ type: UPDATE_ALL, payload: metersById(meters) }), [
     meters
   ]);
