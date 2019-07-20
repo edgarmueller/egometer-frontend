@@ -7,42 +7,29 @@ import BooleanCell from "./BooleanCell";
 import NumberCell from "./NumberCell";
 import StringCell from "./StringCell";
 
-export class GenericCell extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-      inputValue: undefined
-    };
+export const GenericCell = ({ schema, ...props }) => {
+  if (schema === undefined) {
+    return null;
   }
 
-  render() {
-    const { schema } = this.props;
-
-    if (schema === undefined) {
-      return null;
-    }
-
-    switch (schema.type) {
-      case "boolean":
-        return <BooleanCell {...this.props} />;
-      case "number":
-      case "integer":
-        return <NumberCell {...this.props} />;
-      case "string":
-      default:
-        return <StringCell {...this.props} />;
-    }
+  switch (schema.type) {
+    case "boolean":
+      return <BooleanCell {...props} />;
+    case "number":
+    case "integer":
+      return <NumberCell {...props} />;
+    case "string":
+    default:
+      return <StringCell {...props} />;
   }
-}
+};
 
 GenericCell.propTypes = {
   data: PropTypes.any,
   date: PropTypes.string,
   isLoading: PropTypes.bool,
   meterId: PropTypes.string,
-  schema: PropTypes.object,
-  updateEntry: PropTypes.func.isRequired
+  schema: PropTypes.object
 };
 
 GenericCell.defaultProps = {

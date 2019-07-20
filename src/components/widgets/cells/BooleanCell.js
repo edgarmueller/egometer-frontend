@@ -1,9 +1,10 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import ConnectedComponent from "../../../components/common/ConnectedComponent";
 import Checkbox from "@material-ui/core/Checkbox";
 import RadioButtonUnchecked from "@material-ui/icons/RadioButtonUnchecked";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { MeterContext } from "../../../context";
 
 const styles = {
   checkbox: {
@@ -22,42 +23,45 @@ const styles = {
 };
 
 const BooleanCell = ({
+  meterId,
   classes,
   color,
   isLoading,
   date,
   data,
-  hover,
-  updateEntry
-}) => (
-  <ConnectedComponent
-    date={date}
-    isLoading={isLoading}
-    data={data}
-    updateEntry={updateEntry}
-    fromEvent={ev => {
-      return ev.target.checked;
-    }}
-  >
-    {({ handleOnChange, data }) => {
-      return (
-        <div className={classes.checkbox} style={{ backgroundColor: color }}>
-          <Checkbox
-            icon={
-              hover ? (
-                <RadioButtonUnchecked style={{ color: "#fff" }} />
-              ) : (
-                <span />
-              )
-            }
-            checkedIcon={<CheckCircle />}
-            checked={data}
-            onChange={ev => handleOnChange(ev)}
-          />
-        </div>
-      );
-    }}
-  </ConnectedComponent>
-);
+  hover
+}) => {
+  const { deleteEntry, updateEntry } = useContext(MeterContext);
+
+  return (
+    <ConnectedComponent
+      date={date}
+      isLoading={isLoading}
+      data={data}
+      updateEntry={updateEntry(meterId, date)}
+      deleteEntry={deleteEntry}
+      fromEvent={ev => ev.target.checked}
+    >
+      {({ handleOnChange, data: value }) => {
+        return (
+          <div className={classes.checkbox} style={{ backgroundColor: color }}>
+            <Checkbox
+              icon={
+                hover ? (
+                  <RadioButtonUnchecked style={{ color: "#fff" }} />
+                ) : (
+                  <span />
+                )
+              }
+              checkedIcon={<CheckCircle />}
+              checked={value}
+              onChange={ev => handleOnChange(ev)}
+            />
+          </div>
+        );
+      }}
+    </ConnectedComponent>
+  );
+};
 
 export default withStyles(styles)(BooleanCell);

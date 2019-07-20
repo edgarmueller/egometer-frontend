@@ -1,22 +1,26 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+// TODO make a context/hook out of this context?
 export class ConnectedComponent extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      text: props.data
+      text: (props.data && props.data.value) || ""
     };
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    // TODO data is entry actually
     if (
       (this.props.date && prevProps.date !== this.props.date) ||
-      (prevProps.isLoading && !this.props.isLoading)
+      (prevProps.isLoading && !this.props.isLoading) ||
+      (prevProps.data && prevProps.data.value) !==
+        (this.props.data && this.props.data.value)
     ) {
       // only update data via props if either the date or the loading state changes
       this.setState({
-        text: this.props.data
+        text: this.props.data.value
       });
     }
   }
@@ -51,7 +55,7 @@ export class ConnectedComponent extends React.PureComponent {
   };
 
   reset = () => {
-    this.setState({ text: this.props.data });
+    this.setState({ text: this.props.data.value });
   };
 
   render() {
@@ -76,7 +80,9 @@ ConnectedComponent.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   fromEvent: PropTypes.func,
   updateOnChange: PropTypes.bool,
+  // TODO: instead of passsing these as props, we could use conetxt
   updateEntry: PropTypes.func.isRequired,
+  deleteEntry: PropTypes.func.isRequired,
   // TODO: maybe rename prop to initData?
   data: PropTypes.any,
   date: PropTypes.string,
@@ -86,7 +92,7 @@ ConnectedComponent.propTypes = {
 ConnectedComponent.defaultProps = {
   fromEvent: x => x.target.value,
   updateOnChange: true,
-  data: "",
+  data: undefined,
   shouldDebounce: false
 };
 

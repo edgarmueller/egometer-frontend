@@ -117,10 +117,23 @@ export const UPDATE_ENTRY_REQUEST = "UPDATE_ENTRY_REQUEST";
 export const UPDATE_ENTRY_SUCCESS = "UPDATE_ENTRY_SUCCESS";
 export const UPDATE_ENTRY_FAILURE = "UPDATE_ENTRY_FAILURE";
 
+export const DELETE_ENTRY_REQUEST = "DELETE_ENTRY_REQUEST";
+export const DELETE_ENTRY_SUCCESS = "DELETE_ENTRY_SUCCESS";
+export const DELETE_ENTRY_FAILURE = "DELETE_ENTRY_FAILURE";
+
 export const updateEntryRequest = (entry, shouldDebounce = false) => {
   return {
     type: UPDATE_ENTRY_REQUEST,
     shouldDebounce,
+    entry
+  };
+};
+
+export const deleteEntryRequest = (meterId, entry, shouldDebounce = false) => {
+  return {
+    type: DELETE_ENTRY_REQUEST,
+    shouldDebounce,
+    meterId,
     entry
   };
 };

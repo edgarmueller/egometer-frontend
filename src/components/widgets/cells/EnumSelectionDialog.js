@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Dialog from "@material-ui/core/Dialog/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import Button from "@material-ui/core/Button/Button";
@@ -25,7 +26,7 @@ const styles = {
   }
 };
 
-const isSelected = selected => value => selected.indexOf(value) !== -1;
+const isSelected = selected => value => selected.includes(value);
 
 class EnumSelectionPanel extends React.PureComponent {
   render() {
@@ -43,6 +44,7 @@ class EnumSelectionPanel extends React.PureComponent {
       labelProvider(literal),
       literal
     ]);
+
 
     return (
       <Grid container justify={"center"}>
@@ -111,6 +113,10 @@ class EnumSelectionDialog extends React.PureComponent {
       </Dialog>
     );
   }
+}
+
+EnumSelectionDialog.propTypes = {
+  selected: PropTypes.array.isRequired
 }
 
 export default withStyles(styles)(EnumSelectionDialog);

@@ -44,7 +44,7 @@ export const fetchEntriesByDate = (date, meterId, days) => {
       })
     );
   }
-}
+};
 
 export const createMeter = (schemaId, name, widget, color) =>
   Axios.post(
@@ -97,6 +97,9 @@ export const updateEntry = ({ meterId, date, value }) => {
     })
   );
 };
+
+export const deleteEntry = entry => 
+  Axios.delete(`${API_BASE_URL}/entries/${entry.id}`, createHeaders());
 
 // TODO: this should overwrite the value on the server
 export const submitSchema = (name, schema) =>

@@ -1,14 +1,15 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import { compose } from "redux";
 import * as _ from "lodash";
 import { withStyles } from "@material-ui/core/styles";
 import ConnectedComponent from "../../../components/common/ConnectedComponent";
+import { MeterContext } from "../../../context";
 
 const styles = {
   numberCell: {
     width: "100%",
     height: "100%",
-    fontSize: '0.75rem',
+    fontSize: "0.75rem",
     maxWidth: 30,
     maxHeight: 30,
     borderRadius: 5,
@@ -58,32 +59,23 @@ class NumberInput extends React.PureComponent {
 
 const StyledNumberInput = compose(withStyles(styles))(NumberInput);
 
-class NumberCell extends React.Component {
-  render() {
-    const {
-      color,
-      date,
-      data,
-      meterId,
-      updateEntry,
-      isLoading,
-      style
-    } = this.props;
-    return (
-      <ConnectedComponent
-        data={data}
-        date={date}
-        meterId={meterId}
-        updateEntry={updateEntry}
-        updateOnChange={false}
-        isLoading={isLoading}
-        fromEvent={ev => _.toNumber(ev.target.value)}
-        shouldDebounce
-      >
-        {props => <StyledNumberInput {...props} color={color} style={style} />}
-      </ConnectedComponent>
-    );
-  }
-}
+const NumberCell = ({ color, date, data, meterId, isLoading, style }) => {
+  const { deleteEntry, updateEntry } = useContext(MeterContext);
+  return (
+    <ConnectedComponent
+      data={data}
+      date={date}
+      meterId={meterId}
+      updateEntry={updateEntry(meterId, date)}
+      deleteEntry={deleteEntry}
+      updateOnChange={false}
+      isLoading={isLoading}
+      fromEvent={ev => _.toNumber(ev.target.value)}
+      shouldDebounce
+    >
+      {props => <StyledNumberInput {...props} color={color} style={style} />}
+    </ConnectedComponent>
+  );
+};
 
 export default NumberCell;

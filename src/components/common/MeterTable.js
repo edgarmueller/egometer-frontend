@@ -5,13 +5,14 @@ import moment from "moment";
 import { Column, Table } from "react-virtualized";
 import ErrorBoundary from "react-error-boundary";
 import { withStyles } from "@material-ui/core";
-import { Emoji } from 'emoji-mart'
+import { Emoji } from "emoji-mart";
 import Cell from "../cells/Cell";
 import styles from "../monthly/MonthMatrix.css";
 import { pad } from "../../common/date";
 import { createColor, getProgressColor } from "../../common/color";
 import DefaultTableRowRenderer from "../cells/DefaultTableRowRenderer";
 import { calcProgress } from "../../common/progress";
+import { findBySchemaId } from "../../utils";
 
 const HEADER_HEIGHT = 60;
 const OVERSCAN_ROW_COUNT = 10;
@@ -26,8 +27,8 @@ const additonalStyles = {
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
     overflow: "hidden",
-    fontWeight: 'bold',
-    paddingLeft: '0.15rem'
+    fontWeight: "bold",
+    paddingLeft: "0.15rem"
   }
 };
 
@@ -55,19 +56,22 @@ class MeterTable extends React.Component {
   };
 
   _getDatum(index) {
-    const { entries, meters, findBySchemaId } = this.props;
+    const { entries, meters, schemas } = this.props;
     const e = _.values(entries);
     if (e && index < meters.length) {
       const meter = meters[index];
 
-      const meterEntries = _.flatten(e.filter(e => e[0].meterId === meter.id));
-      const schema = findBySchemaId(meter.schemaId);
+      const meterEntries =
+        e.length === 0
+          ? []
+          : _.flatten(e.filter(e => e[0].meterId === meter.id));
+      const schema = findBySchemaId(schemas, meter.schemaId);
       if (schema === undefined) {
         return {};
       }
-      const res = meterEntries.reduce(
+      return meterEntries.reduce(
         (acc, o) => {
-          acc[o.date] = o.value;
+          acc[o.date] = o;
           return acc;
         },
         {
@@ -77,8 +81,6 @@ class MeterTable extends React.Component {
           widget: meter.widget
         }
       );
-
-      return res;
     }
 
     return [];
@@ -101,14 +103,8 @@ class MeterTable extends React.Component {
   };
 
   _createColumns = () => {
-    const {
-      classes,
-      colorMapping,
-      days,
-      isLoading,
-      widgets,
-      updateEntry
-    } = this.props;
+    const { classes, colorMapping, days, isLoading } = this.props;
+    const { widgets } = this.props;
     const meterColumn = [
       <Column
         key="meterColumn"
@@ -121,20 +117,22 @@ class MeterTable extends React.Component {
             return null;
           }
           return (
-            <div style={{ display: 'flex' }}>
-              {meter.icon && <Emoji emoji={meter.icon} size={24} set='emojione' />}
-              <div className={classes.title}>
-                {meter.name}
-              </div>
-            </div >
-          )
+            <div style={{ display: "flex" }}>
+              {meter.icon && (
+                <Emoji emoji={meter.icon} size={24} set="emojione" />
+              )}
+              <div className={classes.title}>{meter.name}</div>
+            </div>
+          );
         }}
       />
     ];
     return meterColumn.concat(
       days.map(d => {
         const day = d.getDate();
-        const date = `${d.getFullYear()}-${pad((d.getMonth() + 1).toString())}-${pad(day.toString())}`;
+        const date = `${d.getFullYear()}-${pad(
+          (d.getMonth() + 1).toString()
+        )}-${pad(day.toString())}`;
         const dayName = moment(date, "YYYY-MM-DD").format("dddd");
 
         return (
@@ -152,30 +150,28 @@ class MeterTable extends React.Component {
                 props.rowData.meterId,
                 props.dataKey
               );
-              const progressColor = getProgressColor(dailyProgress, 0.9)
-              const color = createColor(
-                colorMapping,
-                props.rowData,
+              const progressColor = getProgressColor(dailyProgress, 0.9);
+              const color = createColor(colorMapping, props.rowData);
+              const widget = _.find(
+                widgets,
+                w => w.name === props.rowData.widget && _.has(w, "cell")
               );
+
               return (
                 <div className={"item"}>
                   <ErrorBoundary>
                     <Cell
                       style={{
-                        border: dailyProgress ? `2px solid ${progressColor}` : null
+                        border: dailyProgress
+                          ? `2px solid ${progressColor}`
+                          : null
                       }}
                       color={color}
-                      widget={_.find(
-                        widgets,
-                        widget =>
-                          widget.name === props.rowData.widget &&
-                          _.has(widget, "cell")
-                      )}
+                      widget={widget}
                       rowData={props.rowData}
                       isLoading={isLoading}
                       date={date}
                       data={cellData}
-                      updateEntry={updateEntry(props.rowData.meterId, date)}
                     />
                   </ErrorBoundary>
                 </div>
@@ -190,8 +186,12 @@ class MeterTable extends React.Component {
   };
 
   _rowRenderer = props => {
-    const weeklyProgressPerMeter = calcProgress(this.props.entries, this.props.meters, this.props.days);
-    const weeklyProgress = weeklyProgressPerMeter[props.rowData.meterId]
+    const weeklyProgressPerMeter = calcProgress(
+      this.props.entries,
+      this.props.meters,
+      this.props.days
+    );
+    const weeklyProgress = weeklyProgressPerMeter[props.rowData.meterId];
     return (
       <DefaultTableRowRenderer
         rowKey={props.key}
@@ -239,10 +239,8 @@ class MeterTable extends React.Component {
 MeterTable.propTypes = {
   entries: PropTypes.object,
   meters: PropTypes.arrayOf(PropTypes.object),
-  findBySchemaId: PropTypes.func.isRequired,
   days: PropTypes.array,
   colorMapping: PropTypes.object,
-  updateEntry: PropTypes.func.isRequired,
   isLoading: PropTypes.bool,
   widgets: PropTypes.array,
   width: PropTypes.number.isRequired,

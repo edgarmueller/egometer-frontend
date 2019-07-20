@@ -1,31 +1,28 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import MeterTable from '../common/MeterTable';
+import MeterTable from "../common/MeterTable";
 
 class WeeklyMatrix extends React.Component {
-
   render() {
     const {
       colorMapping,
       entries,
       meters,
-      widgets,
       isLoading,
       days,
-      updateEntry,
-      findBySchemaId
+      widgets,
+      schemas
     } = this.props;
 
     return (
       <MeterTable
         entries={entries}
         meters={meters}
-        findBySchemaId={findBySchemaId}
+        schemas={schemas}
         days={days}
         colorMapping={colorMapping}
-        updateEntry={updateEntry}
-        isLoading={isLoading}
         widgets={widgets}
+        isLoading={isLoading}
         width={768}
       />
     );
@@ -34,13 +31,11 @@ class WeeklyMatrix extends React.Component {
 
 WeeklyMatrix.propTypes = {
   isLoading: PropTypes.bool,
-  updateEntry: PropTypes.func.isRequired,
-  meters: PropTypes.arrayOf(PropTypes.object),
-  widgets: PropTypes.array.isRequired
+  meters: PropTypes.arrayOf(PropTypes.object)
 };
 
 WeeklyMatrix.defaultProps = {
-  isLoading: false,
+  isLoading: false
 };
 
 export default WeeklyMatrix;

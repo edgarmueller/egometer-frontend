@@ -4,6 +4,7 @@ import * as _ from "lodash";
 import moment from "moment";
 import NoCellRenderer from "./NoCellRenderer";
 
+// TODO: rename to CellDispatch
 export class Cell extends React.Component {
   shouldComponentUpdate(nextProps, nextState, snapshot) {
     return (
@@ -16,31 +17,21 @@ export class Cell extends React.Component {
   render() {
     const today = moment().format("YYYY-MM-DD");
 
-    const {
-      data,
-      rowData,
-      date,
-      updateEntry,
-      isLoading,
-      color,
-      widget,
-      style
-    } = this.props;
+    const { data, rowData, date, isLoading, color, widget, style } = this.props;
 
     if (widget === undefined || widget.cell === undefined) {
       return <NoCellRenderer />;
     }
 
-    const Cell = widget.cell;
-    const hasData = !_.isEmpty(data);
+    const WidgetCell = widget.cell;
+    const hasData = !_.isEmpty(data) && !!data.value;
 
     return (
-      <Cell
+      <WidgetCell
         isLoading={isLoading}
         schema={rowData.schema}
         data={data}
         date={date}
-        updateEntry={updateEntry}
         meterId={rowData.meterId}
         color={
           hasData ? color : today === date ? "rgba(246, 246, 31, 0.56)" : null
@@ -55,7 +46,6 @@ Cell.propTypes = {
   data: PropTypes.any,
   rowData: PropTypes.object.isRequired,
   date: PropTypes.string.isRequired,
-  updateEntry: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
   color: PropTypes.string.isRequired
 };

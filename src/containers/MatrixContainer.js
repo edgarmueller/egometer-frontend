@@ -3,21 +3,35 @@ import { compose, withProps } from "recompose";
 import React from "react";
 import PropTypes from "prop-types";
 import widgets from "../widgets";
-import { updateEntryRequest } from "../actions";
+import { deleteEntryRequest, updateEntryRequest } from "../actions";
 import { getMeters } from "../reducers";
+import { MeterContext } from "../context";
 
 export class MatrixContainer extends React.Component {
   render() {
-    const { meters, child } = this.props;
+    const { days, meters, child, schemas, entries } = this.props;
+    const { widgets, deleteEntry, updateEntry } = this.props;
     const colorMapping = meters.reduce((acc, m) => {
       acc[m.name] = m.color;
       return acc;
     }, {});
     const Child = child;
     return (
-      <React.Fragment>
-        <Child {...this.props} colorMapping={colorMapping} />
-      </React.Fragment>
+      <MeterContext.Provider
+        value={{
+          updateEntry,
+          deleteEntry
+        }}
+      >
+        <Child
+          widgets={widgets}
+          entries={entries}
+          days={days}
+          meters={meters}
+          schemas={schemas}
+          colorMapping={colorMapping}
+        />
+      </MeterContext.Provider>
     );
   }
 }
@@ -43,14 +57,15 @@ const mapDispatchToProps = dispatch => ({
         shouldDebounce
       )
     );
-  }
+  },
+  deleteEntry: (meterId, entry) => dispatch(deleteEntryRequest(meterId, entry))
 });
 
 MatrixContainer.propTypes = {
-  days: PropTypes.array.isRequired,
-  findBySchemaId: PropTypes.func.isRequired,
-  year: PropTypes.number.isRequired,
-  month: PropTypes.number.isRequired
+  // TODO: schemas, meters
+  //const { meters, child, schemas, entries } = this.props;
+  //const { widgets, deleteEntry, updateEntry } = this.props;
+  days: PropTypes.array.isRequired
 };
 
 export default compose(

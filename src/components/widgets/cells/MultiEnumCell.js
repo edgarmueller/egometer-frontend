@@ -1,43 +1,72 @@
-import * as React from "react";
+import React, { useCallback, useContext } from "react";
 import * as _ from "lodash";
+import PropTypes from "prop-types";
 import EnumCellRenderer from "./EnumCellRenderer";
+import { MeterContext } from "../../../context";
 
-class MultiEnumCell extends React.Component {
-  isSelected = val => {
-    const { data } = this.props;
-    return data !== undefined ? data.indexOf(val) !== -1 : false;
-  };
-
-  updateMulti = val => {
-    const { data, updateEntry } = this.props;
-    if (data === undefined) {
-      updateEntry([val]);
-    } else {
-      if (data.indexOf(val) === -1) {
-        updateEntry(data.concat([val]));
+const MultiEnumCell = ({
+  meterId,
+  data,
+  date,
+  imageProvider,
+  labelProvider,
+  schema,
+  color,
+  isLoading
+}) => {
+  const isSelected = useCallback(
+    val => {
+      return data !== undefined ? data.indexOf(val) !== -1 : false;
+    },
+    [data]
+  );
+  const { updateEntry } = useContext(MeterContext);
+  const updateMulti = useCallback(
+    val => {
+      if (data === undefined) {
+        updateEntry(meterId, date)([val]);
       } else {
-        updateEntry(data.filter(x => x !== val));
+        console.log(data);
+        if (data.value.indexOf(val) === -1) {
+          updateEntry(meterId, date)(data.value.concat([val]));
+        } else {
+          updateEntry(meterId, date)(data.value.filter(x => x !== val));
+        }
       }
-    }
-  };
+    },
+    [updateEntry, meterId, date, data]
+  );
 
-  render() {
-    const { updateEntry, schema, ...otherProps } = this.props;
-
-    if (_.isEmpty(schema)) {
-      return null;
-    }
-
-    return (
-      <EnumCellRenderer
-        {...otherProps}
-        showImage={false}
-        updateEntry={this.updateMulti}
-        schema={schema.items}
-        closeOnSelect={false}
-      />
-    );
+  if (_.isEmpty(schema)) {
+    return null;
   }
-}
+
+  return (
+    <EnumCellRenderer
+      color={color}
+      date={date}
+      data={data && data.value}
+      labelProvider={labelProvider}
+      imageProvider={imageProvider}
+      isSelected={isSelected}
+      showImage={false}
+      updateEntry={updateMulti}
+      schema={schema.items}
+      closeOnSelect={false}
+      isLoading={isLoading}
+    />
+  );
+};
+
+MultiEnumCell.propTypes = {
+  meterId: PropTypes.string.isRequired,
+  data: PropTypes.any,
+  date: PropTypes.string,
+  imageProvider: PropTypes.any,
+  labelProvider: PropTypes.any,
+  schema: PropTypes.any,
+  color: PropTypes.string,
+  isLoading: PropTypes.bool
+};
 
 export default MultiEnumCell;

@@ -25,7 +25,10 @@ import {
   FETCH_METERS_REQUEST,
   UPDATE_METER_REQUEST,
   UPDATE_METER_SUCCESS,
-  UPDATE_METER_FAILURE
+  UPDATE_METER_FAILURE,
+  DELETE_ENTRY_REQUEST,
+  DELETE_ENTRY_FAILURE,
+  DELETE_ENTRY_SUCCESS
 } from "../actions";
 
 export function fetchSchemasEpic(action$, store, deps) {
@@ -100,6 +103,29 @@ export function updateEntryEpic(action$, store, deps) {
     });
 }
 
+export function deleteEntryEpic(action$, store, deps) {
+  return action$
+    .ofType(DELETE_ENTRY_REQUEST)
+    //    .filter(({ shouldDebounce }) => !shouldDebounce)
+    .switchMap(({ entry }) => {
+      console.log('entry to be deleted', entry)
+      return Observable.fromPromise(deps.api.deleteEntry(entry))
+        .flatMap(resp => {
+          return Observable.of({
+            type: DELETE_ENTRY_SUCCESS,
+            entry: resp.data
+          });
+        })
+        .catch(error => {
+          return Observable.of({
+            type: DELETE_ENTRY_FAILURE,
+            entry: entry.id,
+            error: error.message
+          });
+        });
+    });
+}
+
 export function updateEntryDebounceEpic(action$, store, deps) {
   return action$
     .ofType(UPDATE_ENTRY_REQUEST)
@@ -150,6 +176,7 @@ export const rootEpic = combineEpics(
   fetchMetersEpic,
   fetchEntriesEpic,
   updateEntryEpic,
+  deleteEntryEpic,
   updateEntryDebounceEpic,
   updateMeterDebounceEpic,
   fetchAllAfterLogin
