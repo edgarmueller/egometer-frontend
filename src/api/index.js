@@ -98,6 +98,14 @@ export const updateEntry = ({ meterId, date, value }) => {
   );
 };
 
+export const deleteEntry = entry => {
+  console.log('entry', entry)
+  return Axios.delete(
+    `${API_BASE_URL}/entries/${entry.id}`,
+    createHeaders()
+  );
+};
+
 // TODO: this should overwrite the value on the server
 export const submitSchema = (name, schema) =>
   Axios.post(

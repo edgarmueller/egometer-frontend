@@ -91,6 +91,9 @@ export class WeeklyDashboard extends React.Component {
       return <Loading />;
     }
 
+    console.log('entries', entries)
+
+
     return (
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <ErrorSnackbar />
@@ -110,6 +113,18 @@ export class WeeklyDashboard extends React.Component {
                 // TODO: can we just update the URL without reloading?
                 history.push(`/weekly/${year}/${week}`);
               }}
+            />
+            <MatrixContainer
+              date={this.state.date}
+              days={this.state.days}
+              headerHeight={30}
+              year={this.state.year}
+              month={this.state.month}
+              child={WeeklyMatrix}
+              findBySchemaId={this.findSchema}
+              meters={meters}
+              entries={entries}
+              {...otherProps}
             />
             <MatrixContainer
               date={this.state.date}

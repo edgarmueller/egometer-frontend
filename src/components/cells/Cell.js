@@ -20,6 +20,7 @@ export class Cell extends React.Component {
       data,
       rowData,
       date,
+      deleteEntry,
       updateEntry,
       isLoading,
       color,
@@ -31,16 +32,17 @@ export class Cell extends React.Component {
       return <NoCellRenderer />;
     }
 
-    const Cell = widget.cell;
+    const WidgetCell = widget.cell;
     const hasData = !_.isEmpty(data);
 
     return (
-      <Cell
+      <WidgetCell
         isLoading={isLoading}
         schema={rowData.schema}
         data={data}
         date={date}
         updateEntry={updateEntry}
+        deleteEntry={deleteEntry}
         meterId={rowData.meterId}
         color={
           hasData ? color : today === date ? "rgba(246, 246, 31, 0.56)" : null

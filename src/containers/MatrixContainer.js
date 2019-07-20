@@ -3,7 +3,7 @@ import { compose, withProps } from "recompose";
 import React from "react";
 import PropTypes from "prop-types";
 import widgets from "../widgets";
-import { updateEntryRequest } from "../actions";
+import { deleteEntryRequest, updateEntryRequest } from "../actions";
 import { getMeters } from "../reducers";
 
 export class MatrixContainer extends React.Component {
@@ -43,7 +43,8 @@ const mapDispatchToProps = dispatch => ({
         shouldDebounce
       )
     );
-  }
+  },
+  deleteEntry: (meterId, entry) => dispatch(deleteEntryRequest(meterId, entry))
 });
 
 MatrixContainer.propTypes = {

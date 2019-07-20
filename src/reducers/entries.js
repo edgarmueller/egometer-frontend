@@ -7,7 +7,10 @@ import {
   FETCH_ENTRIES_SUCCESS,
   UPDATE_ENTRY_FAILURE,
   UPDATE_ENTRY_REQUEST,
-  UPDATE_ENTRY_SUCCESS
+  UPDATE_ENTRY_SUCCESS,
+  DELETE_ENTRY_REQUEST,
+  DELETE_ENTRY_FAILURE,
+  DELETE_ENTRY_SUCCESS
 } from "../actions";
 
 const initialState = {
@@ -25,6 +28,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: undefined
+      };
+    case DELETE_ENTRY_REQUEST:
+      return {
+        ...state,
+        error: undefined,
+        loadingStatus: {
+          isLoading: false,
+          entryId: action.entry.id,
+          meterId: action.meterId
+        }
       };
     case UPDATE_ENTRY_REQUEST:
       return {
@@ -44,6 +57,7 @@ export default (state = initialState, action) => {
           meterId: action.meterId
         }
       };
+    case DELETE_ENTRY_FAILURE:
     case UPDATE_ENTRY_FAILURE:
     case FETCH_ENTRIES_FAILURE:
       return {
@@ -55,6 +69,19 @@ export default (state = initialState, action) => {
         loadingStatus: {
           isLoading: false,
           meterId: undefined
+        }
+      };
+    case DELETE_ENTRY_SUCCESS:
+      const clonedEntries = _.cloneDeep(state.entries);
+      const meterEntries = clonedEntries[state.loadingStatus.meterId]
+      clonedEntries[state.loadingStatus.meterId] = meterEntries.filter(e => e.id !== state.loadingStatus.entryId)
+      console.log('new entries', clonedEntries)
+      return {
+        entries: clonedEntries,
+        loadingStatus: {
+          isLoading: false,
+          meterId: undefined,
+          entryId: undefined
         }
       };
     case FETCH_ENTRIES_SUCCESS:

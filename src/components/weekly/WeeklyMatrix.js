@@ -12,6 +12,7 @@ class WeeklyMatrix extends React.Component {
       widgets,
       isLoading,
       days,
+      deleteEntry,
       updateEntry,
       findBySchemaId
     } = this.props;
@@ -24,6 +25,7 @@ class WeeklyMatrix extends React.Component {
         days={days}
         colorMapping={colorMapping}
         updateEntry={updateEntry}
+        deleteEntry={deleteEntry}
         isLoading={isLoading}
         widgets={widgets}
         width={768}
@@ -34,6 +36,7 @@ class WeeklyMatrix extends React.Component {
 
 WeeklyMatrix.propTypes = {
   isLoading: PropTypes.bool,
+  deleteEntry: PropTypes.func.isRequired,
   updateEntry: PropTypes.func.isRequired,
   meters: PropTypes.arrayOf(PropTypes.object),
   widgets: PropTypes.array.isRequired

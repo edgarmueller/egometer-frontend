@@ -114,6 +114,7 @@ export class Widget extends React.Component {
           data={data}
           schema={schema}
           updateEntry={this.updateEntry}
+          deleteEntry={this.deleteEntry}
         />
       </div>
     );
@@ -161,6 +162,11 @@ const mapDispatchToProps = dispatch => ({
         },
         shouldDebounce
       )
+    );
+  },
+  deleteEntry: (meterId, entry) => {
+    return dispatch(
+      actions.deleteEntryRequest(meterId, entry)
     );
   }
 });

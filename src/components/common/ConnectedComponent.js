@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+// TODO make a context/hook out of this context?
 export class ConnectedComponent extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -12,7 +13,8 @@ export class ConnectedComponent extends React.PureComponent {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       (this.props.date && prevProps.date !== this.props.date) ||
-      (prevProps.isLoading && !this.props.isLoading)
+      (prevProps.isLoading && !this.props.isLoading) ||
+      prevProps.data !== this.props.data
     ) {
       // only update data via props if either the date or the loading state changes
       this.setState({
@@ -77,6 +79,7 @@ ConnectedComponent.propTypes = {
   fromEvent: PropTypes.func,
   updateOnChange: PropTypes.bool,
   updateEntry: PropTypes.func.isRequired,
+  deleteEntry: PropTypes.func.isRequired,
   // TODO: maybe rename prop to initData?
   data: PropTypes.any,
   date: PropTypes.string,

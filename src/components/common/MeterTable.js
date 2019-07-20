@@ -60,14 +60,14 @@ class MeterTable extends React.Component {
     if (e && index < meters.length) {
       const meter = meters[index];
 
-      const meterEntries = _.flatten(e.filter(e => e[0].meterId === meter.id));
+      const meterEntries = e.length == 0 ? [] : _.flatten(e.filter(e => e[0].meterId === meter.id));
       const schema = findBySchemaId(meter.schemaId);
       if (schema === undefined) {
         return {};
       }
       const res = meterEntries.reduce(
         (acc, o) => {
-          acc[o.date] = o.value;
+          acc[o.date] = o;
           return acc;
         },
         {
@@ -107,7 +107,8 @@ class MeterTable extends React.Component {
       days,
       isLoading,
       widgets,
-      updateEntry
+      updateEntry,
+      deleteEntry
     } = this.props;
     const meterColumn = [
       <Column
@@ -176,6 +177,7 @@ class MeterTable extends React.Component {
                       date={date}
                       data={cellData}
                       updateEntry={updateEntry(props.rowData.meterId, date)}
+                      deleteEntry={deleteEntry}
                     />
                   </ErrorBoundary>
                 </div>
