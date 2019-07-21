@@ -94,7 +94,7 @@ export const NavBar = ({
               border: "1px solid rgb(65, 102, 170, 0.5)"
             }}
           >
-            <Hidden lgDown>
+            <Hidden mdDown>
               <AdminLinkButton
                 link="/schemas"
                 label="Schemas"
@@ -110,7 +110,7 @@ export const NavBar = ({
                 currentRoute={currentRoute}
               />
             </Hidden>
-            <Hidden lgDown>
+            <Hidden xsDown>
               <LinkButton
                 link="/weekly"
                 label="Week"
@@ -132,7 +132,7 @@ export const NavBar = ({
             />
             <Button className={classes.link} onClick={logout}>
               Logout
-                  </Button>
+            </Button>
           </div>
         </nav>
         <RadiumLink
@@ -146,7 +146,7 @@ export const NavBar = ({
         >
           <Ionicon icon="md-flash" />
           egometer
-                {isDevmode && (
+          {isDevmode && (
             <strong style={{ color: "#FF7043" }}>&nbsp;DEVMODE</strong>
           )}
         </RadiumLink>
@@ -163,7 +163,7 @@ export const NavBar = ({
         >
           <AddIcon />
           Add meter
-              </Button>
+        </Button>
         <Drawer open={open} onClose={handleClose}>
           <AddMeter
             open={open}
