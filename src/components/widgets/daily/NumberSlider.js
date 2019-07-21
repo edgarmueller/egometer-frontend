@@ -28,7 +28,6 @@ export class NumberSlider extends React.Component {
         data={(entry && entry.value) || undefined}
         date={date}
         updateOnChange
-        updateEntry={updateEntry}
         fromEvent={x => x}
       >
         {({ handleOnChange, data: number }) => {

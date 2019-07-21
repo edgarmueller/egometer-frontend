@@ -8,7 +8,6 @@ import Button from "@material-ui/core/Button/Button";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import ConnectedComponent from "../../../components/common/ConnectedComponent";
-import { MeterContext } from "../../../context";
 
 const styles = {
   stringCell: {
@@ -41,80 +40,72 @@ export const StringCell = ({
 }) => {
   const [open, setOpen] = useState(false);
   return (
-    <MeterContext.Consumer>
-      {({ updateEntry, deleteEntry }) => {
-        return (
-          <ConnectedComponent
-            shouldDebounce={true}
-            data={data}
-            date={date}
-            meterId={meterId}
-            isLoading={isLoading}
-            deleteEntry={deleteEntry}
-            updateEntry={updateEntry(meterId, date)}
-            updateOnChange={false}
+    <ConnectedComponent
+      shouldDebounce={true}
+      data={data}
+      date={date}
+      meterId={meterId}
+      isLoading={isLoading}
+      updateOnChange={false}
+    >
+      {({ data: value, handleOnChange, reset, submitEntry }) => (
+        <React.Fragment>
+          <div
+            className={classes.stringCell}
+            style={{
+              backgroundColor: color
+            }}
+            onClick={() => {
+              if (open) {
+                return;
+              }
+              setOpen(true);
+            }}
+          />
+          <Dialog
+            open={open}
+            maxWidth="md"
+            fullWidth
+            onClose={() => setOpen(false)}
           >
-            {({ data: value, handleOnChange, reset, submitEntry }) => (
-              <React.Fragment>
-                <div
-                  className={classes.stringCell}
-                  style={{
-                    backgroundColor: color
-                  }}
-                  onClick={() => {
-                    if (open) {
-                      return;
-                    }
-                    setOpen(true);
-                  }}
-                />
-                <Dialog
-                  open={open}
-                  maxWidth="md"
-                  fullWidth
-                  onClose={() => setOpen(false)}
-                >
-                  <DialogTitle>Add entry</DialogTitle>
-                  <DialogContent>
-                    <TextField
-                      multiline
-                      value={value}
-                      onChange={handleOnChange}
-                      rows={10}
-                      variant="outlined"
-                      fullWidth
-                      margin={"dense"}
-                    />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button
-                      variant="outlined"
-                      onClick={() => {
-                        submitEntry();
-                        setOpen(false);
-                      }}
-                      color="primary"
-                      autoFocus
-                    >
-                      OK
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      onClick={() => {
-                        setOpen(false);
-                        reset();
-                      }}
-                    >
-                      Close
-                    </Button>
-                  </DialogActions>
-                </Dialog>
-              </React.Fragment>
-            )}
-          </ConnectedComponent>
-        );
-      }}
-    </MeterContext.Consumer>
+            <DialogTitle>Add entry</DialogTitle>
+            <DialogContent>
+              <TextField
+                multiline
+                value={value}
+                onChange={handleOnChange}
+                rows={10}
+                variant="outlined"
+                fullWidth
+                margin={"dense"}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  submitEntry();
+                  setOpen(false);
+                }}
+                color="primary"
+                autoFocus
+              >
+                OK
+              </Button>
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  setOpen(false);
+                  reset();
+                }}
+              >
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </React.Fragment>
+      )}
+    </ConnectedComponent>
   );
 };
 

@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 import ConnectedComponent from "../../../components/common/ConnectedComponent";
 import Checkbox from "@material-ui/core/Checkbox";
 import RadioButtonUnchecked from "@material-ui/icons/RadioButtonUnchecked";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { MeterContext } from "../../../context";
 
 const styles = {
   checkbox: {
@@ -31,15 +30,12 @@ const BooleanCell = ({
   data,
   hover
 }) => {
-  const { deleteEntry, updateEntry } = useContext(MeterContext);
-
   return (
     <ConnectedComponent
       date={date}
       isLoading={isLoading}
       data={data}
-      updateEntry={updateEntry(meterId, date)}
-      deleteEntry={deleteEntry}
+      meterId={meterId}
       fromEvent={ev => ev.target.checked}
     >
       {({ handleOnChange, data: value }) => {

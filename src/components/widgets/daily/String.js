@@ -11,7 +11,7 @@ export class DailyString extends React.Component {
   };
 
   render() {
-    const { date, data, meter, updateEntry, isLoading, icon } = this.props;
+    const { date, data, meter, isLoading, icon } = this.props;
 
     const journalEntry = _.find(data, d => d.date === date);
 
@@ -22,7 +22,6 @@ export class DailyString extends React.Component {
         data={(journalEntry && journalEntry.value) || undefined}
         date={date}
         updateOnChange
-        updateEntry={updateEntry}
       >
         {({ handleOnChange, handleOnBlur, data: text }) => {
           return (

@@ -1,9 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { compose } from "redux";
 import * as _ from "lodash";
 import { withStyles } from "@material-ui/core/styles";
 import ConnectedComponent from "../../../components/common/ConnectedComponent";
-import { MeterContext } from "../../../context";
 
 const styles = {
   numberCell: {
@@ -60,14 +59,11 @@ class NumberInput extends React.PureComponent {
 const StyledNumberInput = compose(withStyles(styles))(NumberInput);
 
 const NumberCell = ({ color, date, data, meterId, isLoading, style }) => {
-  const { deleteEntry, updateEntry } = useContext(MeterContext);
   return (
     <ConnectedComponent
       data={data}
       date={date}
       meterId={meterId}
-      updateEntry={updateEntry(meterId, date)}
-      deleteEntry={deleteEntry}
       updateOnChange={false}
       isLoading={isLoading}
       fromEvent={ev => _.toNumber(ev.target.value)}
