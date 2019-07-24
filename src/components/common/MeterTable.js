@@ -208,7 +208,6 @@ class MeterTable extends React.Component {
   render() {
     const { meters, width } = this.props;
     // if specified in this order the json reponse contains HTML
-    // TODO updateEntry={updateEntry(date, props.rowData.meterId)}
     // TODO: 60 per meter + header
     const height = meters.length * 60 + 60;
     const rowCount = meters.length;
