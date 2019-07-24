@@ -109,4 +109,4 @@ export const StringCell = ({
   );
 };
 
-export default compose(withStyles(styles))(StringCell);
+export default compose(withStyles(styles))(React.memo(StringCell));

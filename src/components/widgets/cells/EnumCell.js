@@ -1,7 +1,7 @@
-import React, { useContext, useCallback } from "react";
+import React, { useCallback } from "react";
 import PropTypes from "prop-types";
 import EnumCellRenderer from "./EnumCellRenderer";
-import { MeterContext } from "../../../context";
+import { withMeterContext } from "../../../context";
 
 const EnumCell = ({
   meterId,
@@ -11,9 +11,10 @@ const EnumCell = ({
   labelProvider,
   schema,
   color,
-  isLoading
+  isLoading,
+  updateEntry,
+  deleteEntry
 }) => {
-  const { updateEntry, deleteEntry } = useContext(MeterContext);
   const update = useCallback(
     val => {
       if (data && data.value === val) {
@@ -49,11 +50,11 @@ EnumCell.propTypes = {
   meterId: PropTypes.string.isRequired,
   data: PropTypes.any,
   date: PropTypes.string,
-  imageProvider: PropTypes.any,
-  labelProvider: PropTypes.any,
+  imageProvider: PropTypes.func.isRequired,
+  labelProvider: PropTypes.func.isRequired,
   schema: PropTypes.any,
   color: PropTypes.string,
   isLoading: PropTypes.bool
 };
 
-export default EnumCell;
+export default withMeterContext(React.memo(EnumCell));

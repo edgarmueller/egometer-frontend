@@ -2,7 +2,7 @@ import React, { useCallback, useContext } from "react";
 import * as _ from "lodash";
 import PropTypes from "prop-types";
 import EnumCellRenderer from "./EnumCellRenderer";
-import { MeterContext } from "../../../context";
+import { MeterContext, withMeterContext } from "../../../context";
 
 const MultiEnumCell = ({
   meterId,
@@ -12,21 +12,19 @@ const MultiEnumCell = ({
   labelProvider,
   schema,
   color,
-  isLoading
+  isLoading,
+  updateEntry
 }) => {
   const isSelected = useCallback(
-    val => {
-      return data !== undefined ? data.indexOf(val) !== -1 : false;
-    },
+    val => (data !== undefined ? data.indexOf(val) !== -1 : false),
     [data]
   );
-  const { updateEntry } = useContext(MeterContext);
   const updateMulti = useCallback(
+    // TODO: if no entries are selected anymore, we should call deleteEntry
     val => {
       if (data === undefined) {
         updateEntry(meterId, date)([val]);
       } else {
-        console.log(data);
         if (data.value.indexOf(val) === -1) {
           updateEntry(meterId, date)(data.value.concat([val]));
         } else {
@@ -66,7 +64,8 @@ MultiEnumCell.propTypes = {
   labelProvider: PropTypes.any,
   schema: PropTypes.any,
   color: PropTypes.string,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
+  updateEntry: PropTypes.func.isRequired
 };
 
-export default MultiEnumCell;
+export default withMeterContext(React.memo(MultiEnumCell));

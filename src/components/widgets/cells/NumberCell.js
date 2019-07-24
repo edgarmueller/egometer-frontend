@@ -74,4 +74,4 @@ const NumberCell = ({ color, date, data, meterId, isLoading, style }) => {
   );
 };
 
-export default NumberCell;
+export default React.memo(NumberCell);
