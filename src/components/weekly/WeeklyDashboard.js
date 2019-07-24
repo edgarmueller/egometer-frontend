@@ -118,7 +118,6 @@ export class WeeklyDashboard extends React.Component {
               year={this.state.year}
               month={this.state.month}
               child={WeeklyMatrix}
-              findBySchemaId={this.findSchema}
               meters={meters}
               entries={entries}
               {...otherProps}
