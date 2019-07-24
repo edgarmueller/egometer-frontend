@@ -11,7 +11,6 @@ export class NumberSlider extends React.Component {
       date,
       data,
       meter,
-      updateEntry,
       isLoading,
       icon,
       min,
@@ -23,7 +22,7 @@ export class NumberSlider extends React.Component {
 
     return (
       <ConnectedComponent
-        meter={meter}
+        meterId={meter.id}
         isLoading={isLoading}
         data={(entry && entry.value) || undefined}
         date={date}
@@ -59,7 +58,6 @@ NumberSlider.propTypes = {
   date: PropTypes.string.isRequired,
   width: PropTypes.number,
   height: PropTypes.number,
-  updateEntry: PropTypes.func.isRequired,
   min: PropTypes.number.isRequired,
   max: PropTypes.number.isRequired,
   step: PropTypes.number

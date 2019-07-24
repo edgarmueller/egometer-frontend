@@ -28,52 +28,47 @@ function isNumeric(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-export class DailyNumber extends React.Component {
-  render() {
-    const { date, data, meter, isLoading, icon } = this.props;
-
-    const journalEntry = _.find(data, d => d.date === date);
-
-    return (
-      <ConnectedComponent
-        meter={meter}
-        fromEvent={ev => {
-          const val = ev.target.value;
-          const isNumber = isNumeric(val);
-          return isNumber ? _.toNumber(val) : val;
-        }}
-        isLoading={isLoading}
-        data={(journalEntry && journalEntry.value) || undefined}
-        date={date}
-        updateOnChange
-      >
-        {({ handleOnChange, handleOnBlur, data: number }) => {
-          return (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                boxSizing: "border-box"
+export const DailyNumber = ({ date, data, meter, isLoading, icon }) => {
+  const journalEntry = _.find(data, d => d.date === date);
+  return (
+    <ConnectedComponent
+      meterId={meter.id}
+      fromEvent={ev => {
+        const val = ev.target.value;
+        const isNumber = isNumeric(val);
+        return isNumber ? _.toNumber(val) : val;
+      }}
+      isLoading={isLoading}
+      data={(journalEntry && journalEntry.value) || undefined}
+      date={date}
+      updateOnChange
+    >
+      {({ handleOnChange, handleOnBlur, data: number }) => {
+        return (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              boxSizing: "border-box"
+            }}
+          >
+            <TitleBar meter={meter} icon={icon} />
+            <TextField
+              type="number"
+              variant="outlined"
+              value={number}
+              onChange={handleOnChange}
+              onBlur={handleOnBlur}
+              inputProps={{
+                pattern: "[0-9]+([.,][0-9]+)?"
               }}
-            >
-              <TitleBar meter={meter} icon={icon} />
-              <TextField
-                type="number"
-                variant="outlined"
-                value={number}
-                onChange={handleOnChange}
-                onBlur={handleOnBlur}
-                inputProps={{
-                  pattern: "[0-9]+([.,][0-9]+)?"
-                }}
-              />
-            </div>
-          );
-        }}
-      </ConnectedComponent>
-    );
-  }
-}
+            />
+          </div>
+        );
+      }}
+    </ConnectedComponent>
+  );
+};
 
 DailyNumber.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object),

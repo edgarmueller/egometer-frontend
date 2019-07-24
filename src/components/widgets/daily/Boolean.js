@@ -12,37 +12,35 @@ const styles = {
   underline
 };
 
-class DailyBoolean extends React.PureComponent {
-  render() {
-    const { meter, date, data, updateEntry, isLoading, icon } = this.props;
-    const booleanEntry = _.find(data, d => d.date === date);
+const Boolean = ({ meter, date, data, updateEntry, isLoading, icon }) => {
+  const booleanEntry = _.find(data, d => d.date === date);
 
-    return (
-      <ConnectedComponent
-        isLoading={isLoading}
-        data={(booleanEntry && booleanEntry.value) || false}
-        updateOnChange
-        // TODO: this should be probably be the default?
-        fromEvent={x => x}
-        updateEntry={updateEntry}
-      >
-        {({ handleOnChange, data: checked }) => {
-          return (
-            <div>
-              <TitleBar meter={meter} icon={icon} />
-              <Switch
-                checked={checked}
-                onChange={(ev, value) => handleOnChange(value)}
-              />
-            </div>
-          );
-        }}
-      </ConnectedComponent>
-    );
-  }
-}
+  return (
+    <ConnectedComponent
+      meterId={meter.id}
+      isLoading={isLoading}
+      data={(booleanEntry && booleanEntry.value) || false}
+      updateOnChange
+      // TODO: this should be probably be the default?
+      fromEvent={x => x}
+      updateEntry={updateEntry}
+    >
+      {({ handleOnChange, data: checked }) => {
+        return (
+          <div>
+            <TitleBar meter={meter} icon={icon} />
+            <Switch
+              checked={checked}
+              onChange={(ev, value) => handleOnChange(value)}
+            />
+          </div>
+        );
+      }}
+    </ConnectedComponent>
+  );
+};
 
-DailyBoolean.propTypes = {
+Boolean.propTypes = {
   meter: PropTypes.object.isRequired,
   date: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
@@ -51,8 +49,8 @@ DailyBoolean.propTypes = {
   icon: PropTypes.node
 };
 
-DailyBoolean.defaultProps = {
+Boolean.defaultProps = {
   icon: null
 };
 
-export default withStyles(styles)(DailyBoolean);
+export default withStyles(styles)(Boolean);

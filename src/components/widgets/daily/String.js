@@ -17,6 +17,7 @@ export class DailyString extends React.Component {
 
     return (
       <ConnectedComponent
+        meterId={meter.id}
         isLoading={isLoading}
         shouldDebounce={true}
         data={(journalEntry && journalEntry.value) || undefined}
@@ -53,6 +54,7 @@ export class DailyString extends React.Component {
 }
 
 DailyString.propTypes = {
+  meter: PropTypes.any,
   data: PropTypes.arrayOf(PropTypes.object),
   date: PropTypes.string.isRequired,
   width: PropTypes.number,
