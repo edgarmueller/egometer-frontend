@@ -102,7 +102,7 @@ export const NavBar = ({
                 currentRoute={currentRoute}
               />
             </Hidden>
-            <Hidden lgDown>
+            <Hidden mdDown>
               <LinkButton
                 link="/matrix"
                 label="Month"
