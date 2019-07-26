@@ -8,14 +8,7 @@ import { MeterContext } from "../context";
 configure({ adapter: new Adapter() });
 
 describe("ConnectedComponent", () => {
-  let setState;
   let wrapper;
-
-  beforeEach(() => {
-    setState = jest.fn();
-    const useStateSpy = jest.spyOn(React, "useState");
-    useStateSpy.mockImplementation(init => [init, setState]);
-  });
 
   afterEach(() => {
     jest.clearAllMocks();
