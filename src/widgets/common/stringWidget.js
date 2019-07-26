@@ -1,13 +1,13 @@
-import GenericCell from "../../components/widgets/cells/GenericCell";
 import DailyString from "../../components/widgets/daily/String";
 import { isString } from "../../common/testers";
+import { StringCell } from "../../components/widgets/cells/StringCell";
 
 const StringWidget = {
   schemaId: "String",
   day: DailyString,
   week: undefined,
   month: undefined,
-  cell: GenericCell,
+  cell: StringCell,
   isApplicable: s => (isString(s) ? 1 : -1),
   h: 1
 };
