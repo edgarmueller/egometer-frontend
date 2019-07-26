@@ -1,8 +1,8 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback } from "react";
 import * as _ from "lodash";
 import PropTypes from "prop-types";
 import EnumCellRenderer from "./EnumCellRenderer";
-import { MeterContext, withMeterContext } from "../../../context";
+import { withMeterContext } from "../../../context";
 
 const MultiEnumCell = ({
   meterId,

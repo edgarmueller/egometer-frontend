@@ -3,7 +3,6 @@ import { compose, withProps } from "recompose";
 import React from "react";
 import PropTypes from "prop-types";
 import widgets from "../widgets";
-import { deleteEntryRequest, updateEntryRequest } from "../actions";
 import { getMeters } from "../reducers";
 import { MeterContext } from "../context";
 import { mapDispatchToCrudMethodProps } from "../utils/redux-mappers";
