@@ -1,14 +1,31 @@
-import React from "react";
-import { configure, shallow } from "enzyme";
+import React, { useContext } from "react";
+import { configure, shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import ConnectedComponent from "../components/common/ConnectedComponent";
 import { testDate } from "../__mocks__/testData";
+import { MeterContext } from "../context";
 
 configure({ adapter: new Adapter() });
 
 describe("ConnectedComponent", () => {
-  it("should render its input component", () => {
-    const wrapper = shallow(
+  let setState;
+  let wrapper;
+
+  beforeEach(() => {
+    setState = jest.fn();
+    const useStateSpy = jest.spyOn(React, "useState");
+    useStateSpy.mockImplementation(init => [init, setState]);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    if (wrapper) {
+      wrapper.unmount();
+    }
+  });
+
+  it("should render its children", () => {
+    wrapper = shallow(
       <ConnectedComponent
         date={testDate}
         updateEntry={jest.fn()}
@@ -20,144 +37,169 @@ describe("ConnectedComponent", () => {
     expect(wrapper.find("div").length).toBe(1);
   });
 
-  it("should only update on change if updateOnChange is set", () => {
-    let didUpdate = false;
+  it("should provide data to its children", () => {
+    let provided = undefined;
     const wrapper = shallow(
       <ConnectedComponent
-        data={"init"}
+        data={{ value: "init" }}
         date={testDate}
-        updateEntry={() => (didUpdate = true)}
-        updateOnChange
+        updateEntry={jest.fn()}
         isLoading={false}
       >
-        {() => <div>Test</div>}
-      </ConnectedComponent>
-    );
-    wrapper.instance().handleOnChange({ target: { value: "test" } });
-    expect(wrapper.state().text).toBe("test");
-    expect(didUpdate).toBe(true);
-  });
-
-  it("should not update on change if updateOnChange is set to false", () => {
-    let didUpdate = false;
-    const wrapper = shallow(
-      <ConnectedComponent
-        data={"init"}
-        date={testDate}
-        updateEntry={() => (didUpdate = true)}
-        updateOnChange={false}
-        isLoading={false}
-      >
-        {() => <div>Test</div>}
-      </ConnectedComponent>
-    );
-    wrapper.instance().handleOnChange({ target: { value: "test" } });
-    expect(didUpdate).toBe(false);
-  });
-
-  it("should provide input component with submit entry function", () => {
-    let didUpdate = false;
-    const wrapper = shallow(
-      <ConnectedComponent
-        date={testDate}
-        updateEntry={() => (didUpdate = true)}
-        updateOnChange={false}
-        isLoading={false}
-      >
-        {({ reset, submitEntry }) => submitEntry()}
-      </ConnectedComponent>
-    );
-    expect(didUpdate).toBe(true);
-  });
-
-  it("should provide input component with reset function", () => {
-    let doReset = jest.fn();
-    const wrapper = shallow(
-      <ConnectedComponent
-        data={"init"}
-        date={testDate}
-        updateEntry={() => (didUpdate = true)}
-        updateOnChange={false}
-        isLoading={false}
-      >
-        {({ reset }) => {
-          doReset = reset;
+        {({ data }) => {
+          provided = data;
         }}
       </ConnectedComponent>
     );
-    wrapper.instance().handleOnChange({ target: { value: "test" } });
-    doReset();
-    expect(wrapper.state().text).toBe("init");
+    wrapper.setProps({ data: { value: "foo" } });
+    expect(provided).toBe("foo");
   });
 
-  it("should update via key", () => {
-    const wrapper = shallow(
+  it("should update its stored data on key down", () => {
+    let keydownHandler;
+    let providedData;
+    shallow(
       <ConnectedComponent
-        data={"init"}
+        data={{ value: "init" }}
         date={testDate}
-        updateEntry={jest.fn()}
         isLoading={false}
       >
-        {jest.fn}
+        {({ handleOnKeyDown, data }) => {
+          keydownHandler = handleOnKeyDown;
+          providedData = data;
+        }}
       </ConnectedComponent>
     );
-    wrapper.instance().handleOnKeyDown({ target: { value: "test" } });
-    expect(wrapper.state().text).toBe("test");
+    keydownHandler({ target: { value: "test" } });
+    expect(providedData).toBe("test");
   });
 
-  it("should update on blur", () => {
-    let didUpdate = false;
-    const wrapper = shallow(
+  it("should update on change if updateOnChange is set to true", () => {
+    let onChangeHandler;
+    let called = false;
+    wrapper = mount(
+      <MeterContext.Provider
+        value={{
+          updateEntry: () => () => {
+            called = true;
+          }
+        }}
+      >
+        <ConnectedComponent
+          data={{ value: "init" }}
+          date={testDate}
+          updateOnChange
+          isLoading={false}
+        >
+          {({ handleOnChange }) => {
+            onChangeHandler = handleOnChange;
+          }}
+        </ConnectedComponent>
+      </MeterContext.Provider>
+    );
+    onChangeHandler({ target: { value: "test" } });
+    expect(called).toBe(true);
+  });
+
+  it("should not update on change if updateOnChange is set to false", () => {
+    let onChangeHandler;
+    let called = false;
+    wrapper = mount(
+      <MeterContext.Provider
+        value={{
+          updateEntry: () => () => {
+            called = true;
+          }
+        }}
+      >
+        <ConnectedComponent
+          data={{ value: "init" }}
+          date={testDate}
+          updateOnChange={false}
+          isLoading={false}
+        >
+          {({ handleOnChange }) => {
+            onChangeHandler = handleOnChange;
+          }}
+        </ConnectedComponent>
+      </MeterContext.Provider>
+    );
+    onChangeHandler({ target: { value: "test" } });
+    expect(called).toBe(false);
+  });
+
+  it("should provide children with submit entry function", () => {
+    let called = false;
+    let doSubmit;
+    const Test = () => (
+      <MeterContext.Provider
+        value={{
+          updateEntry: () => () => {
+            called = true;
+          }
+        }}
+      >
+        <ConnectedComponent
+          date={testDate}
+          updateOnChange={false}
+          isLoading={false}
+        >
+          {({ submitEntry }) => {
+            doSubmit = submitEntry;
+          }}
+        </ConnectedComponent>
+      </MeterContext.Provider>
+    );
+    wrapper = mount(<Test />);
+    doSubmit();
+    expect(called).toBe(true);
+  });
+
+  it("should provide input component with reset function", () => {
+    let keydownHandler;
+    let providedData;
+    let doReset;
+    wrapper = shallow(
       <ConnectedComponent
-        data={"init"}
+        data={{ value: "init" }}
         date={testDate}
         updateEntry={() => (didUpdate = true)}
+        updateOnChange={false}
         isLoading={false}
       >
-        {jest.fn}
+        {({ data, handleOnKeyDown, reset }) => {
+          doReset = reset;
+          providedData = data;
+          keydownHandler = handleOnKeyDown;
+        }}
       </ConnectedComponent>
     );
-    wrapper
-      .instance()
-      .handleOnKeyDown({ key: "Enter", target: { value: "test" } });
-    wrapper.instance().handleOnBlur();
-    expect(wrapper.state().text).toBe("test");
-    expect(didUpdate).toBe(true);
+    // change value and reset
+    keydownHandler({ target: { value: "test" } });
+    doReset();
+    expect(providedData).toBe("init");
   });
 
-  // TODO: test for rendering ConnectedComponent once initially,
-  // then update data prop
-  // Expectation: state.text prop should not update
-  it("data prop should provide initial data", () => {
-    const wrapper = shallow(
-      <ConnectedComponent
-        data={"init"}
-        date={testDate}
-        updateEntry={jest.fn()}
-        isLoading={false}
-      >
-        {jest.fn}
-      </ConnectedComponent>
-    );
-    wrapper.setProps({ data: "foo" });
-    expect(wrapper.state().text).toBe("init");
-  });
+  it("should update on blur ", () => {
+    let called = false;
+    let onBlurHandler;
 
-  it("data prop should only update state if date differs", () => {
-    const wrapper = shallow(
-      <ConnectedComponent
-        data={"init"}
-        date={testDate}
-        updateEntry={jest.fn()}
-        isLoading={false}
-      >
-        {jest.fn}
-      </ConnectedComponent>
+    const contextValues = {
+      updateEntry: () => () => {
+        called = true;
+      }
+    };
+    const Test = () => (
+      <MeterContext.Provider value={contextValues}>
+        <ConnectedComponent data={"init"} date={testDate} isLoading={false}>
+          {({ handleOnBlur }) => {
+            onBlurHandler = handleOnBlur;
+          }}
+        </ConnectedComponent>
+      </MeterContext.Provider>
     );
-    wrapper.setProps({
-      data: "foo",
-      date: "2018-07-30"
-    });
-    expect(wrapper.state().text).toBe("foo");
+    wrapper = mount(<Test />);
+    onBlurHandler();
+    expect(called).toBe(true);
   });
 });

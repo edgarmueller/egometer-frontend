@@ -14,9 +14,7 @@ export const ConnectedComponent = ({
   shouldDebounce
 }) => {
   const [value, setValue] = useState((data && data.value) || "");
-  useEffect(() => {
-    data && setValue(data.value);
-  }, [data, isLoading, date]);
+  useEffect(() => data && setValue(data.value), [data, isLoading, date]);
   const { updateEntry, deleteEntry } = useContext(MeterContext);
   const handleOnChange = useCallback(
     ev => {
@@ -44,7 +42,7 @@ export const ConnectedComponent = ({
         handleOnKeyDown,
         handleOnBlur,
         data: value,
-        submitEntry: submitEntry,
+        submitEntry,
         reset
       })}
     </React.Fragment>
@@ -58,7 +56,7 @@ ConnectedComponent.propTypes = {
   // TODO: maybe rename prop to initData?
   meterId: PropTypes.string.isRequired,
   data: PropTypes.any,
-  date: PropTypes.string,
+  date: PropTypes.string.isRequired,
   shouldDebounce: PropTypes.bool
 };
 
