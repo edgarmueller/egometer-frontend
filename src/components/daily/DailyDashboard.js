@@ -17,6 +17,8 @@ import widgets from "../../widgets";
 import { fetchEntriesRequest, fetchMeters } from "../../actions";
 import ErrorSnackbar from "../common/ErrorSnackbar";
 import { calcProgress } from "../../common/progress";
+import { MeterContext } from "../../context";
+import { mapDispatchToCrudMethodProps } from "../../utils/redux-mappers";
 
 const styles = {
   display1: {
@@ -64,7 +66,9 @@ export class DailyDashboard extends Component {
 
   calcProgress = () => {
     const { entries, meters } = this.props;
-    this.setState({ progress: calcProgress(entries, meters, [this.state.date.toDate()]) });
+    this.setState({
+      progress: calcProgress(entries, meters, [this.state.date.toDate()])
+    });
   };
 
   componentDidUpdate(prevProps) {
@@ -95,7 +99,14 @@ export class DailyDashboard extends Component {
   };
 
   render() {
-    const { classes, meters, entries, isLoading } = this.props;
+    const {
+      classes,
+      meters,
+      entries,
+      isLoading,
+      updateEntry,
+      deleteEntry
+    } = this.props;
 
     // TODO: duplicate code, see month dashboard
     const meterWidgets = meters.map((meter, i) => {
@@ -114,35 +125,49 @@ export class DailyDashboard extends Component {
     });
 
     return (
-      <div
-        style={{
-          width: "80%",
-          height: "100%",
-          margin: "0 auto"
+      <MeterContext.Provider
+        value={{
+          updateEntry,
+          deleteEntry
         }}
-        id={"dashboard"}
       >
-        <div className={classes.paper}>
-          <span>Selected date is &nbsp;</span>
-          <DayPickerInput
-            formatDate={formatDate}
-            parseDate={parseDate}
-            format={"YYYY-MM-DD"}
-            placeholder={`${formatDate(new Date())}`}
-            value={this.state.date.format("YYYY-MM-DD")}
-            isOutsideRange={() => false}
-            onDayChange={this.handleDateChange}
-            focused={this.state.focused}
-            onFocusChange={({ focused }) => this.setState({ focused })}
-            block={false}
-            small={true}
-          />
+        <div
+          style={{
+            width: "80%",
+            height: "100%",
+            margin: "0 auto"
+          }}
+          id={"dashboard"}
+        >
+          <div className={classes.paper}>
+            <span>Selected date is &nbsp;</span>
+            <DayPickerInput
+              formatDate={formatDate}
+              parseDate={parseDate}
+              format={"YYYY-MM-DD"}
+              placeholder={`${formatDate(new Date())}`}
+              value={this.state.date.format("YYYY-MM-DD")}
+              isOutsideRange={() => false}
+              onDayChange={this.handleDateChange}
+              focused={this.state.focused}
+              onFocusChange={({ focused }) => this.setState({ focused })}
+              block={false}
+              small={true}
+            />
+          </div>
+          <ErrorSnackbar />
+          <div
+            style={{
+              maxWidth: 600,
+              margin: "0 auto",
+              display: "flex",
+              flexDirection: "column"
+            }}
+          >
+            {meterWidgets}
+          </div>
         </div>
-        <ErrorSnackbar />
-        <div style={{ maxWidth: 600, margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
-          {meterWidgets}
-        </div>
-      </div>
+      </MeterContext.Provider>
     );
   }
 }
@@ -159,6 +184,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  ...mapDispatchToCrudMethodProps(dispatch),
   fetchEntries(date, days) {
     dispatch(fetchEntriesRequest(date, days));
   },
@@ -172,7 +198,9 @@ DailyDashboard.propTypes = {
   error: PropTypes.object,
   meters: PropTypes.array,
   entries: PropTypes.object,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
+  updateEntry: PropTypes.func.isRequired,
+  deleteEntry: PropTypes.func.isRequired
 };
 
 DailyDashboard.defaultProps = {

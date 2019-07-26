@@ -6,6 +6,7 @@ import widgets from "../widgets";
 import { deleteEntryRequest, updateEntryRequest } from "../actions";
 import { getMeters } from "../reducers";
 import { MeterContext } from "../context";
+import { mapDispatchToCrudMethodProps } from "../utils/redux-mappers";
 
 export class MatrixContainer extends React.Component {
   render() {
@@ -45,22 +46,6 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  updateEntry: (meterId, date) => (value, shouldDebounce) => {
-    return dispatch(
-      updateEntryRequest(
-        {
-          meterId,
-          date,
-          value
-        },
-        shouldDebounce
-      )
-    );
-  },
-  deleteEntry: (meterId, entry) => dispatch(deleteEntryRequest(meterId, entry))
-});
-
 MatrixContainer.propTypes = {
   // TODO: schemas, meters
   //const { meters, child, schemas, entries } = this.props;
@@ -72,6 +57,6 @@ export default compose(
   withProps({ widgets }),
   connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToCrudMethodProps
   )
 )(MatrixContainer);
