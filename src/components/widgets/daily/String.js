@@ -12,15 +12,14 @@ export class DailyString extends React.Component {
 
   render() {
     const { date, data, meter, isLoading, icon } = this.props;
-
-    const journalEntry = _.find(data, d => d.date === date);
+    const entry = _.find(data, d => d.date === date);
 
     return (
       <ConnectedComponent
         meterId={meter.id}
         isLoading={isLoading}
         shouldDebounce={true}
-        data={(journalEntry && journalEntry.value) || undefined}
+        data={entry}
         date={date}
         updateOnChange
       >
@@ -56,10 +55,9 @@ export class DailyString extends React.Component {
 DailyString.propTypes = {
   meter: PropTypes.any,
   data: PropTypes.arrayOf(PropTypes.object),
-  date: PropTypes.string.isRequired,
+  date: PropTypes.any.isRequired,
   width: PropTypes.number,
   height: PropTypes.number,
-  updateEntry: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired
 };
 

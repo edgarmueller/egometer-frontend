@@ -29,7 +29,7 @@ function isNumeric(n) {
 }
 
 export const DailyNumber = ({ date, data, meter, isLoading, icon }) => {
-  const journalEntry = _.find(data, d => d.date === date);
+  const entry = _.find(data, d => d.date === date);
   return (
     <ConnectedComponent
       meterId={meter.id}
@@ -39,7 +39,7 @@ export const DailyNumber = ({ date, data, meter, isLoading, icon }) => {
         return isNumber ? _.toNumber(val) : val;
       }}
       isLoading={isLoading}
-      data={(journalEntry && journalEntry.value) || undefined}
+      data={entry}
       date={date}
       updateOnChange
     >

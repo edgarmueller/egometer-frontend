@@ -12,18 +12,17 @@ const styles = {
   underline
 };
 
-const Boolean = ({ meter, date, data, updateEntry, isLoading, icon }) => {
-  const booleanEntry = _.find(data, d => d.date === date);
+const Boolean = ({ meter, date, data, isLoading, icon }) => {
+  const entry = _.find(data, d => d.date === date);
 
   return (
     <ConnectedComponent
       meterId={meter.id}
       isLoading={isLoading}
-      data={(booleanEntry && booleanEntry.value) || false}
+      data={entry}
+      date={date}
       updateOnChange
-      // TODO: this should be probably be the default?
       fromEvent={x => x}
-      updateEntry={updateEntry}
     >
       {({ handleOnChange, data: checked }) => {
         return (
