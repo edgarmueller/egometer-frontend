@@ -23,7 +23,7 @@ export class DailyString extends React.Component {
         date={date}
         updateOnChange
       >
-        {({ handleOnChange, handleOnBlur, data: text }) => {
+        {({ updateValue, submitEntry, data: text }) => {
           return (
             <div
               style={{
@@ -38,8 +38,8 @@ export class DailyString extends React.Component {
                 value={text}
                 multiline
                 rowsMax={10}
-                onChange={handleOnChange}
-                onBlur={handleOnBlur}
+                onChange={updateValue}
+                onBlur={submitEntry}
                 style={{
                   flexGrow: 1
                 }}

@@ -43,7 +43,7 @@ export const DailyNumber = ({ date, data, meter, isLoading, icon }) => {
       date={date}
       updateOnChange
     >
-      {({ handleOnChange, handleOnBlur, data: number }) => {
+      {({ updateValue, submitEntry, data: number }) => {
         return (
           <div
             style={{
@@ -57,8 +57,8 @@ export const DailyNumber = ({ date, data, meter, isLoading, icon }) => {
               type="number"
               variant="outlined"
               value={number}
-              onChange={handleOnChange}
-              onBlur={handleOnBlur}
+              onChange={updateValue}
+              onBlur={submitEntry}
               inputProps={{
                 pattern: "[0-9]+([.,][0-9]+)?"
               }}

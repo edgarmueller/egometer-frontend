@@ -19,11 +19,7 @@ describe("ConnectedComponent", () => {
 
   it("should render its children", () => {
     wrapper = shallow(
-      <ConnectedComponent
-        date={testDate}
-        updateEntry={jest.fn()}
-        isLoading={false}
-      >
+      <ConnectedComponent date={testDate} isLoading={false}>
         {() => <div>Test</div>}
       </ConnectedComponent>
     );
@@ -48,27 +44,28 @@ describe("ConnectedComponent", () => {
     expect(provided).toBe("foo");
   });
 
-  it("should update its stored data on key down", () => {
-    let keydownHandler;
+  it("should update its internal data via updateValue", () => {
+    let updateValueHandler;
     let providedData;
     shallow(
       <ConnectedComponent
         data={{ value: "init" }}
         date={testDate}
         isLoading={false}
+        updateOnChange={false}
       >
-        {({ handleOnKeyDown, data }) => {
-          keydownHandler = handleOnKeyDown;
+        {({ updateValue, data }) => {
+          updateValueHandler = updateValue;
           providedData = data;
         }}
       </ConnectedComponent>
     );
-    keydownHandler({ target: { value: "test" } });
+    updateValueHandler({ target: { value: "test" } });
     expect(providedData).toBe("test");
   });
 
-  it("should update on change if updateOnChange is set to true", () => {
-    let onChangeHandler;
+  it("should emit value if updateOnChange is set to true", () => {
+    let updateValueHandler;
     let called = false;
     wrapper = mount(
       <MeterContext.Provider
@@ -84,18 +81,18 @@ describe("ConnectedComponent", () => {
           updateOnChange
           isLoading={false}
         >
-          {({ handleOnChange }) => {
-            onChangeHandler = handleOnChange;
+          {({ updateValue }) => {
+            updateValueHandler = updateValue;
           }}
         </ConnectedComponent>
       </MeterContext.Provider>
     );
-    onChangeHandler({ target: { value: "test" } });
+    updateValueHandler({ target: { value: "test" } });
     expect(called).toBe(true);
   });
 
-  it("should not update on change if updateOnChange is set to false", () => {
-    let onChangeHandler;
+  it("should not emit value if updateOnChange is set to false", () => {
+    let updateValueHandler;
     let called = false;
     wrapper = mount(
       <MeterContext.Provider
@@ -111,13 +108,13 @@ describe("ConnectedComponent", () => {
           updateOnChange={false}
           isLoading={false}
         >
-          {({ handleOnChange }) => {
-            onChangeHandler = handleOnChange;
+          {({ updateValue }) => {
+            updateValueHandler = updateValue;
           }}
         </ConnectedComponent>
       </MeterContext.Provider>
     );
-    onChangeHandler({ target: { value: "test" } });
+    updateValueHandler({ target: { value: "test" } });
     expect(called).toBe(false);
   });
 
@@ -148,8 +145,8 @@ describe("ConnectedComponent", () => {
     expect(called).toBe(true);
   });
 
-  it("should provide input component with reset function", () => {
-    let keydownHandler;
+  it("should provide children with reset function", () => {
+    let updateValueHandler;
     let providedData;
     let doReset;
     wrapper = shallow(
@@ -160,39 +157,16 @@ describe("ConnectedComponent", () => {
         updateOnChange={false}
         isLoading={false}
       >
-        {({ data, handleOnKeyDown, reset }) => {
+        {({ data, updateValue, reset }) => {
           doReset = reset;
           providedData = data;
-          keydownHandler = handleOnKeyDown;
+          updateValueHandler = updateValue;
         }}
       </ConnectedComponent>
     );
     // change value and reset
-    keydownHandler({ target: { value: "test" } });
+    updateValueHandler({ target: { value: "test" } });
     doReset();
     expect(providedData).toBe("init");
-  });
-
-  it("should update on blur ", () => {
-    let called = false;
-    let onBlurHandler;
-
-    const contextValues = {
-      updateEntry: () => () => {
-        called = true;
-      }
-    };
-    const Test = () => (
-      <MeterContext.Provider value={contextValues}>
-        <ConnectedComponent data={"init"} date={testDate} isLoading={false}>
-          {({ handleOnBlur }) => {
-            onBlurHandler = handleOnBlur;
-          }}
-        </ConnectedComponent>
-      </MeterContext.Provider>
-    );
-    wrapper = mount(<Test />);
-    onBlurHandler();
-    expect(called).toBe(true);
   });
 });

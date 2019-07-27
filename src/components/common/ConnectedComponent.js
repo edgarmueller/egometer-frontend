@@ -16,7 +16,7 @@ export const ConnectedComponent = ({
   const [value, setValue] = useState((data && data.value) || "");
   useEffect(() => data && setValue(data.value), [data, isLoading, date]);
   const { updateEntry, deleteEntry } = useContext(MeterContext);
-  const handleOnChange = useCallback(
+  const updateValue = useCallback(
     ev => {
       const newValue = fromEvent(ev);
       setValue(newValue);
@@ -29,18 +29,11 @@ export const ConnectedComponent = ({
   const submitEntry = useCallback(() => {
     updateEntry(meterId, date)(value, shouldDebounce);
   }, [meterId, date, value, updateEntry, shouldDebounce]);
-  const handleOnBlur = useCallback(() => submitEntry(), [submitEntry]);
-  const handleOnKeyDown = useCallback(ev => setValue(fromEvent(ev)), [
-    fromEvent,
-    setValue
-  ]);
   const reset = useCallback(() => setValue(data.value), [setValue]);
   return (
     <React.Fragment>
       {children({
-        handleOnChange,
-        handleOnKeyDown,
-        handleOnBlur,
+        updateValue,
         data: value,
         submitEntry,
         reset

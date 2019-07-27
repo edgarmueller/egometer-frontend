@@ -26,16 +26,16 @@ class NumberInput extends React.PureComponent {
   ref = React.createRef();
 
   handleOnKeyDown = ev => {
-    this.props.handleOnKeyDown(ev);
+    this.props.updateValue(ev);
     ev.key === "Enter" && this.ref.current.blur();
   };
 
   handleOnChange = ev => {
-    this.props.handleOnChange(ev);
+    this.props.updateValue(ev);
   };
 
   handleOnBlur = ev => {
-    this.props.handleOnBlur(ev);
+    this.props.submitEntry(ev);
   };
 
   render() {
