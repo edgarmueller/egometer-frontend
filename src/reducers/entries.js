@@ -73,8 +73,10 @@ export default (state = initialState, action) => {
       };
     case DELETE_ENTRY_SUCCESS:
       const clonedEntries = _.cloneDeep(state.entries);
-      const meterEntries = clonedEntries[state.loadingStatus.meterId]
-      clonedEntries[state.loadingStatus.meterId] = meterEntries.filter(e => e.id !== state.loadingStatus.entryId)
+      const meterEntries = clonedEntries[state.loadingStatus.meterId];
+      clonedEntries[state.loadingStatus.meterId] = meterEntries.filter(
+        e => e.id !== state.loadingStatus.entryId
+      );
       return {
         entries: clonedEntries,
         loadingStatus: {
