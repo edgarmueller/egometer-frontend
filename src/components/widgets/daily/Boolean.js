@@ -24,13 +24,13 @@ const Boolean = ({ meter, date, data, isLoading, icon }) => {
       updateOnChange
       fromEvent={x => x}
     >
-      {({ handleOnChange, data: checked }) => {
+      {({ updateValue, data: checked }) => {
         return (
           <div>
             <TitleBar meter={meter} icon={icon} />
             <Switch
               checked={checked}
-              onChange={(ev, value) => handleOnChange(value)}
+              onChange={(ev, value) => updateValue(value)}
             />
           </div>
         );

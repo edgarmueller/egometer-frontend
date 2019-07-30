@@ -38,7 +38,7 @@ const BooleanCell = ({
       meterId={meterId}
       fromEvent={ev => ev.target.checked}
     >
-      {({ handleOnChange, data: value }) => {
+      {({ updateValue, data: value }) => {
         return (
           <div className={classes.checkbox} style={{ backgroundColor: color }}>
             <Checkbox
@@ -51,7 +51,7 @@ const BooleanCell = ({
               }
               checkedIcon={<CheckCircle />}
               checked={value}
-              onChange={ev => handleOnChange(ev)}
+              onChange={ev => updateValue(ev)}
             />
           </div>
         );

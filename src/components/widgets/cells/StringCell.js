@@ -48,7 +48,7 @@ export const StringCell = ({
       isLoading={isLoading}
       updateOnChange={false}
     >
-      {({ data: value, handleOnChange, reset, submitEntry }) => (
+      {({ data: value, updateValue, reset, submitEntry }) => (
         <React.Fragment>
           <div
             className={classes.stringCell}
@@ -73,7 +73,7 @@ export const StringCell = ({
               <TextField
                 multiline
                 value={value}
-                onChange={handleOnChange}
+                onChange={updateValue}
                 rows={10}
                 variant="outlined"
                 fullWidth

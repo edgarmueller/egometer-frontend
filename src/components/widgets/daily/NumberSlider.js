@@ -7,16 +7,7 @@ import TitleBar from "./TitleBar";
 
 export class NumberSlider extends React.Component {
   render() {
-    const {
-      date,
-      data,
-      meter,
-      isLoading,
-      icon,
-      min,
-      max,
-      step
-    } = this.props;
+    const { date, data, meter, isLoading, icon, min, max, step } = this.props;
 
     const entry = _.find(data, d => d.date === date);
 
@@ -29,10 +20,13 @@ export class NumberSlider extends React.Component {
         updateOnChange
         fromEvent={x => x}
       >
-        {({ handleOnChange, data: number }) => {
-          const onChannge = (ev, value) => {
-            handleOnChange(value);
-          };
+        {({ updateValue, data: number }) => {
+          const onChannge = useCallback(
+            (ev, value) => {
+              updateValue(value);
+            },
+            [updateValue]
+          );
           return (
             <div>
               <TitleBar meter={meter} icon={icon} />
