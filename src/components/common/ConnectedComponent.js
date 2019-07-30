@@ -16,21 +16,27 @@ export const ConnectedComponent = ({
   const [value, setValue] = useState((data && data.value) || "");
   useEffect(() => data && setValue(data.value), [data, isLoading, date]);
   const { updateEntry, deleteEntry } = useContext(MeterContext);
-  const submitEntry = useCallback(() => {
-    if (value) {
-      updateEntry(meterId, date)(value, shouldDebounce);
-    } else {
-      if (data) {
-        deleteEntry(meterId, data);
+  const apiCall = useCallback(
+    val => {
+      if (val) {
+        updateEntry(meterId, date)(val, shouldDebounce);
+      } else {
+        if (data) {
+          deleteEntry(meterId, data);
+        }
       }
-    }
-  }, [data, meterId, date, value, updateEntry, shouldDebounce]);
+    },
+    [meterId, data, date, shouldDebounce, updateEntry, deleteEntry]
+  );
+  const submitEntry = useCallback(() => {
+    apiCall(value);
+  }, [value, apiCall]);
   const updateValue = useCallback(
     ev => {
       const newValue = fromEvent(ev);
       setValue(newValue);
       if (updateOnChange) {
-        submitEntry();
+        apiCall(newValue);
       }
     },
     [meterId, date, fromEvent, updateOnChange, updateEntry, shouldDebounce]

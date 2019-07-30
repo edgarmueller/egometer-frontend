@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { act } from "react-dom/test-utils";
 import { configure, shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import ConnectedComponent from "../components/common/ConnectedComponent";
@@ -87,7 +88,7 @@ describe("ConnectedComponent", () => {
         </ConnectedComponent>
       </MeterContext.Provider>
     );
-    updateValueHandler({ target: { value: "test" } });
+    act(() => updateValueHandler({ target: { value: "test" } }));
     expect(called).toBe(true);
   });
 
@@ -114,13 +115,14 @@ describe("ConnectedComponent", () => {
         </ConnectedComponent>
       </MeterContext.Provider>
     );
-    updateValueHandler({ target: { value: "test" } });
+    act(() => updateValueHandler({ target: { value: "test" } }));
     expect(called).toBe(false);
   });
 
   it("should provide children with submit entry function", () => {
     let called = false;
     let doSubmit;
+    let updateValueHandler;
     const Test = () => (
       <MeterContext.Provider
         value={{
@@ -134,13 +136,15 @@ describe("ConnectedComponent", () => {
           updateOnChange={false}
           isLoading={false}
         >
-          {({ submitEntry }) => {
+          {({ submitEntry, updateValue }) => {
+            updateValueHandler = updateValue;
             doSubmit = submitEntry;
           }}
         </ConnectedComponent>
       </MeterContext.Provider>
     );
     wrapper = mount(<Test />);
+    act(() => updateValueHandler({ target: { value: 42 } }));
     doSubmit();
     expect(called).toBe(true);
   });
