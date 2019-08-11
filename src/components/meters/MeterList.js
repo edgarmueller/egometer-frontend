@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useState, useReducer } from "react";
 import toNumber from "lodash/toNumber";
 import get from "lodash/get";
 import { connect } from "react-redux";
-import { compose } from "recompose";
+import { compose, withProps } from "recompose";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -14,16 +14,20 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { Emoji } from 'emoji-mart'
-import {
-  Switch,
-  Dialog,
-  DialogTitle,
-  Button,
-} from "@material-ui/core";
+import { Emoji } from "emoji-mart";
+import { Switch, Dialog, DialogTitle, Button } from "@material-ui/core";
+import { Drawer } from "@material-ui/core";
+import { Picker } from "emoji-mart";
+import AddIcon from "@material-ui/icons/Add";
+import { fetchMeters } from "../../actions";
 import ColorPicker from "../common/ColorPicker";
-import { Picker } from 'emoji-mart'
-import { deleteMeter, resetMetersError, updateMeter, updateMeterRequest } from "../../actions";
+import widgets from "../../widgets";
+import {
+  deleteMeter,
+  resetMetersError,
+  updateMeter,
+  updateMeterRequest
+} from "../../actions";
 import { display1 } from "../../common/styles";
 import {
   getMeters,
@@ -33,6 +37,7 @@ import {
 } from "../../reducers";
 import { findBySchemaId } from "../../utils";
 import { ErrorSnackbar } from "../common/ErrorSnackbar";
+import AddMeterDrawer from "../common/AddMeterDrawer";
 
 const styles = theme => ({
   textField: {
@@ -111,27 +116,38 @@ export const Meters = ({
   isFetchingMeters,
   schemas,
   meterError,
-  resetMetersError
+  resetMetersError,
+  fetchMeters
 }) => {
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [state, dispatch] = useReducer(localMeterReducer, {
     meterById: metersById(meters)
   });
+  const confirmDialog = useCallback(() => {
+    setDrawerOpen(false);
+    fetchMeters();
+  });
   const [open, setOpen] = useState(false);
   const [editedMeter, setEditedMeter] = useState(undefined);
-  const handleUpdateMeter = useCallback((meter, propName, propValue) => {
-    dispatch({
-      type: UPDATE_SINGLE,
-      id: meter.id,
-      propName,
-      payload: propValue
-    });
-    updateMeterRequest({
-      ...meter,
-      [propName]: propValue
-    });
-  }, [updateMeterRequest]);
+  const handleUpdateMeter = useCallback(
+    (meter, propName, propValue) => {
+      dispatch({
+        type: UPDATE_SINGLE,
+        id: meter.id,
+        propName,
+        payload: propValue
+      });
+      updateMeterRequest({
+        ...meter,
+        [propName]: propValue
+      });
+    },
+    [updateMeterRequest]
+  );
 
-  const handleDeleteMeter = useCallback(meter => () => deleteMeter(meter.id), [deleteMeter]);
+  const handleDeleteMeter = useCallback(meter => () => deleteMeter(meter.id), [
+    deleteMeter
+  ]);
   useEffect(() => dispatch({ type: UPDATE_ALL, payload: metersById(meters) }), [
     meters
   ]);
@@ -142,13 +158,26 @@ export const Meters = ({
 
   return (
     <div>
-      <ErrorSnackbar
-        error={meterError}
-        resetError={resetMetersError}
-      />
+      <ErrorSnackbar error={meterError} resetError={resetMetersError} />
       <Typography variant="display1" className={classes.display1}>
         Manage Meters
       </Typography>
+      <div>
+        <Button
+          variant="text"
+          size="small"
+          color="primary"
+          aria-label="Add"
+          style={{
+            color: "rgb(65, 102, 170)",
+            borderRadius: 30
+          }}
+          onClick={() => setDrawerOpen(true)}
+        >
+          <AddIcon />
+          Meter
+        </Button>
+      </div>
       <Paper className={classes.root}>
         <Table className={classes.table}>
           <TableHead>
@@ -202,13 +231,13 @@ export const Meters = ({
                           }
                         />
                       ) : (
-                          <Switch
-                            checked={valueOf(state)(meter.id, "dailyGoal") > 0}
-                            onChange={(ev, goal) =>
-                              handleUpdateMeter(meter, "dailyGoal", goal ? 1 : 0)
-                            }
-                          />
-                        )}
+                        <Switch
+                          checked={valueOf(state)(meter.id, "dailyGoal") > 0}
+                          onChange={(ev, goal) =>
+                            handleUpdateMeter(meter, "dailyGoal", goal ? 1 : 0)
+                          }
+                        />
+                      )}
                     </TableCell>
                     <TableCell>
                       <TextField
@@ -225,7 +254,7 @@ export const Meters = ({
                     <TableCell>
                       <ColorPicker
                         color={valueOf(state)(meter.id, "color")}
-                        onChange={() => { }}
+                        onChange={() => {}}
                         onChangeComplete={color =>
                           handleUpdateMeter(meter, "color", color)
                         }
@@ -239,19 +268,20 @@ export const Meters = ({
                         }}
                       >
                         {meter.icon ? (
-                          <Emoji emoji={meter.icon} size={24} set='emojione' />
-                        ) : "Set icon"
-                        }
+                          <Emoji emoji={meter.icon} size={24} set="emojione" />
+                        ) : (
+                          "Set icon"
+                        )}
                       </Button>
                     </TableCell>
                   </TableRow>
                 );
               })
             ) : (
-                <TableRow>
-                  <TableCell>No meters defined yet</TableCell>
-                </TableRow>
-              )}
+              <TableRow>
+                <TableCell>No meters defined yet</TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
         <Dialog
@@ -265,8 +295,8 @@ export const Meters = ({
           <DialogTitle id="simple-dialog-title">Set icon</DialogTitle>
           <div>
             <Picker
-              set='emojione'
-              onClick={(emoji) => {
+              set="emojione"
+              onClick={emoji => {
                 handleUpdateMeter(editedMeter, "icon", emoji.id);
                 setEditedMeter(undefined);
                 setOpen(false);
@@ -274,6 +304,14 @@ export const Meters = ({
             />
           </div>
         </Dialog>
+        <Drawer open={isDrawerOpen} onClose={() => setDrawerOpen(false)}>
+          <AddMeterDrawer
+            open={isDrawerOpen}
+            onSubmit={confirmDialog}
+            handleClose={() => setDrawerOpen(false)}
+            widgets={widgets}
+          />
+        </Drawer>
       </Paper>
     </div>
   );
@@ -287,13 +325,15 @@ const mapStateToProps = state => ({
 });
 
 export default compose(
+  withProps({ widgets }),
   connect(
     mapStateToProps,
     {
       resetMetersError,
       deleteMeter,
       updateMeter,
-      updateMeterRequest
+      updateMeterRequest,
+      fetchMeters
     }
   ),
   withStyles(styles)

@@ -14,7 +14,7 @@ import { findBySchemaName } from "../../utils";
 const filterApplicableWidgets = (widgets, schema) => {
   return _.filter(widgets, widget => widget.isApplicable(schema) > -1);
 };
-export class AddMeter extends React.PureComponent {
+export class AddMeterDrawer extends React.PureComponent {
   constructor(props) {
     super(props);
     const applicableWidgets = !_.isEmpty(props.schemas)
@@ -42,9 +42,9 @@ export class AddMeter extends React.PureComponent {
     );
   };
 
-  findSchema = (schemaName) => {
+  findSchema = schemaName => {
     return findBySchemaName(this.props.schemas, schemaName);
-  }
+  };
 
   render() {
     const { widgets, schemas } = this.props;
@@ -104,21 +104,21 @@ export class AddMeter extends React.PureComponent {
             />
           ))
         ) : (
-            <Typography variant="body1">
-              Sorry, no widgets seem applicable
+          <Typography variant="body1">
+            Sorry, no widgets seem applicable
           </Typography>
-          )}
+        )}
       </div>
     );
   }
 }
 
-AddMeter.propTypes = {
+AddMeterDrawer.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   widgets: PropTypes.array.isRequired
 };
 
-AddMeter.defaultProps = {
+AddMeterDrawer.defaultProps = {
   open: false
 };
 
@@ -132,4 +132,4 @@ export default compose(
     mapStateToProps,
     null
   )
-)(AddMeter);
+)(AddMeterDrawer);
