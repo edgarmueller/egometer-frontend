@@ -70,8 +70,6 @@ export const display1 = {
 export const logo = {
   color: "#333435",
   borderRadius: "16px",
-  paddingLeft: "2em",
-  paddingRight: "2em",
   marginRight: "1em",
   fontSize: "0.8125em",
   fontWeight: "bold",
