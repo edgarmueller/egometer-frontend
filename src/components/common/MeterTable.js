@@ -64,7 +64,11 @@ class MeterTable extends React.Component {
       const meterEntries =
         e.length === 0
           ? []
-          : _.flatten(e.filter(e => e[0].meterId === meter.id));
+          : _.flatten(
+              e.filter(e => {
+                return e.length > 0 && e[0].meterId === meter.id;
+              })
+            );
       const schema = findBySchemaId(schemas, meter.schemaId);
       if (schema === undefined) {
         return {};
