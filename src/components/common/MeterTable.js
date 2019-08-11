@@ -16,7 +16,7 @@ import { findBySchemaId } from "../../utils";
 
 const HEADER_HEIGHT = 60;
 const OVERSCAN_ROW_COUNT = 10;
-const ROW_HEIGHT = 48;
+const ROW_HEIGHT = 40;
 
 const additonalStyles = {
   meterColumn: {
@@ -28,6 +28,7 @@ const additonalStyles = {
     textOverflow: "ellipsis",
     overflow: "hidden",
     fontWeight: "bold",
+    fontSize: "0.85rem",
     paddingLeft: "0.15rem"
   }
 };
@@ -96,7 +97,7 @@ class MeterTable extends React.Component {
     if (this.props.entries) {
       const meter = this.props.meters.find(m => m.id === meterId);
       const foundEntries = this.props.entries[meterId];
-      if (foundEntries && date) {
+      if (foundEntries && date && meter.dailyGoal) {
         const foundEntry = foundEntries.find(e => e.date === date);
         if (foundEntry) {
           return foundEntry.value / meter.dailyGoal;
@@ -114,7 +115,7 @@ class MeterTable extends React.Component {
         key="meterColumn"
         label="Meter"
         dataKey={"meter"}
-        width={200}
+        width={300}
         className={classes.meterColumn}
         cellRenderer={({ cellData: meter }) => {
           if (meter === undefined) {
@@ -143,7 +144,7 @@ class MeterTable extends React.Component {
           <Column
             key={day}
             label={
-              <div>
+              <div style={{ fontSize: "0.65rem" }}>
                 <div>{dayName.substr(0, 3)}</div>
                 {day}
               </div>
@@ -201,6 +202,7 @@ class MeterTable extends React.Component {
         rowKey={props.key}
         {...props}
         style={{
+          ...props.style,
           backgroundColor: getProgressColor(weeklyProgress, 0.2),
           padding: 5,
           borderRadius: 3
@@ -213,7 +215,7 @@ class MeterTable extends React.Component {
     const { meters, width } = this.props;
     // if specified in this order the json reponse contains HTML
     // TODO: 60 per meter + header
-    const height = meters.length * 60 + 60;
+    const height = meters.length * 40 + 60;
     const rowCount = meters.length;
     const columns = this._createColumns();
 
