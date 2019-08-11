@@ -3,7 +3,7 @@ import { Route, Switch } from "react-router";
 import { connect } from "react-redux";
 import Loadable from "react-loadable";
 import "./App.css";
-import NavBar from "./common/NavBar";
+import NavDrawer from "./common/NavDrawer";
 import {
   userIsAuthenticated,
   userIsAdminRedir,
@@ -19,10 +19,6 @@ const mainStyle = {
   margin: "auto"
 };
 
-const navStyle = {
-  maxWidth: "1200px",
-  margin: "auto"
-};
 const AsyncLoginPage = Loadable({
   loader: () => import("./auth/LoginPage"),
   loading: Loading
@@ -67,8 +63,8 @@ const AsycnWeeklyDashboard = Loadable({
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <NavBar className={navStyle} />
+      <div className="App" style={{ display: "flex" }} id="app">
+        <NavDrawer />
         <main style={mainStyle}>
           <ConnectedSwitch>
             <Route
