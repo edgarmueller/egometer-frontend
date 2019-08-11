@@ -13,23 +13,17 @@ const styles = {
     maxHeight: 27,
     borderRadius: 5,
     display: "flex",
-    justifyContent: "center",
-    "&:hover": {
-      backgroundColor: "rgb(65, 102, 170, 0.5)",
-      color: "#fff"
-    }
+    justifyContent: "center"
   }
 };
 
-const BooleanCell = ({
-  meterId,
-  classes,
-  color,
-  isLoading,
-  date,
-  data,
-  hover
-}) => {
+const NoPaddingCheckbox = withStyles({
+  root: {
+    width: "27px"
+  }
+})(Checkbox);
+
+const BooleanCell = ({ meterId, classes, color, isLoading, date, data }) => {
   return (
     <ConnectedComponent
       date={date}
@@ -41,14 +35,8 @@ const BooleanCell = ({
       {({ updateValue, data: value }) => {
         return (
           <div className={classes.checkbox} style={{ backgroundColor: color }}>
-            <Checkbox
-              icon={
-                hover ? (
-                  <RadioButtonUnchecked style={{ color: "#fff" }} />
-                ) : (
-                  <span />
-                )
-              }
+            <NoPaddingCheckbox
+              icon={<span />}
               checkedIcon={<CheckCircle />}
               checked={value}
               onChange={ev => updateValue(ev)}
