@@ -92,7 +92,7 @@ export class WeeklyDashboard extends React.Component {
     }
 
     return (
-      <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+      <div>
         <ErrorSnackbar />
         <div
           style={{ display: "flex", flexDirection: "column" }}

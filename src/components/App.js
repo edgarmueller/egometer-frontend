@@ -16,7 +16,7 @@ const ConnectedSwitch = connect(state => ({
 }))(Switch);
 
 const mainStyle = {
-  margin: "auto"
+  width: "100%"
 };
 
 const AsyncLoginPage = Loadable({
