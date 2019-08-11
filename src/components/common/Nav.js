@@ -12,7 +12,6 @@ import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import ExtensionIcon from "@material-ui/icons/Extension";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import _ from "lodash";
 import { compose, withProps } from "recompose";
 import { Link } from "react-router-dom";
 import Radium from "radium";

@@ -13,7 +13,6 @@ import Radium from "radium";
 import { link, logo } from "../../common/styles";
 import { logout } from "../../actions";
 import Nav from "./Nav";
-import { fetchMeters } from "../../actions";
 
 export const RadiumLink = Radium(Link);
 
@@ -60,14 +59,12 @@ export const NavDrawer = ({
           style={{
             display: "flex",
             flexDirection: "row",
-            alignItems: "center"
+            alignItems: "center",
+            fontSize: "1.5rem"
           }}
         >
           <Ionicon icon="md-flash" />
           egometer
-          {isDevmode && (
-            <strong style={{ color: "#FF7043" }}>&nbsp;DEVMODE</strong>
-          )}
         </RadiumLink>
         <Hidden mdDown implementation="css">
           <Drawer variant="permanent" onClose={closeNav}>
