@@ -19,7 +19,6 @@ import ErrorSnackbar from "../common/ErrorSnackbar";
 import { calcProgress } from "../../common/progress";
 import { MeterContext } from "../../context";
 import { mapDispatchToCrudMethodProps } from "../../utils/redux-mappers";
-import { Button } from "@material-ui/core";
 
 const styles = {
   display1: {

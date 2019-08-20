@@ -22,6 +22,8 @@ describe("Dashboard", () => {
         isLoading={false}
         widgets={[mood]}
         fetchEntries={jest.fn()}
+        updateEntry={jest.fn()}
+        deleteEntry={jest.fn()}
       />
     );
     // Dashboard title
