@@ -31,9 +31,6 @@ const styles = {
     boxSizing: "border-box",
     width: "100%",
     padding: "1em"
-  },
-  container: {
-    padding: '1rem'
   }
 };
 
@@ -89,7 +86,7 @@ export class MonthlyDashboard extends React.Component {
     }
 
     return (
-      <div className={classes.container}>
+      <div>
         <ErrorSnackbar />
         <div id={"dashboard"} className={classes.monthMatrix}>
           <MonthPickerInput
