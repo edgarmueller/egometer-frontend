@@ -23,7 +23,7 @@ const EnumCell = ({
         updateEntry(meterId, date)(val);
       }
     },
-    [updateEntry, deleteEntry, meterId, data]
+    [updateEntry, deleteEntry, meterId, data, date]
   );
   const isSelected = useCallback(
     val => (data !== undefined ? data === val : false),

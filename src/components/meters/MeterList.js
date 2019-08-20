@@ -126,7 +126,7 @@ export const Meters = ({
   const confirmDialog = useCallback(() => {
     setDrawerOpen(false);
     fetchMeters();
-  });
+  }, [setDrawerOpen, fetchMeters]);
   const [open, setOpen] = useState(false);
   const [editedMeter, setEditedMeter] = useState(undefined);
   const handleUpdateMeter = useCallback(

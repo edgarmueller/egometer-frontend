@@ -39,9 +39,9 @@ export const ConnectedComponent = ({
         apiCall(newValue);
       }
     },
-    [meterId, date, fromEvent, updateOnChange, updateEntry, shouldDebounce]
+    [fromEvent, updateOnChange, apiCall]
   );
-  const reset = useCallback(() => setValue(data.value), [setValue]);
+  const reset = useCallback(() => setValue(data.value), [setValue, data]);
   return (
     <React.Fragment>
       {children({
