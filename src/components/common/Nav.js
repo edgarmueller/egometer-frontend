@@ -25,7 +25,6 @@ import { withStyles } from "@material-ui/styles";
 
 export const RadiumLink = Radium(Link);
 
-//const AdminLinkButton = visibleOnlyAdmin(props => <LinkButton {...props} />);
 export const LinkButton = ({ link, label, currentRoute }) => (
   <Button
     component={RadiumLink}
