@@ -42,7 +42,7 @@ export const LinkButton = ({ link, label, currentRoute }) => (
 export const Nav = ({ classes, logout, location, history, isAdmin }) => {
   const [currentRoute, setRoute] = useState(location.pathname);
   useEffect(() =>
-    history.listen((location, action) => {
+    history.listen(location => {
       setRoute(location.pathname);
     })
   );
@@ -125,9 +125,10 @@ export const Nav = ({ classes, logout, location, history, isAdmin }) => {
 
 Nav.propTypes = {
   classes: PropTypes.shape({
-    link: PropTypes.string.isRequired
+    logo: PropTypes.string.isRequired
   }).isRequired,
   logout: PropTypes.func.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
   location: PropTypes.any,
   history: PropTypes.any
 };

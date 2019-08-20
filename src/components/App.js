@@ -1,7 +1,15 @@
-import React, { Component } from "react";
+import React, { useState, useCallback } from "react";
+import PropTypes from "prop-types";
 import { Route, Switch } from "react-router";
 import { connect } from "react-redux";
 import Loadable from "react-loadable";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import MenuIcon from "@material-ui/icons/Menu";
+import Ionicon from "react-ionicons";
+import { IconButton, withStyles } from "@material-ui/core";
+import { Hidden } from "@material-ui/core";
+import { Link } from "react-router-dom";
+import Radium from "radium";
 import "./App.css";
 import NavDrawer from "./common/NavDrawer";
 import {
@@ -10,13 +18,16 @@ import {
   userIsNotAuthenticated
 } from "../common/auth";
 import Loading from "./common/Loading";
+import { logo } from "../common/styles";
+
+export const RadiumLink = Radium(Link);
 
 const ConnectedSwitch = connect(state => ({
   location: state.router.location
 }))(Switch);
 
 const mainStyle = {
-  width: "100%"
+  flexGrow: 1
 };
 
 const AsyncLoginPage = Loadable({
@@ -60,11 +71,35 @@ const AsycnWeeklyDashboard = Loadable({
   loading: Loading
 });
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App" style={{ display: "flex" }} id="app">
-        <NavDrawer />
+export const App = ({ classes }) => {
+  const [isNavOpen, setNavOpen] = useState(false);
+  const openNav = useCallback(() => setNavOpen(true), [setNavOpen]);
+  const closeNav = useCallback(() => setNavOpen(false), [setNavOpen]);
+  return (
+    <div className="App" id="app">
+      <CssBaseline />
+      <Hidden mdUp>
+        <div style={{ display: "flex" }}>
+          <IconButton onClick={openNav}>
+            <MenuIcon />
+          </IconButton>
+          <RadiumLink
+            className={classes.logo}
+            to="/"
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              fontSize: "1.5rem"
+            }}
+          >
+            <Ionicon icon="md-flash" />
+            egometer
+          </RadiumLink>
+        </div>
+      </Hidden>
+      <div style={{ display: "flex" }}>
+        <NavDrawer isNavOpen={isNavOpen} closeNav={closeNav} />
         <main style={mainStyle}>
           <ConnectedSwitch>
             <Route
@@ -124,8 +159,18 @@ class App extends Component {
           </ConnectedSwitch>
         </main>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-export default App;
+App.propTypes = {
+  classes: PropTypes.shape({
+    logo: PropTypes.string.isRequired
+  }).isRequired
+};
+
+const styles = {
+  logo
+};
+
+export default withStyles(styles)(App);
