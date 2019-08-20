@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import withStyles from '@material-ui/core/styles/withStyles';
 import PropTypes from 'prop-types';
-import {primaryButton, button, joinClasses} from "../../common/styles";
+import { primaryButton, button, joinClasses } from "../../common/styles";
 
 const RadiumLink = Radium(Link);
 
@@ -44,7 +44,11 @@ export class LoginForm extends React.Component {
     const { classes, handleFormSubmit, renderAlert } = this.props;
 
     return (
-      <div>
+      <form onSubmit={e => {
+        e.preventDefault();
+        handleFormSubmit(this.state.user, this.state.password)
+      }
+      }>
         <TextField
           required
           type="text"
@@ -68,16 +72,15 @@ export class LoginForm extends React.Component {
             No account yet?
           </RadiumLink>
           <Button
-            type="button"
+            type="submit"
             className={joinClasses(classes.button, classes.primaryButton)}
-            onClick={() => handleFormSubmit(this.state.user, this.state.password)}
           >
             Login
           </Button>
 
           {renderAlert()}
         </div>
-      </div>
+      </form>
     );
   }
 }
