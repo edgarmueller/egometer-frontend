@@ -3,11 +3,8 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { compose, withProps } from "recompose";
 import * as _ from "lodash";
-import DayPickerInput from "react-day-picker/DayPickerInput";
 
-import "react-day-picker/lib/style.css";
 import { formatDate, parseDate } from "react-day-picker/moment";
-import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 
 import { getMeters } from "../../reducers";
@@ -19,25 +16,9 @@ import ErrorSnackbar from "../common/ErrorSnackbar";
 import { calcProgress } from "../../common/progress";
 import { MeterContext } from "../../context";
 import { mapDispatchToCrudMethodProps } from "../../utils/redux-mappers";
-
-const styles = {
-  display1: {
-    marginTop: "0.5em",
-    fontFamily: `'Oxygen', sans-serif`,
-    color: "#000",
-    marginBottom: 20,
-    fontWeight: "bold"
-  },
-  paper: {
-    paddingLeft: "10px",
-    paddingRight: "10px",
-    maxWidth: "1200px",
-    margin: "auto"
-  },
-  button: {
-    marginBottom: "0.5em"
-  }
-};
+import "react-day-picker/lib/style.css";
+import "./DayPicker.css";
+import DayPicker from "react-day-picker";
 
 export class DailyDashboard extends Component {
   constructor(props) {
@@ -49,7 +30,6 @@ export class DailyDashboard extends Component {
     const day = _.get(match, "params.day");
     this.state = {
       entries: props.entries,
-      focused: false,
       overscanByPixels: 0,
       windowScrollerEnabled: false,
       date:
@@ -81,9 +61,17 @@ export class DailyDashboard extends Component {
     this.props.fetchEntries(`${year}-${month}-${day}`);
   }
 
-  handleDateChange = day => {
-    const date = moment(day);
+  handleDateChange = date => {
+    this.fetchEntriesByDate(moment(date));
+  };
+
+  handleMonthChange = date => {
+    this.fetchEntriesByDate(moment(date));
+  };
+
+  fetchEntriesByDate = date => {
     const { history } = this.props;
+    console.log("seleted date", date);
     const formattedDate = date.format("YYYY-MM-DD");
     this.setState({
       date,
@@ -98,14 +86,7 @@ export class DailyDashboard extends Component {
   };
 
   render() {
-    const {
-      classes,
-      meters,
-      entries,
-      isLoading,
-      updateEntry,
-      deleteEntry
-    } = this.props;
+    const { meters, entries, isLoading, updateEntry, deleteEntry } = this.props;
 
     // TODO: duplicate code, see month dashboard
     const meterWidgets = meters.map((meter, i) => {
@@ -124,48 +105,43 @@ export class DailyDashboard extends Component {
     });
 
     return (
-      <MeterContext.Provider
-        value={{
-          updateEntry,
-          deleteEntry
-        }}
-      >
+      <div>
+        <ErrorSnackbar />
         <div
-          style={{
-            height: "100%",
-            margin: "0 auto"
-          }}
-          id={"dashboard"}
+          style={{ display: "flex", flexDirection: "column", padding: "1rem" }}
         >
-          <div className={classes.paper}>
-            <span>Selected date is &nbsp;</span>
-            <DayPickerInput
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <DayPicker
               formatDate={formatDate}
               parseDate={parseDate}
               format={"YYYY-MM-DD"}
               placeholder={`${formatDate(new Date())}`}
               value={this.state.date.format("YYYY-MM-DD")}
-              isOutsideRange={() => false}
-              onDayChange={this.handleDateChange}
-              focused={this.state.focused}
-              onFocusChange={({ focused }) => this.setState({ focused })}
-              block={false}
-              small={true}
+              onDayClick={this.handleDateChange}
+              onMonthChange={this.handleMonthChange}
+              month={this.state.date.toDate()}
+              selectedDays={this.state.date.toDate()}
             />
-          </div>
-          <ErrorSnackbar />
-          <div
-            style={{
-              maxWidth: 600,
-              margin: "0 auto",
-              display: "flex",
-              flexDirection: "column"
-            }}
-          >
-            {meterWidgets}
+            <MeterContext.Provider
+              value={{
+                updateEntry,
+                deleteEntry
+              }}
+            >
+              <div
+                style={{
+                  maxWidth: 600,
+                  marginLeft: "1rem",
+                  display: "flex",
+                  flexDirection: "column"
+                }}
+              >
+                {meterWidgets}
+              </div>
+            </MeterContext.Provider>
           </div>
         </div>
-      </MeterContext.Provider>
+      </div>
     );
   }
 }
@@ -212,6 +188,5 @@ export default compose(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  withStyles(styles)
+  )
 )(DailyDashboard);
