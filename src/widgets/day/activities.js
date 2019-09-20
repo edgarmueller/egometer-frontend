@@ -29,7 +29,9 @@ const icons = {
   cleaning: "md-trash",
   pet_project: "md-star",
   family: "md-home",
-  sick: "md-thermometer"
+  sick: "md-thermometer",
+  learning: "md-create",
+  health: "md-medical"
 };
 
 const imageProvider = (color, isSelected, value) => {
