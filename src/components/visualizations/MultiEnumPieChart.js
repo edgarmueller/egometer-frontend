@@ -55,21 +55,19 @@ class MultiEnumPieChart extends React.Component {
     }
 
     return (
-      <div>
-        <RadialChart
-          colorType="category"
-          colorDomain={[0, 1, 2]}
-          colorRange={colorRange}
-          data={angles}
-          width={400}
-          height={400}
-          showLabels={true}
-          labelsStyle={{
-            color: "#212121",
-            fontWeight: "bold"
-          }}
-        />
-      </div>
+      <RadialChart
+        colorType="category"
+        colorDomain={[0, 1, 2]}
+        colorRange={colorRange}
+        data={angles}
+        width={500}
+        height={400}
+        showLabels={true}
+        labelsStyle={{
+          color: "#212121",
+          fontWeight: "bold"
+        }}
+      />
     );
   }
 }
