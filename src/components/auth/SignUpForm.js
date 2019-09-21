@@ -80,7 +80,11 @@ export class SignUpForm extends React.Component {
           </FormControl>
           <FormControl required error={!_.isEmpty(errors.password)}>
             <InputLabel htmlFor="password">Password</InputLabel>
-            <Input id="password" onChange={handleUpdatePassword} />
+            <Input
+              id="password"
+              onChange={handleUpdatePassword}
+              type="password"
+            />
             <FormHelperText id="error-passowrd">
               {errors.password}
             </FormHelperText>
@@ -90,6 +94,7 @@ export class SignUpForm extends React.Component {
             <Input
               id="confirm-password"
               onChange={handleUpdateConfirmationPassword}
+              type="password"
             />
             <FormHelperText id="error-confirm-passowrd">
               {errors.confirmationPassword}
@@ -109,9 +114,7 @@ export class SignUpForm extends React.Component {
             Sign Up
           </Button>
         </div>
-        <div style={{ color: red[500] }}>
-          {errors.message}
-        </div>
+        <div style={{ color: red[500] }}>{errors.message}</div>
       </div>
     );
   }
