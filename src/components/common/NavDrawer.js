@@ -31,7 +31,7 @@ export const NavDrawer = ({
   if (isAuthenticated) {
     return (
       <Fragment>
-        <Hidden smDown implementation="css">
+        <Hidden mdDown implementation="css">
           <Drawer
             variant="permanent"
             onClose={closeNav}

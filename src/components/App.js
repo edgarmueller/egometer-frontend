@@ -78,7 +78,7 @@ export const App = ({ classes }) => {
   return (
     <div className="App" id="app">
       <CssBaseline />
-      <Hidden mdUp>
+      <Hidden lgUp>
         <div style={{ display: "flex" }}>
           <IconButton onClick={openNav}>
             <MenuIcon />
