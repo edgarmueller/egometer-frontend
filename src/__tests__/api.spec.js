@@ -1,7 +1,7 @@
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { moodMeter, moodSchema, moodSchemaId } from "../__mocks__/testData";
-import { BASE_URL } from "../constants";
+import { API_BASE_URL } from "../constants";
 import * as api from "../api";
 import mockStorage from "../__mocks__/mockStorage";
 
@@ -13,38 +13,35 @@ describe("api", () => {
     mock.reset();
   });
 
-  it("should fetch meters", () => {
-    mock.onGet(`${BASE_URL}/meters`).reply(200, [moodMeter]);
-    //.reply(() => Promise.resolve([200, [moodMeter]]));
-    expect(api.fetchMeters().then(resp => resp.data)).resolves.toEqual([
-      moodMeter
-    ]);
+  it("should fetch meters", async () => {
+    mock.onGet(`${API_BASE_URL}/meters`).reply(200, [moodMeter]);
+    const meters = await api.fetchMeters();
+    expect(meters.data).toEqual([moodMeter]);
   });
 
-  it("should fetch schemas", () => {
-    mock.onGet(`${BASE_URL}/schemas`).reply(200, [moodSchema]);
-    //.reply(() => Promise.resolve([200, [moodMeter]]));
-    expect(api.fetchSchemas().then(resp => resp.data)).resolves.toEqual([
-      moodSchema
-    ]);
+  it("should fetch schemas", async () => {
+    mock.onGet(`${API_BASE_URL}/schemas`).reply(200, [moodSchema]);
+    const schemas = await api.fetchSchemas();
+    expect(schemas.data).toEqual([moodSchema]);
   });
 
-  it("should create a meter", () => {
+  it("should create a meter", async () => {
     const newMeterId = "5ac23a6c170200a1d6f98a3f";
     const smileyMeter = {
       name: "smiley-meter",
       widget: "smiley-faces",
       schemaId: moodSchemaId
     };
-    mock.onPost(`${BASE_URL}/meters`, smileyMeter).reply(200, {
+    mock.onPost(`${API_BASE_URL}/meters`, smileyMeter).reply(200, {
       ...smileyMeter,
       _id: { $oid: newMeterId }
     });
-    expect(
-      api
-        .createMeter(moodSchemaId, "smiley-meter", "smiley-faces")
-        .then(resp => resp.data)
-    ).resolves.toEqual({
+    const response = await api.createMeter(
+      moodSchemaId,
+      "smiley-meter",
+      "smiley-faces"
+    );
+    expect(response.data).toEqual({
       ...smileyMeter,
       _id: { $oid: newMeterId }
     });

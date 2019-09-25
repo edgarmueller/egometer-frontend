@@ -1,10 +1,8 @@
 import Axios from "axios";
-import { BASE_URL } from "../constants";
+import { API_BASE_URL } from "../constants";
 
 const contentType = "Content-Type";
 const applicationJson = "application/json";
-const API_VERSION = "v1";
-const API_BASE_URL = `${BASE_URL}/api/${API_VERSION}`;
 
 const createHeaders = headers => ({
   headers: {
@@ -98,7 +96,7 @@ export const updateEntry = ({ meterId, date, value }) => {
   );
 };
 
-export const deleteEntry = entry => 
+export const deleteEntry = entry =>
   Axios.delete(`${API_BASE_URL}/entries/${entry.id}`, createHeaders());
 
 // TODO: this should overwrite the value on the server
