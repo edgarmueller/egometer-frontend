@@ -30,16 +30,11 @@ export const meterPropTypes = PropTypes.shape({
   color: PropTypes.string.isRequired
 });
 
-export const componentPropType = PropTypes.oneOfType([
-  PropTypes.string,
-  PropTypes.func
-]);
-
 export const widgetPropTypes = PropTypes.shape({
   category: PropTypes.string,
-  cell: componentPropType,
-  day: componentPropType,
-  month: componentPropType,
+  cell: PropTypes.any,
+  day: PropTypes.any,
+  month: PropTypes.any,
   icon: PropTypes.node,
   isApplicable: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
