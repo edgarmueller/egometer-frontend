@@ -68,8 +68,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(
-  s => ({
-    isAuthenticated: s.user.isAuthenticated
-  }),
+  state => ({ isAuthenticated: state.user.isAuthenticated }),
   mapDispatchToProps
 )(withStyles(styles)(withRouter(NavDrawer)));

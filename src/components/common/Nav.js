@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import Radium from "radium";
 import { Hidden } from "@material-ui/core";
 import Ionicon from "react-ionicons";
+import get from "lodash/get";
 
 import widgets from "../../widgets";
 import { getSchemas } from "../../reducers";
@@ -136,7 +137,7 @@ Nav.defaultProps = {};
 
 const mapStateToProps = state => ({
   schemas: getSchemas(state),
-  isAdmin: state.user !== null && state.user.isAdmin
+  isAdmin: get(state, "user.isAdmin", false)
 });
 
 const styles = {

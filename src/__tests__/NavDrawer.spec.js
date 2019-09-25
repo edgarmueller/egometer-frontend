@@ -27,12 +27,8 @@ describe("NavDrawer", () => {
         <Provider store={store}>
           <NavDrawer
             navigateTo={jest.fn()}
-            classes={{
-              link: ""
-            }}
-            location={{
-              pathname: "weekly"
-            }}
+            classes={{ link: "" }}
+            location={{ pathname: "weekly" }}
           />
         </Provider>
       </Router>
