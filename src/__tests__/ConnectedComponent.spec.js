@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { act } from "react-dom/test-utils";
 import { configure, shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
@@ -20,7 +20,7 @@ describe("ConnectedComponent", () => {
 
   it("should render its children", () => {
     wrapper = shallow(
-      <ConnectedComponent date={testDate} isLoading={false}>
+      <ConnectedComponent date={testDate} isLoading={false} meterId="dummyId">
         {() => <div>Test</div>}
       </ConnectedComponent>
     );
@@ -35,6 +35,7 @@ describe("ConnectedComponent", () => {
         date={testDate}
         updateEntry={jest.fn()}
         isLoading={false}
+        meterId="dummyId"
       >
         {({ data }) => {
           provided = data;
@@ -54,6 +55,7 @@ describe("ConnectedComponent", () => {
         date={testDate}
         isLoading={false}
         updateOnChange={false}
+        meterId="dummyId"
       >
         {({ updateValue, data }) => {
           updateValueHandler = updateValue;
@@ -81,6 +83,7 @@ describe("ConnectedComponent", () => {
           date={testDate}
           updateOnChange
           isLoading={false}
+          meterId="dummyId"
         >
           {({ updateValue }) => {
             updateValueHandler = updateValue;
@@ -108,6 +111,7 @@ describe("ConnectedComponent", () => {
           date={testDate}
           updateOnChange={false}
           isLoading={false}
+          meterId="dummyId"
         >
           {({ updateValue }) => {
             updateValueHandler = updateValue;
@@ -135,6 +139,7 @@ describe("ConnectedComponent", () => {
           date={testDate}
           updateOnChange={false}
           isLoading={false}
+          meterId="dummyId"
         >
           {({ submitEntry, updateValue }) => {
             updateValueHandler = updateValue;
@@ -160,6 +165,7 @@ describe("ConnectedComponent", () => {
         updateEntry={() => (didUpdate = true)}
         updateOnChange={false}
         isLoading={false}
+        meterId="dummyId"
       >
         {({ data, updateValue, reset }) => {
           doReset = reset;
