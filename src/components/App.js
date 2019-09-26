@@ -1,17 +1,14 @@
-import React, { useState, useCallback } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { Route, Switch } from "react-router";
 import { connect } from "react-redux";
 import Loadable from "react-loadable";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import MenuIcon from "@material-ui/icons/Menu";
-import Ionicon from "react-ionicons";
-import { IconButton, withStyles } from "@material-ui/core";
-import { Hidden } from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Radium from "radium";
 import "./App.css";
-import NavDrawer from "./common/NavDrawer";
+import WithLayout from "./common/WithLayout";
 import {
   userIsAuthenticated,
   userIsAdminRedir,
@@ -25,10 +22,6 @@ export const RadiumLink = Radium(Link);
 const ConnectedSwitch = connect(state => ({
   location: state.router.location
 }))(Switch);
-
-const mainStyle = {
-  flexGrow: 1
-};
 
 const AsyncLoginPage = Loadable({
   loader: () => import("./auth/LoginPage"),
@@ -72,93 +65,67 @@ const AsycnWeeklyDashboard = Loadable({
 });
 
 export const App = ({ classes }) => {
-  const [isNavOpen, setNavOpen] = useState(false);
-  const openNav = useCallback(() => setNavOpen(true), [setNavOpen]);
-  const closeNav = useCallback(() => setNavOpen(false), [setNavOpen]);
   return (
     <div className="App" id="app">
       <CssBaseline />
-      <Hidden lgUp>
-        <div style={{ display: "flex" }}>
-          <IconButton onClick={openNav}>
-            <MenuIcon />
-          </IconButton>
-          <RadiumLink
-            className={classes.logo}
-            to="/"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              fontSize: "1.5rem"
-            }}
-          >
-            <Ionicon icon="md-flash" />
-            egometer
-          </RadiumLink>
-        </div>
-      </Hidden>
-      <div style={{ display: "flex" }}>
-        <NavDrawer isNavOpen={isNavOpen} closeNav={closeNav} />
-        <main style={mainStyle}>
-          <ConnectedSwitch>
-            <Route
-              exact
-              path="/login"
-              component={userIsNotAuthenticated(AsyncLoginPage)}
-            />
-            <Route
-              exact
-              path="/sign-up"
-              component={userIsNotAuthenticated(AsyncSignUpPage)}
-            />
-            <Route
-              exact
-              path="/schemas"
-              component={userIsAuthenticated(userIsAdminRedir(AsyncSchemaList))}
-            />
-            <Route
-              exact
-              path="/meters"
-              component={userIsAuthenticated(AsyncMeterList)}
-            />
-            <Route
-              exact
-              path="/matrix/:year(\d{4})?/:month(0?[1-9]|1[012])?"
-              component={userIsAuthenticated(AsycnMonthlyDashboard)}
-            />
-            <Route
-              exact
-              path="/weekly/:year(\d{4})?/:week(0?[1-9]|[0-9]{2})?"
-              component={userIsAuthenticated(AsycnWeeklyDashboard)}
-            />
-            <Route
-              exact
-              path="/dashboard/:year(\d{4})?/:month(0?[1-9]|1[012])?/:day(0?[1-9]|1[0-9]|2[0-9]|3[01])?"
-              component={userIsAuthenticated(AsyncDailyDashboard)}
-            />
-            <Route
-              exact
-              path="/auth/account/activation/:token"
-              component={AsyncActivedAccountPage}
-            />
-            <Route
-              exact
-              path="/auth/recover/password"
-              component={AsyncRecoverPasswordPage}
-            />
-            <Route
-              exact
-              path="/auth/recover/password/:token"
-              component={AsyncResetPasswordPage}
-            />
-            <Route
-              path="*"
-              component={userIsAuthenticated(AsyncDailyDashboard)}
-            />
-          </ConnectedSwitch>
-        </main>
-      </div>
+      <ConnectedSwitch>
+        <Route
+          exact
+          path="/login"
+          component={userIsNotAuthenticated(AsyncLoginPage)}
+        />
+        <Route
+          exact
+          path="/sign-up"
+          component={userIsNotAuthenticated(AsyncSignUpPage)}
+        />
+        <Route
+          exact
+          path="/schemas"
+          component={userIsAuthenticated(
+            userIsAdminRedir(WithLayout(AsyncSchemaList))
+          )}
+        />
+        <Route
+          exact
+          path="/meters"
+          component={userIsAuthenticated(WithLayout(AsyncMeterList))}
+        />
+        <Route
+          exact
+          path="/matrix/:year(\d{4})?/:month(0?[1-9]|1[012])?"
+          component={userIsAuthenticated(WithLayout(AsycnMonthlyDashboard))}
+        />
+        <Route
+          exact
+          path="/weekly/:year(\d{4})?/:week(0?[1-9]|[0-9]{2})?"
+          component={userIsAuthenticated(WithLayout(AsycnWeeklyDashboard))}
+        />
+        <Route
+          exact
+          path="/dashboard/:year(\d{4})?/:month(0?[1-9]|1[012])?/:day(0?[1-9]|1[0-9]|2[0-9]|3[01])?"
+          component={userIsAuthenticated(WithLayout(AsyncDailyDashboard))}
+        />
+        <Route
+          path="*"
+          component={userIsAuthenticated(WithLayout(AsyncDailyDashboard))}
+        />
+        <Route
+          exact
+          path="/auth/account/activation/:token"
+          component={AsyncActivedAccountPage}
+        />
+        <Route
+          exact
+          path="/auth/recover/password"
+          component={AsyncRecoverPasswordPage}
+        />
+        <Route
+          exact
+          path="/auth/recover/password/:token"
+          component={AsyncResetPasswordPage}
+        />
+      </ConnectedSwitch>
     </div>
   );
 };
