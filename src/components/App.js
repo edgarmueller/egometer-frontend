@@ -1,12 +1,8 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Route, Switch } from "react-router";
 import { connect } from "react-redux";
 import Loadable from "react-loadable";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { withStyles } from "@material-ui/core";
-import { Link } from "react-router-dom";
-import Radium from "radium";
 import "./App.css";
 import WithLayout from "./common/WithLayout";
 import {
@@ -15,9 +11,6 @@ import {
   userIsNotAuthenticated
 } from "../common/auth";
 import Loading from "./common/Loading";
-import { logo } from "../common/styles";
-
-export const RadiumLink = Radium(Link);
 
 const ConnectedSwitch = connect(state => ({
   location: state.router.location
@@ -64,7 +57,7 @@ const AsycnWeeklyDashboard = Loadable({
   loading: Loading
 });
 
-export const App = ({ classes }) => {
+export const App = () => {
   return (
     <div className="App" id="app">
       <CssBaseline />
@@ -130,14 +123,4 @@ export const App = ({ classes }) => {
   );
 };
 
-App.propTypes = {
-  classes: PropTypes.shape({
-    logo: PropTypes.string.isRequired
-  }).isRequired
-};
-
-const styles = {
-  logo
-};
-
-export default withStyles(styles)(App);
+export default App;

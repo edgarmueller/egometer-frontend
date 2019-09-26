@@ -7,5 +7,5 @@ configure({ adapter: new Adapter() });
 
 it("fetches meters and schemas on mount", () => {
   const wrapper = shallow(<App classes={{ logo: "" }} />);
-  expect(wrapper.find("main").length).toBe(1);
+  expect(wrapper.find("div").length).toBe(1);
 });
