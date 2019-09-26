@@ -89,22 +89,6 @@ export class DailyDashboard extends Component {
   render() {
     const { meters, entries, isLoading, updateEntry, deleteEntry } = this.props;
 
-    // TODO: duplicate code, see month dashboard
-    const meterWidgets = meters.map((meter, i) => {
-      return (
-        <Widget
-          key={meter.id}
-          id={i}
-          isLoading={isLoading}
-          date={this.state.date.format("YYYY-MM-DD")}
-          meter={meter}
-          data={_.isEmpty(entries) ? [] : entries[meter.id]}
-          widgetType="day"
-          progress={this.state.progress[meter.id]}
-        />
-      );
-    });
-
     return (
       <PickerLayout
         picker={
@@ -128,15 +112,24 @@ export class DailyDashboard extends Component {
           }}
         >
           <Grid container spacing={2} direction="column">
-            {meterWidgets.map(w => (
-              <Grid item>
+            {meters.map((meter, i) => (
+              <Grid item key={meter.id}>
                 <div
                   style={{
                     marginLeft: "2rem",
                     marginRight: "2rem"
                   }}
                 >
-                  {w}
+                  <Widget
+                    key={meter.id}
+                    id={meter.id}
+                    isLoading={isLoading}
+                    date={this.state.date.format("YYYY-MM-DD")}
+                    meter={meter}
+                    data={_.isEmpty(entries) ? [] : entries[meter.id]}
+                    widgetType="day"
+                    progress={this.state.progress[meter.id]}
+                  />
                 </div>
               </Grid>
             ))}
@@ -169,7 +162,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 DailyDashboard.propTypes = {
-  classes: PropTypes.object.isRequired,
   error: PropTypes.object,
   meters: PropTypes.array,
   entries: PropTypes.object,

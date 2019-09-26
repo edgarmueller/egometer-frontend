@@ -29,7 +29,7 @@ const Boolean = ({ meter, date, data, isLoading, icon }) => {
           <div>
             <TitleBar meter={meter} icon={icon} />
             <Switch
-              checked={checked}
+              checked={checked || false}
               onChange={(ev, value) => updateValue(value)}
             />
           </div>
