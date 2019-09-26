@@ -17,7 +17,6 @@ import {
 } from "../../reducers";
 import { findBySchemaId } from "../../utils";
 import widgets from "../../widgets";
-import ErrorSnackbar from "../common/ErrorSnackbar";
 import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import WeekPicker from "./WeekPicker";
@@ -29,6 +28,7 @@ import {
   getCurrentWeek
 } from "../../common/date";
 import { getSchemas } from "../../reducers";
+import PickerLayout from "../common/PickerLayout";
 
 const styles = {
   monthMatrix: {
@@ -92,49 +92,47 @@ export class WeeklyDashboard extends React.Component {
     }
 
     return (
-      <div>
-        <ErrorSnackbar />
-        <div
-          style={{ display: "flex", flexDirection: "column" }}
-          className={classes.monthMatrix}
-        >
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <WeekPicker
-              date={this.state.date}
-              onChange={days => {
-                const week = getWeek(days[0]);
-                const year = days[0].getFullYear();
-                const month = days[0].getMonth() + 1;
-                // TODO: we do not fetch each time
-                fetchEntries(`${year}-${month}-${moment().date()}`);
-                // TODO: can we just update the URL without reloading?
-                history.push(`/weekly/${year}/${week}`);
-              }}
-            />
-            <MatrixContainer
-              date={this.state.date}
-              days={this.state.days}
-              headerHeight={30}
-              year={this.state.year}
-              month={this.state.month}
-              child={WeeklyMatrix}
-              meters={meters}
-              entries={entries}
-              {...otherProps}
-            />
-          </div>
-          <Charts
-            isLoading={isLoading}
+      <PickerLayout
+        picker={
+          <WeekPicker
+            date={this.state.date}
+            onChange={days => {
+              const week = getWeek(days[0]);
+              const year = days[0].getFullYear();
+              const month = days[0].getMonth() + 1;
+              // TODO: we do not fetch each time
+              fetchEntries(`${year}-${month}-${moment().date()}`);
+              // TODO: can we just update the URL without reloading?
+              history.push(`/weekly/${year}/${week}`);
+            }}
+          />
+        }
+      >
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          />
+          <MatrixContainer
+            date={this.state.date}
             days={this.state.days}
-            entries={entries}
-            findBySchemaId={this.findSchema}
+            headerHeight={30}
+            year={this.state.year}
+            month={this.state.month}
+            child={WeeklyMatrix}
             meters={meters}
-            widgets={widgets}
-            widgetType="week"
-            width={window.innerWidth / 2}
+            entries={entries}
+            {...otherProps}
           />
         </div>
-      </div>
+        <Charts
+          isLoading={isLoading}
+          days={this.state.days}
+          entries={entries}
+          findBySchemaId={this.findSchema}
+          meters={meters}
+          widgets={widgets}
+          widgetType="week"
+          width={window.innerWidth / 2}
+        />
+      </PickerLayout>
     );
   }
 }

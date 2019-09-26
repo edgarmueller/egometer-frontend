@@ -12,13 +12,14 @@ import { getMeters } from "../../reducers";
 import Widget from "../../components/common/Widget";
 import widgets from "../../widgets";
 import { fetchEntriesRequest, fetchMeters } from "../../actions";
-import ErrorSnackbar from "../common/ErrorSnackbar";
 import { calcProgress } from "../../common/progress";
 import { MeterContext } from "../../context";
 import { mapDispatchToCrudMethodProps } from "../../utils/redux-mappers";
 import "react-day-picker/lib/style.css";
 import "./DayPicker.css";
 import DayPicker from "react-day-picker";
+import { Grid } from "@material-ui/core";
+import PickerLayout from "../common/PickerLayout";
 
 export class DailyDashboard extends Component {
   constructor(props) {
@@ -105,43 +106,43 @@ export class DailyDashboard extends Component {
     });
 
     return (
-      <div>
-        <ErrorSnackbar />
-        <div
-          style={{ display: "flex", flexDirection: "column", padding: "1rem" }}
+      <PickerLayout
+        picker={
+          <DayPicker
+            formatDate={formatDate}
+            parseDate={parseDate}
+            format={"YYYY-MM-DD"}
+            placeholder={`${formatDate(new Date())}`}
+            value={this.state.date.format("YYYY-MM-DD")}
+            onDayClick={this.handleDateChange}
+            onMonthChange={this.handleMonthChange}
+            month={this.state.date.toDate()}
+            selectedDays={this.state.date.toDate()}
+          />
+        }
+      >
+        <MeterContext.Provider
+          value={{
+            updateEntry,
+            deleteEntry
+          }}
         >
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <DayPicker
-              formatDate={formatDate}
-              parseDate={parseDate}
-              format={"YYYY-MM-DD"}
-              placeholder={`${formatDate(new Date())}`}
-              value={this.state.date.format("YYYY-MM-DD")}
-              onDayClick={this.handleDateChange}
-              onMonthChange={this.handleMonthChange}
-              month={this.state.date.toDate()}
-              selectedDays={this.state.date.toDate()}
-            />
-            <MeterContext.Provider
-              value={{
-                updateEntry,
-                deleteEntry
-              }}
-            >
-              <div
-                style={{
-                  maxWidth: 600,
-                  marginLeft: "1rem",
-                  display: "flex",
-                  flexDirection: "column"
-                }}
-              >
-                {meterWidgets}
-              </div>
-            </MeterContext.Provider>
-          </div>
-        </div>
-      </div>
+          <Grid container spacing={2} direction="column">
+            {meterWidgets.map(w => (
+              <Grid item>
+                <div
+                  style={{
+                    marginLeft: "2rem",
+                    marginRight: "2rem"
+                  }}
+                >
+                  {w}
+                </div>
+              </Grid>
+            ))}
+          </Grid>
+        </MeterContext.Provider>
+      </PickerLayout>
     );
   }
 }
