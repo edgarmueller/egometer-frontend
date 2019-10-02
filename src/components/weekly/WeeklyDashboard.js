@@ -109,7 +109,6 @@ export class WeeklyDashboard extends React.Component {
         }
       >
         <div style={{ display: "flex", flexDirection: "row" }}>
-          />
           <MatrixContainer
             date={this.state.date}
             days={this.state.days}
