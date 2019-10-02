@@ -79,7 +79,7 @@ class SignUpPage extends React.Component {
           errors: null
         }),
       error => {
-        const errorData = _.get(error, 'response.data');
+        const errorData = _.get(error, "response.data");
         const mail = getError(errorData, "email");
         const name = getError(errorData, "name");
         const password = getError(errorData, "password");
@@ -105,7 +105,12 @@ class SignUpPage extends React.Component {
     }
 
     if (!this.state.isLoading && this.state.success) {
-      return <div>Please check your email</div>;
+      return (
+        <div>
+          <p>Please check your email.</p>
+          <p>You may close this window now</p>
+        </div>
+      );
     }
 
     if (!this.state.isLoading && this.state.error === false) {
