@@ -100,10 +100,6 @@ export const App = () => {
           component={userIsAuthenticated(WithLayout(AsyncDailyDashboard))}
         />
         <Route
-          path="*"
-          component={userIsAuthenticated(WithLayout(AsyncDailyDashboard))}
-        />
-        <Route
           exact
           path="/auth/account/activation/:token"
           component={AsyncActivedAccountPage}
@@ -117,6 +113,10 @@ export const App = () => {
           exact
           path="/auth/recover/password/:token"
           component={AsyncResetPasswordPage}
+        />
+        <Route
+          path="*"
+          component={userIsAuthenticated(WithLayout(AsyncDailyDashboard))}
         />
       </ConnectedSwitch>
     </div>
