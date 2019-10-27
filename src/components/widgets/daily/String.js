@@ -21,7 +21,7 @@ export class DailyString extends React.Component {
         shouldDebounce={true}
         data={entry}
         date={date}
-        updateOnChange
+        updateOnChange={false}
       >
         {({ updateValue, submitEntry, data: text }) => {
           return (
