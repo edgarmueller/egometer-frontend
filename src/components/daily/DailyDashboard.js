@@ -58,8 +58,8 @@ export class DailyDashboard extends Component {
   }
 
   componentDidMount() {
-    const { year, month, day } = this.state;
-    this.props.fetchEntries(`${year}-${month}-${day}`);
+    const { year, month } = this.state;
+    this.props.fetchEntries(year, month);
   }
 
   handleDateChange = date => {
@@ -72,15 +72,13 @@ export class DailyDashboard extends Component {
 
   fetchEntriesByDate = date => {
     const { history } = this.props;
-    console.log("seleted date", date);
-    const formattedDate = date.format("YYYY-MM-DD");
     this.setState({
       date,
       year: date.year(),
       month: date.month(),
       day: date.date()
     });
-    this.props.fetchEntries(formattedDate);
+    this.props.fetchEntries(date.year(), date.month());
     history.push(
       `/dashboard/${date.year()}/${date.month() + 1}/${date.date()}`
     );
@@ -88,6 +86,7 @@ export class DailyDashboard extends Component {
 
   render() {
     const { meters, entries, isLoading, updateEntry, deleteEntry } = this.props;
+    console.log(entries);
 
     return (
       <PickerLayout
@@ -153,8 +152,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   ...mapDispatchToCrudMethodProps(dispatch),
-  fetchEntries(date, days) {
-    dispatch(fetchEntriesRequest(date, days));
+  fetchEntries(year, month) {
+    dispatch(fetchEntriesRequest(year, month));
   },
   fetchMeters() {
     dispatch(fetchMeters());
@@ -178,8 +177,5 @@ DailyDashboard.defaultProps = {
 
 export default compose(
   withProps({ widgets }),
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps)
 )(DailyDashboard);

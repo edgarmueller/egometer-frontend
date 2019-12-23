@@ -10,7 +10,7 @@ export const FETCH_SCHEMAS_REQUEST = "FETCH_SCHEMAS_REQUEST";
 export const FETCH_SCHEMAS_SUCCESS = "FETCH_SCHEMAS_SUCCESS";
 export const FETCH_SCHEMAS_FAILURE = "FETCH_SCHEMAS_FAILURE";
 
-export const RESET_METERS_ERROR = 'RESET_METERS_ERROR'
+export const RESET_METERS_ERROR = "RESET_METERS_ERROR";
 
 export const DELETE_METER_SUCCESS = "DELETE_METER_SUCCESS";
 export const DELETE_METER_FAILURE = "DELETE_METER_FAILURE";
@@ -71,12 +71,10 @@ export const fetchMeters = () => dispatch => {
 export const fetchSchemas = () => dispatch => {
   dispatch({ type: FETCH_SCHEMAS_REQUEST });
 
-  return api
-    .fetchSchemas()
-    .then(
-      resp => dispatch(setSchemas(resp.data)),
-      error => dispatch(setSchemasError(error))
-    );
+  return api.fetchSchemas().then(
+    resp => dispatch(setSchemas(resp.data)),
+    error => dispatch(setSchemasError(error))
+  );
 };
 
 export const deleteMeter = meterId => dispatch => {
@@ -151,14 +149,14 @@ export const RESET_ENTRIES_ERROR = "RESET_ENTRIES_ERROR";
  * @param meterId optional meter id, if omitted, data of all meters is fetched
  * @returns {{type: string, date: *, meterId: *}}
  */
-export const fetchEntriesRequest = (date, days, meterId = undefined) => ({
+export const fetchEntriesRequest = (year, month, meterId = undefined) => ({
   type: FETCH_ENTRIES_REQUEST,
-  date,
-  meterId,
-  days
+  year,
+  month,
+  meterId
 });
 
-export const updateMeterRequest = (meter) => ({
+export const updateMeterRequest = meter => ({
   type: UPDATE_METER_REQUEST,
   meter
 });

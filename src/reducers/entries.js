@@ -102,7 +102,10 @@ export default (state = initialState, action) => {
       }
 
       return {
-        entries: action.entries,
+        entries: action.entries.meters.reduce((acc, meter) => {
+          acc[meter.meterId] = meter.entries;
+          return acc;
+        }, {}),
         loadingStatus: {
           isLoading: false,
           meterId: undefined

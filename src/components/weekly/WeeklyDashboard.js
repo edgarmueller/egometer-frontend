@@ -57,9 +57,8 @@ export class WeeklyDashboard extends React.Component {
 
   componentDidMount() {
     const { date } = this.state;
-    this.props.fetchEntries(
-      `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-    );
+    console.log(">>>", date.getMonth());
+    this.props.fetchEntries(date.getFullYear(), date.getMonth());
   }
 
   findSchema = schemaId => {
@@ -101,7 +100,7 @@ export class WeeklyDashboard extends React.Component {
               const year = days[0].getFullYear();
               const month = days[0].getMonth() + 1;
               // TODO: we do not fetch each time
-              fetchEntries(`${year}-${month}-${moment().date()}`);
+              fetchEntries(year, month);
               // TODO: can we just update the URL without reloading?
               history.push(`/weekly/${year}/${week}`);
             }}
@@ -160,8 +159,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchEntries(date) {
-    dispatch(actions.fetchEntriesRequest(date, 7));
+  fetchEntries(date, month) {
+    dispatch(actions.fetchEntriesRequest(date, month + 1));
   },
   ...ownProps
 });
@@ -169,8 +168,5 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 export default compose(
   withProps({ widgets }),
   withStyles(styles),
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps)
 )(WeeklyDashboard);

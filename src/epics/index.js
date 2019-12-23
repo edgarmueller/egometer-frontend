@@ -32,27 +32,25 @@ import {
 } from "../actions";
 
 export function fetchSchemasEpic(action$, store, deps) {
-  return action$
-    .ofType(FETCH_SCHEMAS_REQUEST)
-    .flatMap(() =>
-      Observable.fromPromise(
-        deps.api
-          .fetchSchemas()
-          .then(resp => setSchemas(resp.data), err => setSchemasError(err))
+  return action$.ofType(FETCH_SCHEMAS_REQUEST).flatMap(() =>
+    Observable.fromPromise(
+      deps.api.fetchSchemas().then(
+        resp => setSchemas(resp.data),
+        err => setSchemasError(err)
       )
-    );
+    )
+  );
 }
 
 export function fetchMetersEpic(action$, store, deps) {
-  return action$
-    .ofType(FETCH_METERS_REQUEST)
-    .flatMap(() =>
-      Observable.fromPromise(
-        deps.api
-          .fetchMeters()
-          .then(resp => setMeters(resp.data), err => setMetersError(err))
+  return action$.ofType(FETCH_METERS_REQUEST).flatMap(() =>
+    Observable.fromPromise(
+      deps.api.fetchMeters().then(
+        resp => setMeters(resp.data),
+        err => setMetersError(err)
       )
-    );
+    )
+  );
 }
 
 export function fetchAllAfterLogin(action$, store, deps) {
@@ -67,9 +65,9 @@ export function fetchEntriesEpic(action$, store, deps) {
   return action$
     .ofType(FETCH_ENTRIES_REQUEST)
     .debounceTime(250)
-    .switchMap(({ date, meterId, days }) => {
+    .switchMap(({ year, month, meterId }) => {
       return Observable.fromPromise(
-        deps.api.fetchEntriesByDate(date, meterId, days)
+        deps.api.fetchEntries(year, month, meterId)
       );
     })
     .map(resp => receiveEntries(resp.data))
@@ -104,26 +102,27 @@ export function updateEntryEpic(action$, store, deps) {
 }
 
 export function deleteEntryEpic(action$, store, deps) {
-  return action$
-    .ofType(DELETE_ENTRY_REQUEST)
-    //    .filter(({ shouldDebounce }) => !shouldDebounce)
-    .switchMap(({ entry }) => {
-      console.log('entry to be deleted', entry)
-      return Observable.fromPromise(deps.api.deleteEntry(entry))
-        .flatMap(resp => {
-          return Observable.of({
-            type: DELETE_ENTRY_SUCCESS,
-            entry: resp.data
+  return (
+    action$
+      .ofType(DELETE_ENTRY_REQUEST)
+      //    .filter(({ shouldDebounce }) => !shouldDebounce)
+      .switchMap(({ entry }) => {
+        return Observable.fromPromise(deps.api.deleteEntry(entry))
+          .flatMap(resp => {
+            return Observable.of({
+              type: DELETE_ENTRY_SUCCESS,
+              entry: resp.data
+            });
+          })
+          .catch(error => {
+            return Observable.of({
+              type: DELETE_ENTRY_FAILURE,
+              entry: entry.id,
+              error: error.message
+            });
           });
-        })
-        .catch(error => {
-          return Observable.of({
-            type: DELETE_ENTRY_FAILURE,
-            entry: entry.id,
-            error: error.message
-          });
-        });
-    });
+      })
+  );
 }
 
 export function updateEntryDebounceEpic(action$, store, deps) {

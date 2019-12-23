@@ -5,7 +5,6 @@ import {
   fetchEntriesRequest,
   updateEntryRequest,
   UPDATE_ENTRY_SUCCESS,
-  FETCH_ENTRIES_REQUEST,
   FETCH_ENTRIES_SUCCESS,
   FETCH_ENTRIES_FAILURE,
   UPDATE_ENTRY_FAILURE,
@@ -75,15 +74,13 @@ describe("fetchEntriesEpic", () => {
   it("should fetch entries", done => {
     const deps = {
       api: {
-        fetchEntriesByDate: () => {
+        fetchEntries: () => {
           return Promise.resolve(counterEntries);
         }
       }
     };
     // passed date doesn't really matter
-    const action$ = ActionsObservable.of(
-      fetchEntriesRequest("2018-07-06")
-    );
+    const action$ = ActionsObservable.of(fetchEntriesRequest(2018, 6));
     const output$ = fetchEntriesEpic(action$, null, deps);
     output$.toArray().subscribe(actions => {
       expect(actions[0].type).toBe(FETCH_ENTRIES_SUCCESS);
@@ -94,15 +91,13 @@ describe("fetchEntriesEpic", () => {
   it("should be capable to fail when fetching entries", done => {
     const deps = {
       api: {
-        fetchEntriesByDate: () => {
+        fetchEntries: () => {
           return Promise.reject({ message: "expected failure" });
         }
       }
     };
     // passed date doesn't really matter
-    const action$ = ActionsObservable.of(
-      fetchEntriesRequest("2018-07-06")
-    );
+    const action$ = ActionsObservable.of(fetchEntriesRequest(2018, 6));
     const output$ = fetchEntriesEpic(action$, null, deps);
     output$.toArray().subscribe(actions => {
       expect(actions[0].type).toBe(FETCH_ENTRIES_FAILURE);

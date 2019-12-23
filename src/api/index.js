@@ -22,26 +22,13 @@ export const fetchSchemas = () =>
     })
   );
 
-export const fetchEntriesByDate = (date, meterId, days) => {
-  if (days) {
-    return Axios.get(
-      meterId === undefined
-        ? `${API_BASE_URL}/entries/${date}?days=${days}`
-        : `${API_BASE_URL}/entries/${date}/${meterId}?days=${days}`,
-      createHeaders({
-        [contentType]: applicationJson
-      })
-    );
-  } else {
-    return Axios.get(
-      meterId === undefined
-        ? `${API_BASE_URL}/entries/${date}`
-        : `${API_BASE_URL}/entries/${date}`,
-      createHeaders({
-        [contentType]: applicationJson
-      })
-    );
-  }
+export const fetchEntries = (year, month) => {
+  return Axios.get(
+    `${API_BASE_URL}/entries?year=${year}&month=${month}`,
+    createHeaders({
+      [contentType]: applicationJson
+    })
+  );
 };
 
 export const createMeter = (schemaId, name, widget, color) =>

@@ -50,10 +50,8 @@ export class MonthlyDashboard extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchEntries(
-      `${this.state.year}-${this.state.month}-${moment().date()}`,
-      moment().daysInMonth()
-    );
+    const date = new Date();
+    this.props.fetchEntries(date.getFullYear(), date.getMonth());
   }
 
   findSchema = schemaId => {
@@ -101,9 +99,7 @@ export class MonthlyDashboard extends React.Component {
             year={this.state.year}
             month={this.state.month - 1}
             onChange={(maskedValue, selectedYear, selectedMonth) => {
-              fetchEntries(
-                `${selectedYear}-${selectedMonth + 1}-${moment().date()}`
-              );
+              fetchEntries(selectedYear, selectedMonth);
               history.push(`/matrix/${selectedYear}/${selectedMonth + 1}`);
             }}
             closeOnSelect={true}
@@ -158,8 +154,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  fetchEntries(date, days) {
-    dispatch(actions.fetchEntriesRequest(date));
+  fetchEntries(year, month) {
+    dispatch(actions.fetchEntriesRequest(year, month + 1));
   }
 });
 
@@ -179,8 +175,5 @@ MonthlyDashboard.defaultProps = {
 export default compose(
   withProps({ widgets }),
   withStyles(styles),
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps)
 )(MonthlyDashboard);
