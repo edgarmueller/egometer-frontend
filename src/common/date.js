@@ -75,7 +75,7 @@ export function lastDayOfMonth(month, year) {
 
 export const weekToDate = week =>
   moment()
-    .startOf("isoweek")
+    .startOf("isoWeek")
     .week(week)
     .toDate();
 
@@ -83,7 +83,7 @@ export const getCurrentWeek = () => {
   var currentDate = moment();
   return currentDate
     .clone()
-    .startOf("isoweek")
+    .startOf("isoWeek")
     .week();
 };
 

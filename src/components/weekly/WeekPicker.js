@@ -19,10 +19,10 @@ function getWeekDays(weekStart) {
 function getWeekRange(date) {
   return {
     from: moment(date)
-      .startOf("week")
+      .startOf("isoWeek")
       .toDate(),
     to: moment(date)
-      .endOf("week")
+      .endOf("isoWeek")
       .toDate()
   };
 }
