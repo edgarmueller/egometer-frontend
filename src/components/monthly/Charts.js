@@ -10,7 +10,7 @@ import {
 
 const Charts = ({
   days,
-  entries,
+  entriesByMeter,
   findBySchemaId,
   isLoading,
   meters,
@@ -23,7 +23,7 @@ const Charts = ({
     return null;
   }
 
-  if (_.isEmpty(entries)) {
+  if (_.isEmpty(entriesByMeter)) {
     return "no data";
   }
 
@@ -41,7 +41,7 @@ const Charts = ({
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
     >
       {meterWidgets.map(({ meter, widget }) => {
-        const data = entries[meter.id];
+        const data = entriesByMeter[meter.id];
         const schema = findBySchemaId(meter.schemaId);
 
         if (schema === undefined) {
@@ -70,7 +70,7 @@ const Charts = ({
 
 Charts.propTypes = {
   days: PropTypes.array,
-  entries: entriesPropType,
+  entriesByMeter: entriesPropType,
   findBySchemaId: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
   meters: PropTypes.arrayOf(meterPropTypes),
@@ -80,7 +80,7 @@ Charts.propTypes = {
 };
 
 Charts.defaultProps = {
-  entries: []
+  entries: {}
 };
 
 export default Charts;

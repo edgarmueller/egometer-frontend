@@ -111,7 +111,6 @@ export class WeeklyDashboard extends React.Component {
             onChange={days => {
               const week = getWeek(days[0]);
               const year = days[0].getFullYear();
-              const month = days[0].getMonth() + 1;
               // TODO: we do not fetch each time
               fetchEntries(year, week);
               // TODO: can we just update the URL without reloading?
@@ -137,7 +136,7 @@ export class WeeklyDashboard extends React.Component {
         <Charts
           isLoading={isLoading}
           days={this.state.days}
-          entries={entriesByMeter}
+          entriesByMeter={entriesByMeter}
           findBySchemaId={this.findSchema}
           meters={meters}
           widgets={widgets}
