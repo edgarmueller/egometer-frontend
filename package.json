@@ -31,7 +31,7 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^3.3.0",
     "react-spinners": "^0.5.1",
     "react-virtualized": "^9.21.1",
     "react-vis": "^1.11.7",
@@ -49,7 +49,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "test-cov": "react-scripts test --env=jsdom --coverage",
+    "test:cov": "npm run test -- --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "upgrade-interactive": "npx npm-check --update"
   },
