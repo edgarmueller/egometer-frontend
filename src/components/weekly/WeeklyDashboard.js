@@ -13,7 +13,9 @@ import {
   getMeterError,
   getSchemaError,
   isSchemasLoading,
-  isMetersLoading
+  isMetersLoading,
+  getEntriesByMeter,
+  getProgressByMeter
 } from "../../reducers";
 import { findBySchemaId } from "../../utils";
 import widgets from "../../widgets";
@@ -51,14 +53,24 @@ export class WeeklyDashboard extends React.Component {
       date: weekToDate(w),
       year: year ? Number(year) : now.year(),
       month: m,
-      days: daysOfWeek(weekToDate(w))
+      days: daysOfWeek(weekToDate(w)),
+      week: w,
+      mounted: false
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    const { entriesByMeter: prevEntriesByMeter } = prevProps;
+    const { entriesByMeter } = this.props;
+    if (!_.isEqual(entriesByMeter, prevEntriesByMeter)) {
+      this.props.fetchEntries(this.state.year, this.state.week);
+    }
   }
 
   componentDidMount() {
     const { date } = this.state;
-    console.log(">>>", date.getMonth());
-    this.props.fetchEntries(date.getFullYear(), date.getMonth());
+    this.props.fetchEntries(date.getFullYear(), this.state.week);
+    this.setState({ mounted: true });
   }
 
   findSchema = schemaId => {
@@ -73,7 +85,8 @@ export class WeeklyDashboard extends React.Component {
       history,
       isLoading,
       meters,
-      entries,
+      entriesByMeter,
+      progressByMeter,
       ...otherProps
     } = this.props;
 
@@ -86,7 +99,7 @@ export class WeeklyDashboard extends React.Component {
       );
     }
 
-    if (isLoading) {
+    if (isLoading && !this.state.mounted) {
       return <Loading />;
     }
 
@@ -100,7 +113,7 @@ export class WeeklyDashboard extends React.Component {
               const year = days[0].getFullYear();
               const month = days[0].getMonth() + 1;
               // TODO: we do not fetch each time
-              fetchEntries(year, month);
+              fetchEntries(year, week);
               // TODO: can we just update the URL without reloading?
               history.push(`/weekly/${year}/${week}`);
             }}
@@ -116,14 +129,15 @@ export class WeeklyDashboard extends React.Component {
             month={this.state.month}
             child={WeeklyMatrix}
             meters={meters}
-            entries={entries}
+            entriesByMeter={entriesByMeter}
+            progressByMeter={progressByMeter}
             {...otherProps}
           />
         </div>
         <Charts
           isLoading={isLoading}
           days={this.state.days}
-          entries={entries}
+          entries={entriesByMeter}
           findBySchemaId={this.findSchema}
           meters={meters}
           widgets={widgets}
@@ -152,15 +166,16 @@ const mapStateToProps = state => {
       isMetersLoading(state) ||
       isSchemasLoading(state),
     meters: getMeters(state),
-    entries: state.entries.entries,
+    entriesByMeter: getEntriesByMeter(state),
+    progressByMeter: getProgressByMeter(state),
     error: getMeterError(state) || getSchemaError(state),
     schemas: getSchemas(state)
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchEntries(date, month) {
-    dispatch(actions.fetchEntriesRequest(date, month + 1));
+  fetchEntries(date, week) {
+    dispatch(actions.fetchEntriesRequestByWeek(date, week));
   },
   ...ownProps
 });

@@ -9,7 +9,14 @@ import { mapDispatchToCrudMethodProps } from "../utils/redux-mappers";
 
 export class MatrixContainer extends React.Component {
   render() {
-    const { days, meters, child, schemas, entries } = this.props;
+    const {
+      days,
+      meters,
+      child,
+      schemas,
+      entriesByMeter,
+      progressByMeter
+    } = this.props;
     const { widgets, deleteEntry, updateEntry } = this.props;
     const colorMapping = meters.reduce((acc, m) => {
       acc[m.name] = m.color;
@@ -25,7 +32,8 @@ export class MatrixContainer extends React.Component {
       >
         <Child
           widgets={widgets}
-          entries={entries}
+          entriesByMeter={entriesByMeter}
+          progressByMeter={progressByMeter}
           days={days}
           meters={meters}
           schemas={schemas}
@@ -54,8 +62,5 @@ MatrixContainer.propTypes = {
 
 export default compose(
   withProps({ widgets }),
-  connect(
-    mapStateToProps,
-    mapDispatchToCrudMethodProps
-  )
+  connect(mapStateToProps, mapDispatchToCrudMethodProps)
 )(MatrixContainer);

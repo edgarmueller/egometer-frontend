@@ -11,7 +11,6 @@ import styles from "../monthly/MonthMatrix.css";
 import { pad } from "../../common/date";
 import { createColor, getProgressColor } from "../../common/color";
 import DefaultTableRowRenderer from "../cells/DefaultTableRowRenderer";
-import { calcProgress } from "../../common/progress";
 import { findBySchemaId } from "../../utils";
 
 const HEADER_HEIGHT = 60;
@@ -36,40 +35,16 @@ const additonalStyles = {
 class MeterTable extends React.Component {
   state = {};
 
-  componentDidUpdate(prevProps) {
-    if (!_.isEqual(this.props.entries, prevProps.entries)) {
-      this.calcProgress();
-    }
-  }
-
-  componentDidMount() {
-    this.calcProgress();
-  }
-
-  calcProgress = () => {
-    const { entries, meters, days } = this.props;
-    const progress = calcProgress(entries, meters, days);
-    this.setState({ progress });
-  };
-
   _noRowsRenderer = () => {
     return <div className={styles.noRows}>No rows</div>;
   };
 
   _getDatum(index) {
-    const { entries, meters, schemas } = this.props;
-    const e = _.values(entries);
+    const { entriesByMeter, meters, schemas } = this.props;
+    const e = _.values(entriesByMeter);
     if (e && index < meters.length) {
       const meter = meters[index];
-
-      const meterEntries =
-        e.length === 0
-          ? []
-          : _.flatten(
-              e.filter(e => {
-                return e.length > 0 && e[0].meterId === meter.id;
-              })
-            );
+      const meterEntries = (entriesByMeter && entriesByMeter[meter.id]) || [];
       const schema = findBySchemaId(schemas, meter.schemaId);
       if (schema === undefined) {
         return {};
@@ -94,9 +69,10 @@ class MeterTable extends React.Component {
   _rowGetter = ({ index }) => this._getDatum(index);
 
   _getDailyProgress = (meterId, date) => {
-    if (this.props.entries) {
-      const meter = this.props.meters.find(m => m.id === meterId);
-      const foundEntries = this.props.entries[meterId];
+    const { entriesByMeter, meters } = this.props;
+    if (entriesByMeter) {
+      const meter = meters.find(m => m.id === meterId);
+      const foundEntries = entriesByMeter[meterId];
       if (foundEntries && date && meter.dailyGoal) {
         const foundEntry = foundEntries.find(e => e.date === date);
         if (foundEntry) {
@@ -167,9 +143,10 @@ class MeterTable extends React.Component {
                   <ErrorBoundary>
                     <Cell
                       style={{
-                        border: dailyProgress
-                          ? `2px solid ${progressColor}`
-                          : null
+                        border:
+                          dailyProgress > 0
+                            ? `2px solid ${progressColor}`
+                            : null
                       }}
                       color={color}
                       widget={widget}
@@ -191,19 +168,16 @@ class MeterTable extends React.Component {
   };
 
   _rowRenderer = props => {
-    const weeklyProgressPerMeter = calcProgress(
-      this.props.entries,
-      this.props.meters,
-      this.props.days
-    );
-    const weeklyProgress = weeklyProgressPerMeter[props.rowData.meterId];
+    const { progressByMeter } = this.props;
+    const meterId = props.rowData.meterId;
+    const progress = progressByMeter && progressByMeter[meterId];
     return (
       <DefaultTableRowRenderer
         rowKey={props.key}
         {...props}
         style={{
           ...props.style,
-          backgroundColor: getProgressColor(weeklyProgress, 0.2),
+          backgroundColor: progress ? getProgressColor(progress, 0.2) : null,
           padding: 5,
           borderRadius: 3
         }}
@@ -242,7 +216,8 @@ class MeterTable extends React.Component {
 }
 
 MeterTable.propTypes = {
-  entries: PropTypes.object,
+  entriesByMeter: PropTypes.object,
+  progressByMeter: PropTypes.object,
   meters: PropTypes.arrayOf(PropTypes.object),
   days: PropTypes.array,
   colorMapping: PropTypes.object,

@@ -7,12 +7,11 @@ import * as _ from "lodash";
 import { formatDate, parseDate } from "react-day-picker/moment";
 import { connect } from "react-redux";
 
-import { getMeters } from "../../reducers";
+import { getMeters, getEntriesByMeter } from "../../reducers";
 
 import Widget from "../../components/common/Widget";
 import widgets from "../../widgets";
 import { fetchEntriesRequest, fetchMeters } from "../../actions";
-import { calcProgress } from "../../common/progress";
 import { MeterContext } from "../../context";
 import { mapDispatchToCrudMethodProps } from "../../utils/redux-mappers";
 import "react-day-picker/lib/style.css";
@@ -30,7 +29,7 @@ export class DailyDashboard extends Component {
     const month = _.get(match, "params.month");
     const day = _.get(match, "params.day");
     this.state = {
-      entries: props.entries,
+      entriesByMeter: props.entriesByMeter,
       overscanByPixels: 0,
       windowScrollerEnabled: false,
       date:
@@ -40,21 +39,7 @@ export class DailyDashboard extends Component {
       year: year ? Number(year) : now.year(),
       month: month ? Number(month) : now.month() + 1,
       day: day ? Number(day) : now.date(),
-      progress: {}
     };
-  }
-
-  calcProgress = () => {
-    const { entries, meters } = this.props;
-    this.setState({
-      progress: calcProgress(entries, meters, [this.state.date.toDate()])
-    });
-  };
-
-  componentDidUpdate(prevProps) {
-    if (!_.isEqual(this.props.entries, prevProps.entries)) {
-      this.calcProgress();
-    }
   }
 
   componentDidMount() {
@@ -85,8 +70,7 @@ export class DailyDashboard extends Component {
   };
 
   render() {
-    const { meters, entries, isLoading, updateEntry, deleteEntry } = this.props;
-    console.log(entries);
+    const { meters, entriesByMeter, isLoading, updateEntry, deleteEntry } = this.props;
 
     return (
       <PickerLayout
@@ -125,9 +109,8 @@ export class DailyDashboard extends Component {
                     isLoading={isLoading}
                     date={this.state.date.format("YYYY-MM-DD")}
                     meter={meter}
-                    data={_.isEmpty(entries) ? [] : entries[meter.id]}
+                    data={_.isEmpty(entriesByMeter) ? [] : entriesByMeter[meter.id]}
                     widgetType="day"
-                    progress={this.state.progress[meter.id]}
                   />
                 </div>
               </Grid>
@@ -142,7 +125,7 @@ export class DailyDashboard extends Component {
 const mapStateToProps = state => {
   const meters = getMeters(state);
   return {
-    entries: state.entries.entries,
+    entriesByMeter: getEntriesByMeter(state),
     isLoading: state.entries.loadingStatus.isLoading,
     meters,
     widgets,

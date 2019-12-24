@@ -78,6 +78,7 @@ export default (state = initialState, action) => {
         e => e.id !== state.loadingStatus.entryId
       );
       return {
+        ...state,
         entries: clonedEntries,
         loadingStatus: {
           isLoading: false,
@@ -102,8 +103,12 @@ export default (state = initialState, action) => {
       }
 
       return {
-        entries: action.entries.meters.reduce((acc, meter) => {
+        entries: action.entries.reduce((acc, meter) => {
           acc[meter.meterId] = meter.entries;
+          return acc;
+        }, {}),
+        progressByMeter: action.entries.reduce((acc, meter) => {
+          acc[meter.meterId] = meter.progress;
           return acc;
         }, {}),
         loadingStatus: {

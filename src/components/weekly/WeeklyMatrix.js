@@ -6,7 +6,8 @@ class WeeklyMatrix extends React.Component {
   render() {
     const {
       colorMapping,
-      entries,
+      entriesByMeter,
+      progressByMeter,
       meters,
       isLoading,
       days,
@@ -16,7 +17,8 @@ class WeeklyMatrix extends React.Component {
 
     return (
       <MeterTable
-        entries={entries}
+        entriesByMeter={entriesByMeter}
+        progressByMeter={progressByMeter}
         meters={meters}
         schemas={schemas}
         days={days}

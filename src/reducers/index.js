@@ -38,6 +38,9 @@ export const getSchemaError = state => _getSchemaError(state.schemas);
 export const isFetchingSchemas = state => state.schemas.isPending;
 export const findBySchemaName = schemaName => state =>
   _findBySchemaName(schemaName)(state.schemas);
+// TODO: rename
+export const getEntriesByMeter = state => state.entries.entries;
+export const getProgressByMeter = state => state.entries.progressByMeter;
 
 export const getEntriesError = state => state.entries.error;
 export const isSchemasLoading = state => getIsSchemasLoading(state.schemas);

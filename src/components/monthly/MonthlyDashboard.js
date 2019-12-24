@@ -14,7 +14,9 @@ import {
   getMeterError,
   getSchemaError,
   isSchemasLoading,
-  isMetersLoading
+  isMetersLoading,
+  getEntriesByMeter,
+  getProgressByMeter
 } from "../../reducers";
 import widgets from "../../widgets";
 import ErrorSnackbar from "../common/ErrorSnackbar";
@@ -49,9 +51,16 @@ export class MonthlyDashboard extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    const { entriesByMeter: prevEntriesByMeter } = prevProps;
+    const { entriesByMeter } = this.props;
+    if (!_.isEqual(entriesByMeter, prevEntriesByMeter)) {
+      this.props.fetchEntries(this.state.year, this.state.month);
+    }
+  }
+
   componentDidMount() {
-    const date = new Date();
-    this.props.fetchEntries(date.getFullYear(), date.getMonth());
+    this.props.fetchEntries(this.state.year, this.state.month);
   }
 
   findSchema = schemaId => {
@@ -65,7 +74,8 @@ export class MonthlyDashboard extends React.Component {
       error,
       history,
       isLoading,
-      entries,
+      entriesByMeter,
+      progressByMeter,
       meters,
       ...otherProps
     } = this.props;
@@ -111,14 +121,15 @@ export class MonthlyDashboard extends React.Component {
             child={MonthMatrix}
             findBySchemaId={this.findSchema}
             meters={meters}
-            entries={entries}
+            entriesByMeter={entriesByMeter}
+            progressByMeter={progressByMeter}
             schemas={otherProps.schemas}
             {...otherProps}
           />
           <Charts
             isLoading={isLoading}
             days={daysOfMonth(this.state.year, this.state.month)}
-            entries={entries}
+            entriesByMeter={entriesByMeter}
             findBySchemaId={this.findSchema}
             meters={meters}
             widgets={widgets}
@@ -147,7 +158,8 @@ const mapStateToProps = state => {
       isMetersLoading(state) ||
       isSchemasLoading(state),
     meters: getMeters(state),
-    entries: state.entries.entries,
+    entriesByMeter: getEntriesByMeter(state),
+    progressByMeter: getProgressByMeter(state),
     schemas: getSchemas(state),
     error: getMeterError(state) || getSchemaError(state)
   };
@@ -155,7 +167,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   fetchEntries(year, month) {
-    dispatch(actions.fetchEntriesRequest(year, month + 1));
+    dispatch(actions.fetchEntriesRequest(year, month));
   }
 });
 

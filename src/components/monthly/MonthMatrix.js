@@ -8,7 +8,8 @@ class MonthMatrix extends React.Component {
     const {
       meters,
       days,
-      entries,
+      entriesByMeter,
+      progressByMeter,
       schemas,
       colorMapping,
       isLoading,
@@ -19,7 +20,8 @@ class MonthMatrix extends React.Component {
       <AutoSizer disableHeight defaultHeight={768} defaultWidth={1024}>
         {({ width }) => (
           <MeterTable
-            entries={entries}
+            entriesByMeter={entriesByMeter}
+            progressByMeter={progressByMeter}
             meters={meters}
             schemas={schemas}
             days={days}
