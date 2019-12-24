@@ -156,6 +156,13 @@ export const fetchEntriesRequest = (year, month, meterId = undefined) => ({
   meterId
 });
 
+export const fetchEntriesRequestByWeek = (year, week, meterId = undefined) => ({
+  type: FETCH_ENTRIES_REQUEST,
+  year,
+  week,
+  meterId
+});
+
 export const updateMeterRequest = meter => ({
   type: UPDATE_METER_REQUEST,
   meter

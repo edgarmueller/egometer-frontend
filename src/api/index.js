@@ -31,6 +31,15 @@ export const fetchEntries = (year, month) => {
   );
 };
 
+export const fetchEntriesByWeek = (year, week) => {
+  return Axios.get(
+    `${API_BASE_URL}/entries?year=${year}&week=${week}`,
+    createHeaders({
+      [contentType]: applicationJson
+    })
+  );
+};
+
 export const createMeter = (schemaId, name, widget, color) =>
   Axios.post(
     `${API_BASE_URL}/meters`,

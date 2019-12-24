@@ -62,13 +62,16 @@ export function fetchAllAfterLogin(action$, store, deps) {
 }
 
 export function fetchEntriesEpic(action$, store, deps) {
+  const { fetchEntries, fetchEntriesByWeek } = deps.api;
   return action$
     .ofType(FETCH_ENTRIES_REQUEST)
     .debounceTime(250)
-    .switchMap(({ year, month, meterId }) => {
-      return Observable.fromPromise(
-        deps.api.fetchEntries(year, month, meterId)
-      );
+    .switchMap(({ year, month, week, meterId }) => {
+      if (week) {
+        return Observable.fromPromise(fetchEntriesByWeek(year, week));
+      } else {
+        return Observable.fromPromise(fetchEntries(year, month, meterId));
+      }
     })
     .map(resp => receiveEntries(resp.data))
     .catch(error => {

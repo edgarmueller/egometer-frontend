@@ -28,6 +28,7 @@ describe("Monthly Dashboard", () => {
         schemas: [moodSchema]
       }
     });
+    const fetchEntriesSpy = jest.fn();
     const wrapper = mount(
       <Provider store={store}>
         <MonthlyDashboard
@@ -47,13 +48,14 @@ describe("Monthly Dashboard", () => {
               month: 2
             }
           }}
-          fetchEntries={jest.fn()}
+          fetchEntries={fetchEntriesSpy}
           findBySchemaId={jest.fn()}
         />
       </Provider>
     );
     const matrix = wrapper.find(MonthMatrix);
     expect(matrix.length).toEqual(1);
+    expect(fetchEntriesSpy).toHaveBeenCalledWith(2019, 2);
     wrapper.unmount();
   });
 });
