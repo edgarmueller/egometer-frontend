@@ -22,7 +22,7 @@ const NoPaddingCheckbox = withStyles({
   }
 })(Checkbox);
 
-const BooleanCell = ({ meterId, classes, color, isLoading, date, data }) => {
+const BooleanCell = ({ meterId, classes, color, isLoading, date, data, style }) => {
   return (
     <ConnectedComponent
       date={date}
@@ -33,11 +33,11 @@ const BooleanCell = ({ meterId, classes, color, isLoading, date, data }) => {
     >
       {({ updateValue, data: value }) => {
         return (
-          <div className={classes.checkbox} style={{ backgroundColor: color }}>
+          <div className={classes.checkbox} style={{ backgroundColor: color, ...style }}>
             <NoPaddingCheckbox
               icon={<span />}
               checkedIcon={<CheckCircle />}
-              checked={value}
+              checked={value === 'true' || value}
               onChange={ev => updateValue(ev)}
             />
           </div>
