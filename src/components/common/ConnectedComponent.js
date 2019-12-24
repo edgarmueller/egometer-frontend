@@ -41,7 +41,7 @@ export const ConnectedComponent = ({
     },
     [fromEvent, updateOnChange, apiCall]
   );
-  const reset = useCallback(() => setValue(data.value), [setValue, data]);
+  const reset = useCallback(() => setValue(data ? data.value : undefined), [setValue, data]);
   return (
     <React.Fragment>
       {children({
