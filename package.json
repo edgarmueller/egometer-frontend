@@ -49,7 +49,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "test:cov": "npm run test -- --coverage --watchAll=false",
+    "test:cov": "react-scripts test --coverage --watchAll=false",
     "eject": "react-scripts eject",
     "upgrade-interactive": "npx npm-check --update"
   },
