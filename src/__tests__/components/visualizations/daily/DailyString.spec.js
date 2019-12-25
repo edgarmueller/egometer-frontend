@@ -6,7 +6,7 @@ import { TextField } from "@material-ui/core";
 import configureStore from "redux-mock-store";
 import { Provider } from "react-redux";
 import { DailyString } from "../../../../components/widgets/daily/String";
-import { testDate } from "../../../../__mocks__/testData";
+import { testDate } from "../../../../__mocks__/fixtures";
 
 // TODO: move adapter to common test code
 configure({ adapter: new Adapter() });

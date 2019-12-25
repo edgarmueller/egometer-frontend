@@ -2,7 +2,7 @@ import React from "react";
 import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { StringCell } from "../../../../components/widgets/cells/StringCell";
-import { moodMeterId, testDate } from "../../../../__mocks__/testData";
+import { moodMeterId, testDate } from "../../../../__mocks__/fixtures";
 import { Dialog } from "@material-ui/core";
 
 configure({ adapter: new Adapter() });

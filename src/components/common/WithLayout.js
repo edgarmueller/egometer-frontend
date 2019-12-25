@@ -36,7 +36,6 @@ const WithLayout = WrappedComponent => {
     };
 
     openNav = () => {
-      console.log("opening");
       this.setState({ isNavOpen: true });
     };
 

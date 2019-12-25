@@ -17,7 +17,7 @@ import {
   counterEntries,
   counterSchema,
   counterMeter
-} from "../__mocks__/testData";
+} from "../__mocks__/fixtures";
 import mockStorage from "../__mocks__/mockStorage";
 import {
   fetchEntriesEpic,

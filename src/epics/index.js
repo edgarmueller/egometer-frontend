@@ -111,10 +111,12 @@ export function deleteEntryEpic(action$, store, deps) {
       //    .filter(({ shouldDebounce }) => !shouldDebounce)
       .switchMap(({ entry }) => {
         return Observable.fromPromise(deps.api.deleteEntry(entry))
-          .flatMap(resp => {
+          .flatMap(({ data }) => {
+            const { meterId, ...other } = data;
             return Observable.of({
               type: DELETE_ENTRY_SUCCESS,
-              entry: resp.data
+              meterId: meterId,
+              entry: other
             });
           })
           .catch(error => {

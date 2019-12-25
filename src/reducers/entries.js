@@ -61,7 +61,7 @@ export default (state = initialState, action) => {
     case UPDATE_ENTRY_FAILURE:
     case FETCH_ENTRIES_FAILURE:
       return {
-        entries: _.cloneDeep(state.entries),
+        ...state,
         error: {
           message: action.error,
           meterId: action.meterId
@@ -72,14 +72,12 @@ export default (state = initialState, action) => {
         }
       };
     case DELETE_ENTRY_SUCCESS:
-      const clonedEntries = _.cloneDeep(state.entries);
-      const meterEntries = clonedEntries[state.loadingStatus.meterId];
-      clonedEntries[state.loadingStatus.meterId] = meterEntries.filter(
-        e => e.id !== state.loadingStatus.entryId
-      );
       return {
         ...state,
-        entries: clonedEntries,
+        entries: {
+          ...state.entries,
+          [action.meterId]: state.entries[action.meterId].filter(({ id }) => id !== action.entry.id)
+        },
         loadingStatus: {
           isLoading: false,
           meterId: undefined,

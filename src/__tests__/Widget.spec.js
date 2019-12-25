@@ -1,7 +1,7 @@
 import React from "react";
 import { configure, shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { counterSchema } from "../__mocks__/testData";
+import { counterSchema } from "../__mocks__/fixtures";
 
 import { Widget } from "../components/common/Widget";
 import NoWidgetFound from "../components/common/NoWidgetFound";

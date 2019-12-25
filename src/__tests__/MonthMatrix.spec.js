@@ -1,7 +1,7 @@
 import React from "react";
 import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { moodEntries, moodMeter, moodSchema } from "../__mocks__/testData";
+import { moodEntries, moodMeter, moodSchema } from "../__mocks__/fixtures";
 import { Table } from "react-virtualized";
 import { MatrixContainer } from "../containers/MatrixContainer";
 import MonthMatrix from "../components/monthly/MonthMatrix";

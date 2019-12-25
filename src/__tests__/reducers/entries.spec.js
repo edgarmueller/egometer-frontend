@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import entriesReducer from '../../reducers/entries';
-import {counterEntries, counterMeterId, moodEntries, moodMeterId} from "../../__mocks__/testData";
-import {FETCH_ENTRIES_REQUEST, FETCH_ENTRIES_SUCCESS} from "../../actions";
+import {counterEntries, counterMeterId, moodEntries, moodMeterId} from "../../__mocks__/fixtures";
+import {FETCH_ENTRIES_REQUEST, FETCH_ENTRIES_SUCCESS, DELETE_ENTRY_REQUEST, DELETE_METER_SUCCESS, DELETE_ENTRY_SUCCESS} from "../../actions";
 
 describe('entries reducer', () => {
 
@@ -73,5 +73,23 @@ describe('entries reducer', () => {
 
     expect(after.entries[counterMeterId].length).toBe(3);
     expect(after.entries[moodMeterId].length).toBe(4);
-  })
+  });
+
+  it('should delete an entry', () => {
+    const after = entriesReducer(
+      {
+        entries: {
+          [counterMeterId]: counterEntries,
+          [moodMeterId]: moodEntries
+        }
+      },
+      {
+        type: DELETE_ENTRY_SUCCESS,
+        meterId: counterMeterId,
+        entry: {
+          id: counterEntries[0].id
+        }
+      });
+      expect(after.entries[counterMeterId]).toHaveLength(2);
+  });
 });

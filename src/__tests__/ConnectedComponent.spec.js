@@ -3,7 +3,7 @@ import { act } from "react-dom/test-utils";
 import { configure, shallow, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import ConnectedComponent from "../components/common/ConnectedComponent";
-import { testDate } from "../__mocks__/testData";
+import { testDate } from "../__mocks__/fixtures";
 import { MeterContext } from "../context";
 
 configure({ adapter: new Adapter() });

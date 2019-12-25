@@ -9,7 +9,7 @@ import {
   moodMeterId,
   moodSchema,
   testDate
-} from "../../../../__mocks__/testData";
+} from "../../../../__mocks__/fixtures";
 import DailyEnum from "../../../../components/widgets/daily/Enum";
 import IconButtonWithLabel from "../../../../components/common/IconButtonWithLabel";
 
