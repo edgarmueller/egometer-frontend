@@ -17,7 +17,7 @@ install:
   - npm install
 
 script:
-  - npm run test-cov
+  - npm run test:cov
 
 after_success:
   - "cat coverage/lcov.info | ./node_modules/.bin/coveralls"
