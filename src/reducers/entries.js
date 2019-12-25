@@ -24,29 +24,12 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case DELETE_ENTRY_REQUEST:
+    case UPDATE_ENTRY_REQUEST:
     case RESET_ENTRIES_ERROR:
       return {
         ...state,
         error: undefined
-      };
-    case DELETE_ENTRY_REQUEST:
-      return {
-        ...state,
-        error: undefined,
-        loadingStatus: {
-          isLoading: false,
-          entryId: action.entry.id,
-          meterId: action.meterId
-        }
-      };
-    case UPDATE_ENTRY_REQUEST:
-      return {
-        ...state,
-        error: undefined,
-        loadingStatus: {
-          isLoading: false,
-          meterId: undefined
-        }
       };
     case FETCH_ENTRIES_REQUEST:
       return {
@@ -86,12 +69,11 @@ export default (state = initialState, action) => {
       };
     case FETCH_ENTRIES_SUCCESS:
       if (state.loadingStatus.isLoading && state.loadingStatus.meterId) {
-        // TODO:
         const clonedEntries = _.cloneDeep(state.entries);
         clonedEntries[state.loadingStatus.meterId] =
           action.entries[state.loadingStatus.meterId];
         return {
-          // TODO: data accessor necessary
+          ...state,
           entries: clonedEntries,
           loadingStatus: {
             isLoading: false,
@@ -101,6 +83,7 @@ export default (state = initialState, action) => {
       }
 
       return {
+        ...state,
         entries: action.entries.reduce((acc, meter) => {
           acc[meter.meterId] = meter.entries;
           return acc;
@@ -109,35 +92,36 @@ export default (state = initialState, action) => {
           acc[meter.meterId] = meter.progress;
           return acc;
         }, {}),
-        loadingStatus: {
-          isLoading: false,
-          meterId: undefined
-        }
       };
     case UPDATE_ENTRY_SUCCESS:
       const e = action.entry;
       if (_.has(state.entries, e.meterId)) {
-        const clonedState = _.cloneDeep(state);
         const meterEntries = state.entries[e.meterId];
-        const idx = _.findIndex(meterEntries, entry => entry.date === e.date);
+        const idx = _.findIndex(meterEntries, entry => entry.id === e.id);
         const clonedMeterEntries = _.cloneDeep(meterEntries);
         if (idx === -1) {
           clonedMeterEntries.push(e);
         } else {
           clonedMeterEntries[idx] = e;
         }
-        clonedState.entries[e.meterId] = clonedMeterEntries;
-        return clonedState;
-      } else {
-        const clone = _.cloneDeep(state.entries);
-        clone[e.meterId] = [e];
         return {
           ...state,
-          entries: clone
+          entries: {
+            ...state.entries,
+            [e.meterId]: clonedMeterEntries
+          }
+        }
+      } else {
+        return {
+          ...state,
+          entries: {
+            ...state.entries,
+            [e.meterId]: [e]
+          }
         };
       }
     case DELETE_METER_SUCCESS:
-      const meterId = action.meterId;
+      const { meterId } = action;
       if (_.has(state.entries, meterId)) {
         const clonedState = _.cloneDeep(state.entries);
         const filtered = _.omit(clonedState, meterId);
