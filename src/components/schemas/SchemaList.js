@@ -18,7 +18,7 @@ import { ShowMessageDialog } from "../common/ShowMessageDialog";
 import CreateSchemaDialog from "./CreateSchemaDialog";
 import { fetchSchemasOnMount } from "../../common/hocs";
 import { display1 } from "../../common/styles";
-import { getSchemas, isFetchingSchemas } from "../../reducers";
+import { getSchemas, isSchemasLoading } from "../../reducers";
 
 import * as actions from "../../actions";
 import * as api from "../../api";
@@ -97,7 +97,7 @@ export class Schemas extends React.Component {
   render() {
     const { classes } = this.props;
 
-    if (this.props.isFetchingSchemas) {
+    if (this.props.isSchemasLoading) {
       return <div>Loading schemas</div>;
     }
 
@@ -181,7 +181,7 @@ export class Schemas extends React.Component {
 
 const mapStateToProps = state => ({
   schemas: getSchemas(state),
-  isFetchingSchemas: isFetchingSchemas(state)
+  isSchemasLoading: isSchemasLoading(state)
 });
 
 const mapDispatchToProps = dispatch => ({

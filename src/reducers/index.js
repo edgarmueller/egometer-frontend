@@ -29,13 +29,11 @@ export default app;
 
 export const getMeters = state => _getMeters(state.meters);
 export const getMeterError = state => _getMeterError(state.meters);
-export const isFetchingMeters = state => state.meters.isPending;
 export const findMeterById = meterId => state =>
   _findMeterById(meterId)(state.meters);
 
 export const getSchemas = state => state.schemas.schemas;
 export const getSchemaError = state => _getSchemaError(state.schemas);
-export const isFetchingSchemas = state => state.schemas.isPending;
 export const findBySchemaName = schemaName => state =>
   _findBySchemaName(schemaName)(state.schemas);
 // TODO: rename

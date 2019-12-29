@@ -31,7 +31,7 @@ import {
 import { display1 } from "../../common/styles";
 import {
   getMeters,
-  isFetchingMeters,
+  isMetersLoading,
   getMeterError,
   getSchemas
 } from "../../reducers";
@@ -113,7 +113,7 @@ export const Meters = ({
   deleteMeter,
   meters,
   updateMeterRequest,
-  isFetchingMeters,
+  isMetersLoading,
   schemas,
   meterError,
   resetMetersError,
@@ -152,7 +152,7 @@ export const Meters = ({
     meters
   ]);
 
-  if (isFetchingMeters) {
+  if (isMetersLoading) {
     return <div>Loading meters</div>;
   }
 
@@ -319,7 +319,7 @@ export const Meters = ({
 
 const mapStateToProps = state => ({
   meters: getMeters(state),
-  isFetchingMeters: isFetchingMeters(state),
+  isMetersLoading: isMetersLoading(state),
   schemas: getSchemas(state),
   meterError: getMeterError(state)
 });
