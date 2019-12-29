@@ -9,6 +9,7 @@ export class Cell extends React.Component {
   shouldComponentUpdate(nextProps, nextState, snapshot) {
     return (
       !_.isEqual(this.props.data, nextProps.data) ||
+      !_.isEqual(this.props.widget, nextProps.widget) ||
       (this.props.isLoading && !nextProps.isLoading) ||
       !_.isEqual(this.props.style, nextProps.style)
     );
@@ -16,7 +17,6 @@ export class Cell extends React.Component {
 
   render() {
     const today = moment().format("YYYY-MM-DD");
-
     const { data, rowData, date, isLoading, color, widget, style } = this.props;
 
     if (widget === undefined || widget.cell === undefined) {
