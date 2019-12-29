@@ -12,16 +12,11 @@ const Charts = ({
   days,
   entriesByMeter,
   findBySchemaId,
-  isLoading,
   meters,
   widgets,
   width,
   widgetType
 }) => {
-  if (isLoading) {
-    // parent show loading indicator
-    return null;
-  }
 
   if (_.isEmpty(entriesByMeter)) {
     return "no data";
