@@ -65,14 +65,6 @@ export const weekToDate = (year, week) => {
     .toDate();
 }
 
-export const getCurrentWeek = () => {
-  var currentDate = moment();
-  return currentDate
-    .clone()
-    .startOf("isoWeek")
-    .week();
-};
-
 export const getWeek = function(date) {
   const momentDate = moment(date);
   return [momentDate.isoWeekYear(), momentDate.month(), momentDate.isoWeek()];

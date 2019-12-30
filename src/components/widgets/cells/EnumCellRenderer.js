@@ -44,6 +44,7 @@ class EnumCellRenderer extends React.Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       (this.props.date && prevProps.date !== this.props.date) ||
+      (!_.isEqual(this.props.data, prevProps.data)) ||
       (prevProps.isLoading && !this.props.isLoading)
     ) {
       this.setState({

@@ -27,7 +27,6 @@ import {
   daysOfWeek,
   getWeek,
   weekToDate,
-  getCurrentWeek
 } from "../../common/date";
 import { getSchemas } from "../../reducers";
 import PickerLayout from "../common/PickerLayout";
@@ -42,19 +41,22 @@ const styles = {
 export class WeeklyDashboard extends React.Component {
   constructor(props) {
     super(props);
-    const now = moment();
     const { match } = props;
-    const year = _.get(match, "params.year");
-    const week = _.get(match, "params.week");
-    const month = week && weekToDate(year, week).getMonth() + 1;
-    const w = week || getCurrentWeek();
-    const m = month || weekToDate(year, w).getMonth() + 1;
+    let year = Number(_.get(match, "params.year"));
+    let week = Number(_.get(match, "params.week"));
+    let month = week && year && weekToDate(year, week).getMonth() + 1;
+    if (!year) {
+      const [y, m, w] = getWeek(new Date());
+      year = y;
+      month = m;
+      week = w;
+    }
     this.state = {
-      date: weekToDate(year, w),
-      year: year ? Number(year) : now.year(),
-      month: m,
-      days: daysOfWeek(weekToDate(year, w)),
-      week: w,
+      date: weekToDate(year, week),
+      year,
+      month,
+      days: daysOfWeek(weekToDate(year, week)),
+      week,
       mounted: false
     };
   }
@@ -62,14 +64,15 @@ export class WeeklyDashboard extends React.Component {
   componentDidUpdate(prevProps) {
     const { entriesByMeter: prevEntriesByMeter } = prevProps;
     const { entriesByMeter } = this.props;
+    const { year, week } = this.state;
     if (!_.isEqual(entriesByMeter, prevEntriesByMeter)) {
-      this.props.fetchEntries(this.state.year, this.state.week);
+      this.props.fetchEntries(year, week);
     }
   }
 
   componentDidMount() {
-    const { date } = this.state;
-    this.props.fetchEntries(date.getFullYear(), this.state.week);
+    const { year, week } = this.state;
+    this.props.fetchEntries(year, week);
     this.setState({ mounted: true });
   }
 
