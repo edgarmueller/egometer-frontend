@@ -46,14 +46,14 @@ export class WeeklyDashboard extends React.Component {
     const { match } = props;
     const year = _.get(match, "params.year");
     const week = _.get(match, "params.week");
-    const month = week && weekToDate(week).getMonth() + 1;
+    const month = week && weekToDate(year, week).getMonth() + 1;
     const w = week || getCurrentWeek();
-    const m = month || weekToDate(w).getMonth() + 1;
+    const m = month || weekToDate(year, w).getMonth() + 1;
     this.state = {
-      date: weekToDate(w),
+      date: weekToDate(year, w),
       year: year ? Number(year) : now.year(),
       month: m,
-      days: daysOfWeek(weekToDate(w)),
+      days: daysOfWeek(weekToDate(year, w)),
       week: w,
       mounted: false
     };
@@ -109,8 +109,16 @@ export class WeeklyDashboard extends React.Component {
           <WeekPicker
             date={this.state.date}
             onChange={days => {
-              const week = getWeek(days[0]);
-              const year = days[0].getFullYear();
+              const lastDay = _.last(days);
+              const [year, month, week] = getWeek(lastDay);
+              // TODO remove redundant state
+              this.setState({
+                date: _.head(days),
+                year, 
+                week,
+                days,
+                month: month + 1
+              });
               // TODO: we do not fetch each time
               fetchEntries(year, week);
               // TODO: can we just update the URL without reloading?
