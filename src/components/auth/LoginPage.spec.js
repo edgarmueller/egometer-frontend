@@ -1,8 +1,8 @@
 import React from "react";
 import {configure, shallow} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { LoginPage } from "../../../components/auth/LoginPage";
-import LoginForm from "../../../components/auth/LoginForm";
+import { LoginPage } from "./LoginPage";
+import LoginForm from "./LoginForm";
 
 configure({ adapter: new Adapter() });
 

@@ -1,4 +1,4 @@
-import { getWeek } from "../../common/date"
+import { getWeek } from "./date"
 
 describe('getWeek', () => {
     it('should return year and week based on a given date ', () => {

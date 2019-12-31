@@ -2,11 +2,6 @@ import * as _ from "lodash";
 import { USER_LOGIN_SUCCESS } from "../actions";
 import * as api from "../api";
 
-export const createErrorMsg = msgs => {
-  if (!_.isEmpty(msgs)) return _.join(msgs, " ");
-  return undefined;
-};
-
 export const checkToken = dispatch => {
   const token = localStorage.getItem("egometer.token");
   const role = localStorage.getItem("egometer.role");

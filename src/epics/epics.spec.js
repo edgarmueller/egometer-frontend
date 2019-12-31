@@ -23,7 +23,7 @@ import {
   fetchEntriesEpic,
   updateEntryEpic,
   fetchAllAfterLogin
-} from "../epics";
+} from ".";
 
 global.localStorage = mockStorage();
 

@@ -1,4 +1,4 @@
-import schemaReducer from '../reducers/schemas';
+import schemaReducer from './schemas';
 
 describe('schemas reducer', () => {
   it('should return the initial state', () => {

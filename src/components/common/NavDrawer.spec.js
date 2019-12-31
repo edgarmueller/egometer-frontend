@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import { BrowserRouter as Router } from "react-router-dom";
 
-import NavDrawer from "../components/common/NavDrawer";
+import NavDrawer from "./NavDrawer";
 import { ListItem } from "@material-ui/core";
 
 configure({ adapter: new Adapter() });

@@ -3,10 +3,10 @@ import {configure, shallow} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import TableRow from '@material-ui/core/TableRow';
 
-import {Schemas} from '../components/schemas/SchemaList';
-import {moodEntries, moodMeterId, moodSchema} from '../__mocks__/fixtures';
-import CreateSchemaDialog from "../components/schemas/CreateSchemaDialog";
-import {ShowMessageDialog} from "../components/common/ShowMessageDialog";
+import {Schemas} from './SchemaList';
+import {moodEntries, moodMeterId, moodSchema} from '../../__mocks__/fixtures';
+import CreateSchemaDialog from "./CreateSchemaDialog";
+import {ShowMessageDialog} from "../common/ShowMessageDialog";
 
 configure({ adapter: new Adapter() });
 

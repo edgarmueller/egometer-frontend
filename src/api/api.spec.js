@@ -2,7 +2,7 @@ import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { moodMeter, moodSchema, moodSchemaId } from "../__mocks__/fixtures";
 import { API_BASE_URL } from "../constants";
-import * as api from "../api";
+import * as api from ".";
 import mockStorage from "../__mocks__/mockStorage";
 
 const mock = new MockAdapter(axios);

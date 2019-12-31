@@ -4,7 +4,7 @@ import configureStore from "redux-mock-store";
 import thunk from "redux-thunk";
 import MockAdapter from "axios-mock-adapter";
 
-import * as actions from "../actions";
+import * as actions from ".";
 import { API_BASE_URL } from "../constants";
 import { moodMeter, moodMeterId } from "../__mocks__/fixtures";
 import mockStorage from "../__mocks__/mockStorage";

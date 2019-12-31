@@ -1,7 +1,7 @@
 import React from 'react';
 import {configure, shallow} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { ColorPicker } from "../../components/common/ColorPicker";
+import { ColorPicker } from "./ColorPicker";
 
 configure({ adapter: new Adapter() });
 

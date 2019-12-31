@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
-import entriesReducer from '../../reducers/entries';
-import {counterEntries, counterMeterId, moodEntries, moodMeterId} from "../../__mocks__/fixtures";
+import entriesReducer from './entries';
+import {counterEntries, counterMeterId, moodEntries, moodMeterId} from "../__mocks__/fixtures";
 import {
   FETCH_ENTRIES_REQUEST,
   FETCH_ENTRIES_SUCCESS,
@@ -10,7 +10,7 @@ import {
   RESET_ENTRIES_ERROR,
   DELETE_ENTRY_REQUEST,
   DELETE_ENTRY_FAILURE
-} from "../../actions";
+} from "../actions";
 
 describe('entries reducer', () => {
 

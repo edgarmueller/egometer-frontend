@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import TextField from "@material-ui/core/TextField";
 
-import {CreateSchemaDialog} from "../components/schemas/CreateSchemaDialog";
+import {CreateSchemaDialog} from "./CreateSchemaDialog";
 
 configure({ adapter: new Adapter() });
 

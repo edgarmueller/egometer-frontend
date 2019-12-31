@@ -2,10 +2,10 @@ import React from "react";
 import { configure, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 
-import { DailyDashboard } from "../components/daily/DailyDashboard";
-import { moodEntries, moodMeter, moodMeterId } from "../__mocks__/fixtures";
-import Widget from "../components/common/Widget";
-import mood from "../widgets/day/mood";
+import { DailyDashboard } from "./DailyDashboard";
+import { moodEntries, moodMeter, moodMeterId } from "../../__mocks__/fixtures";
+import Widget from "../common/Widget";
+import mood from "../../widgets/day/mood";
 
 configure({ adapter: new Adapter() });
 

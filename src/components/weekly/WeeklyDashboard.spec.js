@@ -2,13 +2,13 @@ import React from "react";
 import { configure, mount } from "enzyme";
 import { Provider } from "react-redux";
 import Adapter from "enzyme-adapter-react-16";
-import { WeeklyDashboard } from "../../../components/weekly/WeeklyDashboard";
-import { moodEntries, moodMeter, moodSchema } from "../../../__mocks__/fixtures";
-import mood from "../../../widgets/day/mood";
-import configureStore from "../../../store/configureStore";
-import WeeklyMatrix from "../../../components/weekly/WeeklyMatrix";
-import WeekPicker from "../../../components/weekly/WeekPicker";
-import PickerLayout from "../../../components/common/PickerLayout";
+import { WeeklyDashboard } from "./WeeklyDashboard";
+import { moodEntries, moodMeter, moodSchema } from "../../__mocks__/fixtures";
+import mood from "../../widgets/day/mood";
+import configureStore from "../../store/configureStore";
+import WeeklyMatrix from "./WeeklyMatrix";
+import WeekPicker from "./WeekPicker";
+import PickerLayout from "../common/PickerLayout";
 
 configure({ adapter: new Adapter() });
 

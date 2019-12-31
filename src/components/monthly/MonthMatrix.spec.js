@@ -1,12 +1,12 @@
 import React from "react";
 import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { moodEntries, moodMeter, moodSchema } from "../__mocks__/fixtures";
+import { moodEntries, moodMeter, moodSchema } from "../../__mocks__/fixtures";
 import { Table } from "react-virtualized";
-import { MatrixContainer } from "../containers/MatrixContainer";
-import MonthMatrix from "../components/monthly/MonthMatrix";
-import widgets from "../widgets";
-import { daysOfMonth } from "../common/date";
+import { MatrixContainer } from "../../containers/MatrixContainer";
+import MonthMatrix from "./MonthMatrix";
+import widgets from "../../widgets";
+import { daysOfMonth } from "../../common/date";
 configure({ adapter: new Adapter() });
 
 const entries = [moodEntries];

@@ -9,9 +9,9 @@ import {
   moodMeterId,
   moodSchema,
   testDate
-} from "../../../../__mocks__/fixtures";
-import DailyEnum from "../../../../components/widgets/daily/Enum";
-import IconButtonWithLabel from "../../../../components/common/IconButtonWithLabel";
+} from "../../../__mocks__/fixtures";
+import DailyEnum from "./Enum";
+import IconButtonWithLabel from "../../common/IconButtonWithLabel";
 
 configure({ adapter: new Adapter() });
 const mockStore = configureStore([]);
