@@ -47,7 +47,8 @@ export class MonthlyDashboard extends React.Component {
     const month = matchedMonth ? Number(matchedMonth) : now.month() + 1;
     this.state = {
       year,
-      month
+      month,
+      mounted: false
     };
   }
 
@@ -55,12 +56,15 @@ export class MonthlyDashboard extends React.Component {
     const { entriesByMeter: prevEntriesByMeter } = prevProps;
     const { entriesByMeter } = this.props;
     if (!_.isEqual(entriesByMeter, prevEntriesByMeter)) {
-      this.props.fetchEntries(this.state.year, this.state.month);
+      const { year, month } = this.state
+      this.props.fetchEntries(year, month);
     }
   }
 
   componentDidMount() {
-    this.props.fetchEntries(this.state.year, this.state.month);
+    const { year, month } = this.state
+    this.props.fetchEntries(year, month);
+    this.setState({ mounted: true });
   }
 
   findSchema = schemaId => {
@@ -89,7 +93,7 @@ export class MonthlyDashboard extends React.Component {
       );
     }
 
-    if (isLoading) {
+    if (!this.state.mounted) {
       return <Loading />;
     }
 
@@ -175,7 +179,7 @@ MonthlyDashboard.propTypes = {
   fetchEntries: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
   meters: PropTypes.array.isRequired,
-  entries: PropTypes.object.isRequired,
+  entriesByMeter: PropTypes.object.isRequired,
   schemas: PropTypes.array.isRequired,
   error: PropTypes.string
 };

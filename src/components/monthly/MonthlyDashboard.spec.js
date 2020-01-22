@@ -34,7 +34,7 @@ describe("Monthly Dashboard", () => {
         <MonthlyDashboard
           isLoading={false}
           schemas={[moodSchema]}
-          entries={{
+          entriesByMeter={{
             [moodMeter.id]: moodEntries
           }}
           meters={[moodMeter]}
@@ -54,8 +54,10 @@ describe("Monthly Dashboard", () => {
       </Provider>
     );
     const matrix = wrapper.find(MonthMatrix);
+    const dashboard = wrapper.find(MonthlyDashboard);
     expect(matrix.length).toEqual(1);
     expect(fetchEntriesSpy).toHaveBeenCalledWith(2019, 2);
+    expect(dashboard.state().mounted).toBe(true);
     wrapper.unmount();
   });
 });
