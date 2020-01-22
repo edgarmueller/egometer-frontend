@@ -1,0 +1,6 @@
+{
+    "workbench.colorTheme": "Solarized Dark",
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#553955" // change this color!
+      }
+}
