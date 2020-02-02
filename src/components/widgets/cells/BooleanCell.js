@@ -37,7 +37,7 @@ const BooleanCell = ({ meterId, classes, color, isLoading, date, data, style }) 
             <NoPaddingCheckbox
               icon={<span />}
               checkedIcon={<CheckCircle />}
-              checked={value === 'true' || value}
+              checked={value === 'true' || !!value}
               onChange={ev => updateValue(ev)}
             />
           </div>

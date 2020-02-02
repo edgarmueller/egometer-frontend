@@ -17,7 +17,6 @@ const checkTokenExpirationMiddleware = store => next => action => {
   const token = localStorage.getItem("egometer.token");
   if (token) {
     const decodedToken = jwtDecode(token);
-    console.log(decodedToken.exp)
     if (decodedToken.exp < Date.now() / 1000) {
       localStorage.removeItem("egometer.token");
       localStorage.removeItem("egometer.role");

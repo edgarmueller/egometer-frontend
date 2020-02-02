@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import { USER_LOGIN_SUCCESS } from "../actions";
 import * as api from "../api";
 

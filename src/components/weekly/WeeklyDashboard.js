@@ -1,7 +1,6 @@
 import React from "react";
 import _ from "lodash";
 import { connect } from "react-redux";
-import moment from "moment";
 import { compose, withProps } from "recompose";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";

@@ -41,14 +41,14 @@ import AddMeterDrawer from "../common/AddMeterDrawer";
 
 const styles = theme => ({
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   display1,
   root: {
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     overflowX: "auto",
     margin: "0 auto"
   },
@@ -59,8 +59,8 @@ const styles = theme => ({
   table: {
     width: 700,
     margin: "0 auto",
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   }
 });
 
@@ -159,7 +159,7 @@ export const Meters = ({
   return (
     <div>
       <ErrorSnackbar error={meterError} resetError={resetMetersError} />
-      <Typography variant="display1" className={classes.display1}>
+      <Typography variant="h1" className={classes.display1}>
         Manage Meters
       </Typography>
       <div>
