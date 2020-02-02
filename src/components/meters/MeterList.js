@@ -164,13 +164,14 @@ export const Meters = ({
       </Typography>
       <div>
         <Button
-          variant="text"
+          variant="outlined"
           size="small"
           color="primary"
           aria-label="Add"
           style={{
             color: "rgb(65, 102, 170)",
-            borderRadius: 30
+            borderRadius: 30,
+            margin: '0.25rem',
           }}
           onClick={() => setDrawerOpen(true)}
         >
