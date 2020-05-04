@@ -29,7 +29,7 @@ describe("ConnectedComponent", () => {
 
   it("should provide data to its children", () => {
     let provided = undefined;
-    const wrapper = shallow(
+    const wrapper = mount(
       <ConnectedComponent
         data={{ value: "init" }}
         date={testDate}
@@ -38,12 +38,14 @@ describe("ConnectedComponent", () => {
         meterId="dummyId"
       >
         {({ data }) => {
-          provided = data;
+          return <div>{data}</div>;
         }}
       </ConnectedComponent>
     );
     wrapper.setProps({ data: { value: "foo" } });
-    expect(provided).toBe("foo");
+    wrapper.update();
+    expect(wrapper.find('div').childAt(0).text()).toBe('foo')
+    wrapper.unmount();
   });
 
   it("should update its internal data via updateValue", () => {
