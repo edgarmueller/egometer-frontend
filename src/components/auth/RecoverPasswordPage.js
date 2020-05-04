@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { routerActions } from "react-router-redux";
+import get from 'lodash/get';
 import { recoverPassword } from "../../api";
 import RecoverPasswordForm from "./RecoverPasswordForm";
 
@@ -21,12 +22,13 @@ class RecoverPasswordPage extends React.Component {
           error: undefined
         });
       },
-      error =>
+      error => {
         this.setState({
           isLoading: false,
           success: false,
-          error: error.response.data.description
+          error: get(error, 'response.data.description') || error.message
         })
+      }
     );
   };
 
