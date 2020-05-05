@@ -11,6 +11,7 @@ import {
   userIsNotAuthenticated
 } from "../common/auth";
 import Loading from "./common/Loading";
+import PeriodicAuthCheck from "../components/auth/PeriodicAuthCheck";
 
 const ConnectedSwitch = connect(state => ({
   location: state.router.location
@@ -119,6 +120,7 @@ export const App = () => {
           component={userIsAuthenticated(WithLayout(AsyncDailyDashboard))}
         />
       </ConnectedSwitch>
+      <PeriodicAuthCheck/>
     </div>
   );
 };
