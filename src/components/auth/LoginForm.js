@@ -54,6 +54,7 @@ export class LoginForm extends React.Component {
           type="text"
           label="Mail Address"
           onChange={this.handleUpdateUser}
+          style = {{width: 300}} 
         />
         <br />
         <TextField
@@ -61,6 +62,7 @@ export class LoginForm extends React.Component {
           type="password"
           label="Password"
           onChange={this.handleUpdatePassword}
+          style = {{width: 300}} 
         />
         <br />
 

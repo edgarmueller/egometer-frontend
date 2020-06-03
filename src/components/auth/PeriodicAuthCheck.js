@@ -21,7 +21,6 @@ class PeriodicAuthCheck extends React.Component {
     authCheck = (loginPath, dispatchAction) => {
         const { token } = this.props;
         if (!hasValidToken(token)) {
-            console.log('invalid token', token)
             if (token != null && window.location.hash !== `#${loginPath}`) {
                 dispatchAction(loginPath)
             }
