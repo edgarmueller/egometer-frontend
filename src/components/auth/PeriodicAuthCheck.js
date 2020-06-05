@@ -8,7 +8,7 @@ const hasValidToken = token => {
         return false;
     }
     const decoded = jwtDecode(token);
-    return decoded.exp < Date.now()/1000;
+    return decoded.exp > Date.now()/1000;
 }
 
 class PeriodicAuthCheck extends React.Component {
