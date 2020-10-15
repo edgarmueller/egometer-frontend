@@ -8,29 +8,29 @@ const hasValidToken = token => {
         return false;
     }
     const decoded = jwtDecode(token);
-    return decoded.exp > Date.now()/1000;
+    return decoded.exp > new Date().getTime() / 1000;
 }
 
 class PeriodicAuthCheck extends React.Component {
     constructor(props) {
         super(props)
         // interval in seconds
-        this.interval = 60
+        this.interval = 10
     }
 
-    authCheck = (loginPath, dispatchAction) => {
-        const { token } = this.props;
+    authCheck = (loginPath) => () => {
+        const { token, logout } = this.props;
         if (!hasValidToken(token)) {
-            if (token != null && window.location.hash !== `#${loginPath}`) {
-                dispatchAction(loginPath)
+            if (window.location.hash !== `#${loginPath}`) {
+                logout(loginPath);
             }
         }
     }
 
     componentDidMount() {
         const { loginPath, logout } = this.props;
-        this.authCheck(loginPath, logout);
-        this.interval = setInterval(this.authCheck, this.interval * 1000, loginPath, logout)
+        this.authCheck(loginPath)();
+        this.interval = setInterval(this.authCheck(loginPath), this.interval * 1000, loginPath, logout)
     }
 
     componentWillUnmount() {

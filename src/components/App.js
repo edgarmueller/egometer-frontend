@@ -120,7 +120,7 @@ export const App = () => {
           component={userIsAuthenticated(WithLayout(AsyncDailyDashboard))}
         />
       </ConnectedSwitch>
-      <PeriodicAuthCheck/>
+      <PeriodicAuthCheck loginPath='/login'/>
     </div>
   );
 };
