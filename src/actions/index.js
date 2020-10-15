@@ -200,12 +200,16 @@ export const loginWithEmail = (email, password) => dispatch => {
 };
 
 export const USER_LOGGED_OUT = "USER_LOGGED_OUT";
-export const logout = () => dispatch => {
-  return api.logout().then(() => {
-    localStorage.removeItem("egometer.token");
-    localStorage.removeItem("egometer.role");
+export const logout = () => async dispatch => {
+  localStorage.removeItem("egometer.token");
+  localStorage.removeItem("egometer.role");
+  try {
+    await api.logout();
+  } catch {
+    // ignore logout error
+  } finally {
     dispatch({
       type: USER_LOGGED_OUT
     });
-  });
+  }
 };
