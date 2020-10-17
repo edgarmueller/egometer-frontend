@@ -22,7 +22,7 @@ class PeriodicAuthCheck extends React.Component {
         const { token, logout } = this.props;
         if (!hasValidToken(token)) {
             if (window.location.hash !== `#${loginPath}`) {
-                logout(loginPath);
+                logout();
             }
         }
     }
@@ -49,10 +49,8 @@ const mapStateToProps = state => ({
     token: state.user.token
 });
 
-const mapDispatchToProps = dispatch => {
-    return {
-        logout: (loginPath) => dispatch(logout(loginPath))
-    }
-}
+const mapDispatchToProps = dispatch => ({
+    logout
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(PeriodicAuthCheck)
