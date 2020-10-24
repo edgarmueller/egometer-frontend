@@ -26,49 +26,49 @@ import {
   deleteMeter,
   resetMetersError,
   updateMeter,
-  updateMeterRequest
+  updateMeterRequest,
 } from "../../actions";
 import { display1 } from "../../common/styles";
 import {
   getMeters,
   isMetersLoading,
   getMeterError,
-  getSchemas
+  getSchemas,
 } from "../../reducers";
 import { findBySchemaId } from "../../utils";
 import { ErrorSnackbar } from "../common/ErrorSnackbar";
 import AddMeterDrawer from "../common/AddMeterDrawer";
 
-const styles = theme => ({
+const styles = (theme) => ({
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
+    marginBottom: theme.spacing(1),
   },
   display1,
   root: {
     marginTop: theme.spacing(3),
     overflowX: "auto",
-    margin: "0 auto"
+    margin: "0 auto",
   },
   button: {
     margin: "0.25em",
-    float: "right"
+    float: "right",
   },
   table: {
     width: 700,
     margin: "0 auto",
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  }
+    marginBottom: theme.spacing(2),
+  },
 });
 
-const isNumberSchema = schema => {
+const isNumberSchema = (schema) => {
   return schema && schema.type === "number";
 };
 
-const metersById = meters => {
+const metersById = (meters) => {
   return meters.reduce((acc, m) => {
     acc[m.id] = m;
     return acc;
@@ -83,8 +83,8 @@ const updateLocalMeter = (state, meterId, propName, propValue) => {
     ...state,
     [meterId]: {
       ...state[meterId],
-      [propName]: propValue
-    }
+      [propName]: propValue,
+    },
   };
 };
 
@@ -104,10 +104,6 @@ const localMeterReducer = (state, action) => {
   }
 };
 
-const valueOf = state => (meterId, propName) => {
-  return get(state, [meterId + "", propName]) || "";
-};
-
 export const Meters = ({
   classes,
   deleteMeter,
@@ -117,11 +113,11 @@ export const Meters = ({
   schemas,
   meterError,
   resetMetersError,
-  fetchMeters
+  fetchMeters,
 }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [state, dispatch] = useReducer(localMeterReducer, {
-    meterById: metersById(meters)
+    meterById: metersById(meters),
   });
   const confirmDialog = useCallback(() => {
     setDrawerOpen(false);
@@ -135,21 +131,22 @@ export const Meters = ({
         type: UPDATE_SINGLE,
         id: meter.id,
         propName,
-        payload: propValue
+        payload: propValue,
       });
       updateMeterRequest({
         ...meter,
-        [propName]: propValue
+        [propName]: propValue,
       });
     },
     [updateMeterRequest]
   );
 
-  const handleDeleteMeter = useCallback(meter => () => deleteMeter(meter.id), [
-    deleteMeter
-  ]);
+  const handleDeleteMeter = useCallback(
+    (meter) => () => deleteMeter(meter.id),
+    [deleteMeter]
+  );
   useEffect(() => dispatch({ type: UPDATE_ALL, payload: metersById(meters) }), [
-    meters
+    meters,
   ]);
 
   if (isMetersLoading) {
@@ -171,7 +168,7 @@ export const Meters = ({
           style={{
             color: "rgb(65, 102, 170)",
             borderRadius: 30,
-            margin: '0.25rem',
+            margin: "0.25rem",
           }}
           onClick={() => setDrawerOpen(true)}
         >
@@ -196,7 +193,7 @@ export const Meters = ({
           </TableHead>
           <TableBody>
             {meters ? (
-              meters.map(meter => {
+              meters.map((meter) => {
                 const schema = findBySchemaId(schemas, meter.schemaId);
                 return (
                   <TableRow key={meter.id}>
@@ -204,8 +201,8 @@ export const Meters = ({
                       <TextField
                         margin="dense"
                         variant="outlined"
-                        value={valueOf(state)(meter.id, "name")}
-                        onChange={ev =>
+                        value={meter.name}
+                        onChange={(ev) =>
                           handleUpdateMeter(meter, "name", ev.target.value)
                         }
                       />
@@ -222,8 +219,8 @@ export const Meters = ({
                     <TableCell>
                       {isNumberSchema(schema) ? (
                         <TextField
-                          value={valueOf(state)(meter.id, "dailyGoal")}
-                          onChange={ev =>
+                          value={meter.dailyGoal}
+                          onChange={(ev) =>
                             handleUpdateMeter(
                               meter,
                               "dailyGoal",
@@ -233,7 +230,7 @@ export const Meters = ({
                         />
                       ) : (
                         <Switch
-                          checked={valueOf(state)(meter.id, "dailyGoal") > 0}
+                          checked={meter.dailyGoal > 0}
                           onChange={(ev, goal) =>
                             handleUpdateMeter(meter, "dailyGoal", goal ? 1 : 0)
                           }
@@ -242,8 +239,8 @@ export const Meters = ({
                     </TableCell>
                     <TableCell>
                       <TextField
-                        value={valueOf(state)(meter.id, "weeklyGoal")}
-                        onChange={ev =>
+                        value={meter.weekylGoal}
+                        onChange={(ev) =>
                           handleUpdateMeter(
                             meter,
                             "weeklyGoal",
@@ -254,9 +251,9 @@ export const Meters = ({
                     </TableCell>
                     <TableCell>
                       <ColorPicker
-                        color={valueOf(state)(meter.id, "color")}
+                        color={meter.color}
                         onChange={() => {}}
-                        onChangeComplete={color =>
+                        onChangeComplete={(color) =>
                           handleUpdateMeter(meter, "color", color)
                         }
                       />
@@ -297,7 +294,7 @@ export const Meters = ({
           <div>
             <Picker
               set="emojione"
-              onClick={emoji => {
+              onClick={(emoji) => {
                 handleUpdateMeter(editedMeter, "icon", emoji.id);
                 setEditedMeter(undefined);
                 setOpen(false);
@@ -318,24 +315,21 @@ export const Meters = ({
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   meters: getMeters(state),
   isMetersLoading: isMetersLoading(state),
   schemas: getSchemas(state),
-  meterError: getMeterError(state)
+  meterError: getMeterError(state),
 });
 
 export default compose(
   withProps({ widgets }),
-  connect(
-    mapStateToProps,
-    {
-      resetMetersError,
-      deleteMeter,
-      updateMeter,
-      updateMeterRequest,
-      fetchMeters
-    }
-  ),
+  connect(mapStateToProps, {
+    resetMetersError,
+    deleteMeter,
+    updateMeter,
+    updateMeterRequest,
+    fetchMeters,
+  }),
   withStyles(styles)
 )(Meters);

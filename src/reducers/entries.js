@@ -10,7 +10,7 @@ import {
   UPDATE_ENTRY_SUCCESS,
   DELETE_ENTRY_REQUEST,
   DELETE_ENTRY_FAILURE,
-  DELETE_ENTRY_SUCCESS
+  DELETE_ENTRY_SUCCESS,
 } from "../actions";
 
 const initialState = {
@@ -18,8 +18,8 @@ const initialState = {
   error: undefined,
   loadingStatus: {
     isLoading: false,
-    meterId: undefined
-  }
+    meterId: undefined,
+  },
 };
 
 export default (state = initialState, action) => {
@@ -29,7 +29,7 @@ export default (state = initialState, action) => {
     case RESET_ENTRIES_ERROR:
       return {
         ...state,
-        error: undefined
+        error: undefined,
       };
     case FETCH_ENTRIES_REQUEST:
       return {
@@ -37,8 +37,8 @@ export default (state = initialState, action) => {
         error: undefined,
         loadingStatus: {
           isLoading: true,
-          meterId: action.meterId
-        }
+          meterId: action.meterId,
+        },
       };
     case DELETE_ENTRY_FAILURE:
     case UPDATE_ENTRY_FAILURE:
@@ -47,25 +47,27 @@ export default (state = initialState, action) => {
         ...state,
         error: {
           message: action.error,
-          meterId: action.meterId
+          meterId: action.meterId,
         },
         loadingStatus: {
           isLoading: false,
-          meterId: undefined
-        }
+          meterId: undefined,
+        },
       };
     case DELETE_ENTRY_SUCCESS:
       return {
         ...state,
         entries: {
           ...state.entries,
-          [action.meterId]: state.entries[action.meterId].filter(({ id }) => id !== action.entry.id)
+          [action.meterId]: state.entries[action.meterId].filter(
+            ({ id }) => id !== action.entry.id
+          ),
         },
         loadingStatus: {
           isLoading: false,
           meterId: undefined,
-          entryId: undefined
-        }
+          entryId: undefined,
+        },
       };
     case FETCH_ENTRIES_SUCCESS:
       if (state.loadingStatus.isLoading && state.loadingStatus.meterId) {
@@ -77,19 +79,22 @@ export default (state = initialState, action) => {
           entries: clonedEntries,
           loadingStatus: {
             isLoading: false,
-            meterId: undefined
-          }
+            meterId: undefined,
+          },
         };
       }
 
       return {
         ...state,
-        entries: action.entries.reduce((acc, meter) => {
-          acc[meter.meterId] = meter.entries;
+        entries: action.entries.reduce((acc, entry) => {
+          if (!_.has(acc, entry.meterId)) {
+            acc[entry.meterId] = [];
+          }
+          acc[entry.meterId].push(entry);
           return acc;
         }, {}),
-        progressByMeter: action.entries.reduce((acc, meter) => {
-          acc[meter.meterId] = meter.progress;
+        progressByMeter: action.entries.reduce((acc, entry) => {
+          acc[entry.meterId] = 0; //meter.progress;
           return acc;
         }, {}),
       };
@@ -97,7 +102,7 @@ export default (state = initialState, action) => {
       const e = action.entry;
       if (_.has(state.entries, e.meterId)) {
         const meterEntries = state.entries[e.meterId];
-        const idx = _.findIndex(meterEntries, entry => entry.id === e.id);
+        const idx = _.findIndex(meterEntries, (entry) => entry.id === e.id);
         const clonedMeterEntries = _.cloneDeep(meterEntries);
         if (idx === -1) {
           clonedMeterEntries.push(e);
@@ -108,16 +113,16 @@ export default (state = initialState, action) => {
           ...state,
           entries: {
             ...state.entries,
-            [e.meterId]: clonedMeterEntries
-          }
-        }
+            [e.meterId]: clonedMeterEntries,
+          },
+        };
       } else {
         return {
           ...state,
           entries: {
             ...state.entries,
-            [e.meterId]: [e]
-          }
+            [e.meterId]: [e],
+          },
         };
       }
     case DELETE_METER_SUCCESS:
@@ -127,7 +132,7 @@ export default (state = initialState, action) => {
         const filtered = _.omit(clonedState, meterId);
         return {
           ...state,
-          entries: filtered
+          entries: filtered,
         };
       }
       return state;

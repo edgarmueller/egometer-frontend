@@ -47,11 +47,11 @@ Cell.propTypes = {
   rowData: PropTypes.object.isRequired,
   date: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  color: PropTypes.string.isRequired
+  color: PropTypes.string.isRequired,
 };
 
 Cell.defaultProps = {
-  data: undefined
+  data: undefined,
 };
 
 export default Cell;

@@ -1,4 +1,3 @@
-import jwtDecode from "jwt-decode";
 import _ from "lodash";
 import * as api from "../api";
 
@@ -23,90 +22,90 @@ export const USER_LOGIN_REQUEST = "USER_LOGIN_REQUEST";
 export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
 export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
 
-export const setMeters = meters => {
+export const setMeters = (meters) => {
   const mapped = meters.map(({ widget, ...otherProps }) => ({
     ...otherProps,
-    widget
+    widget,
   }));
 
   return {
     type: FETCH_METERS_SUCCESS,
-    meters: mapped
+    meters: mapped,
   };
 };
 
-export const setMetersError = error => ({
+export const setMetersError = (error) => ({
   type: FETCH_METERS_FAILURE,
-  error: error.message
+  error: error.message,
 });
 
 export const resetMetersError = () => ({
-  type: RESET_METERS_ERROR
+  type: RESET_METERS_ERROR,
 });
 
-export const setSchemas = schemas => ({
+export const setSchemas = (schemas) => ({
   type: FETCH_SCHEMAS_SUCCESS,
-  schemas
+  schemas,
 });
 
-export const setSchemasError = error => ({
+export const setSchemasError = (error) => ({
   type: FETCH_SCHEMAS_FAILURE,
-  error: error.message
+  error: error.message,
 });
 
-export const fetchMeters = () => dispatch => {
+export const fetchMeters = () => (dispatch) => {
   dispatch({ type: FETCH_METERS_REQUEST });
   return api.fetchMeters().then(
-    resp => {
+    (resp) => {
       return dispatch(setMeters(resp.data));
     },
-    error =>
+    (error) =>
       dispatch({
         type: FETCH_METERS_FAILURE,
-        error: error.message
+        error: error.message,
       })
   );
 };
 
-export const fetchSchemas = () => dispatch => {
+export const fetchSchemas = () => (dispatch) => {
   dispatch({ type: FETCH_SCHEMAS_REQUEST });
 
   return api.fetchSchemas().then(
-    resp => dispatch(setSchemas(resp.data)),
-    error => dispatch(setSchemasError(error))
+    (resp) => dispatch(setSchemas(resp.data)),
+    (error) => dispatch(setSchemasError(error))
   );
 };
 
-export const deleteMeter = meterId => dispatch => {
+export const deleteMeter = (meterId) => (dispatch) => {
   return api.deleteMeter(meterId).then(
-    resp =>
+    (resp) =>
       dispatch({
         type: DELETE_METER_SUCCESS,
-        meterId: resp.data.id
+        meterId: resp.data.id,
       }),
-    error =>
+    (error) =>
       dispatch({
         type: DELETE_METER_FAILURE,
-        error
+        error,
       })
   );
 };
 
-export const updateMeter = meter => dispatch => {
+export const updateMeter = (meter) => (dispatch) => {
   return api.updateMeter(meter).then(
-    resp => {
+    (resp) => {
       dispatch({
         type: UPDATE_METER_SUCCESS,
         meter: {
           ...resp.data,
-          widget: resp.data.visualization
-        }
+          widget: resp.data.visualization,
+        },
       });
     },
-    error =>
+    (error) =>
       dispatch({
         type: UPDATE_METER_FAILURE,
-        error
+        error,
       })
   );
 };
@@ -123,7 +122,7 @@ export const updateEntryRequest = (entry, shouldDebounce = false) => {
   return {
     type: UPDATE_ENTRY_REQUEST,
     shouldDebounce,
-    entry
+    entry,
   };
 };
 
@@ -132,7 +131,7 @@ export const deleteEntryRequest = (meterId, entry, shouldDebounce = false) => {
     type: DELETE_ENTRY_REQUEST,
     shouldDebounce,
     meterId,
-    entry
+    entry,
   };
 };
 
@@ -153,54 +152,53 @@ export const fetchEntriesRequest = (year, month, meterId = undefined) => ({
   type: FETCH_ENTRIES_REQUEST,
   year,
   month,
-  meterId
+  meterId,
 });
 
 export const fetchEntriesRequestByWeek = (year, week, meterId = undefined) => ({
   type: FETCH_ENTRIES_REQUEST,
   year,
   week,
-  meterId
+  meterId,
 });
 
-export const updateMeterRequest = meter => ({
+export const updateMeterRequest = (meter) => ({
   type: UPDATE_METER_REQUEST,
-  meter
+  meter,
 });
 
-export const receiveEntries = entries => ({
+export const receiveEntries = (entries) => ({
   type: FETCH_ENTRIES_SUCCESS,
-  entries
+  entries,
 });
 
-export const loginWithEmail = (email, password) => dispatch => {
+export const loginWithEmail = (email, password) => (dispatch) => {
   dispatch({
-    type: USER_LOGIN_REQUEST
+    type: USER_LOGIN_REQUEST,
   });
   return api.loginUser(email, password).then(
-    response => {
-      const { userId, details } = response.data;
-      const decodedToken = jwtDecode(details.token);
-      localStorage.setItem("egometer.token", details.token);
-      localStorage.setItem("egometer.role", decodedToken.role);
+    (response) => {
+      const { user, token } = response.data;
+      localStorage.setItem("egometer.token", token);
+      localStorage.setItem("egometer.role", user.roles[0]);
       dispatch({
         type: USER_LOGIN_SUCCESS,
-        token: details.token,
-        role: _.get(details, "user.role.name"),
-        userId
+        token,
+        role: user.roles[0],
+        userId: user.id,
       });
     },
-    error => {
+    (error) => {
       dispatch({
         type: USER_LOGIN_FAILURE,
-        error: _.get(error, "response.data.description") || error.message
+        error: _.get(error, "response.data.description") || error.message,
       });
     }
   );
 };
 
 export const USER_LOGGED_OUT = "USER_LOGGED_OUT";
-export const logout = () => async dispatch => {
+export const logout = () => async (dispatch) => {
   localStorage.removeItem("egometer.token");
   localStorage.removeItem("egometer.role");
   try {
@@ -209,7 +207,7 @@ export const logout = () => async dispatch => {
     // ignore logout error
   } finally {
     dispatch({
-      type: USER_LOGGED_OUT
+      type: USER_LOGGED_OUT,
     });
   }
 };
