@@ -127,7 +127,7 @@ export const logout = () =>
 // TODO
 export const signUpWithEmail = (name, email, password) => {
   return Axios.post(
-    `${API_BASE_URL}/sign-up`,
+    `${API_BASE_URL}/auth/signup`,
     { name, email, password },
     createHeaders({
       [contentType]: applicationJson,
