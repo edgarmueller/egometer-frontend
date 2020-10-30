@@ -6,6 +6,7 @@ import mailValidator from "email-validator";
 
 import SignUpForm from "./SignUpForm";
 import { signUpWithEmail } from "../../api";
+import LinkButton from "../LinkButton";
 
 const getError = (errorData, fieldName) => {
   if (errorData && _.has(errorData.details, `obj.${fieldName}`)) {
@@ -27,44 +28,44 @@ class SignUpPage extends React.Component {
     isLoading: false,
     success: undefined,
     errorMsg: undefined,
-    errors: {}
+    errors: {},
   };
 
-  handleUpdateName = event => {
+  handleUpdateName = (event) => {
     this.setState({
       name: event.target.value,
       errors: {
         ...this.state.errors,
-        name: null
-      }
+        name: null,
+      },
     });
   };
 
-  handleUpdateEmail = event => {
+  handleUpdateEmail = (event) => {
     const value = event.target.value;
     const isValidMail = mailValidator.validate(value);
     this.setState({
       mail: value,
       errors: {
         ...this.state.errors,
-        mail: isValidMail ? null : "Invalid mail address"
-      }
+        mail: isValidMail ? null : "Invalid mail address",
+      },
     });
   };
 
-  handleUpdatePassword = event => {
+  handleUpdatePassword = (event) => {
     this.setState({
       password: event.target.value,
       errors: {
         ...this.state.errors,
-        password: null
-      }
+        password: null,
+      },
     });
   };
 
-  handleUpdateConfirmationPassword = event => {
+  handleUpdateConfirmationPassword = (event) => {
     this.setState({
-      confirmationPassword: event.target.value
+      confirmationPassword: event.target.value,
     });
   };
 
@@ -76,9 +77,9 @@ class SignUpPage extends React.Component {
           isLoading: false,
           success: true,
           errorMsg: null,
-          errors: null
+          errors: null,
         }),
-      error => {
+      (error) => {
         const errorData = _.get(error, "response.data");
         const mail = getError(errorData, "email");
         const name = getError(errorData, "name");
@@ -92,14 +93,15 @@ class SignUpPage extends React.Component {
           errors: {
             name,
             mail,
-            password
-          }
+            password,
+          },
         });
       }
     );
   };
 
   render() {
+    const { classes } = this.props;
     if (this.state.isLoading) {
       return <div>Loading...</div>;
     }
@@ -119,7 +121,7 @@ class SignUpPage extends React.Component {
 
     return (
       <div>
-        <h2>Sign up</h2>
+        <h2>Sign up for egometer</h2>
         <SignUpForm
           name={this.state.name}
           mail={this.state.mail}
@@ -136,12 +138,15 @@ class SignUpPage extends React.Component {
             confirmationPassword:
               this.state.password !== this.state.confirmationPassword
                 ? "Passwords do not match"
-                : null
+                : null,
           }}
         />
         {this.state.error && (
           <p style={{ paddingTop: "1em", color: "red" }}>{this.state.error}</p>
         )}
+        <div style={{ marginTop: "1em" }}>
+          <LinkButton to="/" label="Back to front page" />
+        </div>
       </div>
     );
   }
@@ -152,10 +157,7 @@ SignUpPage.propTypes = {};
 SignUpPage.defaultProps = {};
 
 const mapDispatchToProps = {
-  replace: routerActions.replace
+  replace: routerActions.replace,
 };
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(SignUpPage);
+export default connect(null, mapDispatchToProps)(SignUpPage);

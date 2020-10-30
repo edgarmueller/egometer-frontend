@@ -4,20 +4,20 @@ export const link = {
   alignItems: "center",
   "&:hover": {
     backgroundColor: "rgb(65, 102, 170, 0.5)",
-    color: "#fff"
+    color: "#fff",
   },
   paddingLeft: "1rem",
   paddingRight: "1rem",
-  fontSize: "0.8125rem"
+  fontSize: "0.8125rem",
 };
 
 export const buttonStyle = {
-  fontSize: "2em"
+  fontSize: "2em",
 };
 
 export const primaryButton = {
   backgroundColor: "#25a8cb",
-  color: "#fff"
+  color: "#fff",
 };
 
 export const button = {
@@ -32,12 +32,12 @@ export const button = {
   fontWeight: "bold",
   "&:hover": {
     backgroundColor: "rgba(85, 189, 253, 0.4)",
-    color: "#fff"
+    color: "#fff",
   },
   alignItems: "center",
   fontSize: "0.8em",
+  textTransform: "uppercase",
   letterSpacing: "0.065em",
-  textTransform: 'uppercase'
 };
 
 export const underline = {
@@ -45,26 +45,26 @@ export const underline = {
   height: ".375rem",
   width: "6rem",
   margin: "0.5rem 0",
-  backgroundColor: "#794bc4"
+  backgroundColor: "#794bc4",
 };
 
 export const meterTitle = {
   fontWeight: "bold",
   color: "#000",
-  fontSize: 24
+  fontSize: 24,
 };
 
 export const titleWrapper = {
   position: "sticky",
   top: 0,
-  background: "rgba(255, 255, 255, 0.75)"
+  background: "rgba(255, 255, 255, 0.75)",
 };
 
 export const display1 = {
   marginTop: "0.5em",
   fontSize: "1.5em",
   color: "#000",
-  fontWeight: "bold"
+  fontWeight: "bold",
 };
 
 export const logo = {
@@ -74,7 +74,7 @@ export const logo = {
   fontSize: "0.8125em",
   fontWeight: "bold",
   textDecoration: "none",
-  fontFamily: "'Arial', sans-serif"
+  fontFamily: "'Arial', sans-serif",
 };
 
 export const joinClasses = (...classNames) => `${[...classNames].join(" ")}`;

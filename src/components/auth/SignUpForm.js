@@ -26,19 +26,19 @@ const styles = {
     fontWeight: "bold",
     "&:hover": {
       backgroundColor: "#80CBC4",
-      color: "#fff"
+      color: "#fff",
     },
     alignItems: "center",
     textTransform: "uppercase",
     fontSize: "0.8em",
-    letterSpacing: "0.065em"
+    letterSpacing: "0.065em",
   },
   form: {
     display: "flex",
     flexDirection: "column",
     maxWidth: 280,
-    margin: "0 auto"
-  }
+    margin: "0 auto",
+  },
 };
 
 export class SignUpForm extends React.Component {
@@ -52,7 +52,7 @@ export class SignUpForm extends React.Component {
       handleUpdateConfirmationPassword,
       errors,
       name,
-      mail
+      mail,
     } = this.props;
 
     return (
@@ -132,10 +132,10 @@ SignUpForm.propTypes = {
     name: PropTypes.string,
     mail: PropTypes.string,
     password: PropTypes.string,
-    confirmationPassword: PropTypes.string
+    confirmationPassword: PropTypes.string,
   }),
   name: PropTypes.string,
-  mail: PropTypes.string
+  mail: PropTypes.string,
 };
 
 SignUpForm.defaultProps = {
@@ -143,10 +143,10 @@ SignUpForm.defaultProps = {
     message: null,
     mail: null,
     password: null,
-    name: null
+    name: null,
   },
   name: "",
-  mail: ""
+  mail: "",
 };
 
 export default withStyles(styles)(SignUpForm);
