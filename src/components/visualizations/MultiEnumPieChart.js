@@ -22,7 +22,7 @@ const colorRange = [
   "#ffaf99",
   "#d0f1f4",
   "#7795ff",
-  "#E2F1AF"
+  "#E2F1AF",
 ];
 
 class MultiEnumPieChart extends React.Component {
@@ -34,19 +34,19 @@ class MultiEnumPieChart extends React.Component {
   render() {
     const { data } = this.props;
 
-    const values = _.flatMap(data, d => d.value);
+    const values = _.flatMap(data, (d) => d.value);
     const groupedValues = values.reduce((acc, val) => {
       if (_.has(acc, val)) {
-        return _.update(acc, val, cnt => cnt + 1);
+        return _.update(acc, val, (cnt) => cnt + 1);
       } else {
         return _.set(acc, val, 1);
       }
     }, {});
 
-    const angles = _.keys(groupedValues).map(key => {
+    const angles = _.keys(groupedValues).map((key) => {
       return {
         angle: groupedValues[key],
-        label: _.startCase(key)
+        label: _.startCase(key),
       };
     });
 
@@ -65,7 +65,7 @@ class MultiEnumPieChart extends React.Component {
         showLabels={true}
         labelsStyle={{
           color: "#212121",
-          fontWeight: "bold"
+          fontWeight: "bold",
         }}
       />
     );
@@ -75,16 +75,16 @@ class MultiEnumPieChart extends React.Component {
 MultiEnumPieChart.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.arrayOf(PropTypes.string)
+      value: PropTypes.arrayOf(PropTypes.string),
     })
   ),
   days: PropTypes.array.isRequired,
   schema: PropTypes.shape({
-    enum: PropTypes.array
-  }).isRequired
+    enum: PropTypes.array,
+  }).isRequired,
 };
 MultiEnumPieChart.defaultProps = {
-  data: []
+  data: [],
 };
 
 export default MultiEnumPieChart;

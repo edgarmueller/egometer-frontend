@@ -2,11 +2,17 @@ import React from "react";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import _ from "lodash";
+import moment from "moment";
 import {
   entriesPropType,
   meterPropTypes,
-  widgetPropTypes
+  widgetPropTypes,
 } from "../../prop-types";
+
+const filterDataByDays = (data = [], days) => {
+  const daysAsStrings = days.map((date) => moment(date).format("YYYY-MM-DD"));
+  return data.filter(({ date }) => daysAsStrings.includes(date));
+};
 
 const Charts = ({
   days,
@@ -15,22 +21,21 @@ const Charts = ({
   meters,
   widgets,
   width,
-  widgetType
+  widgetType,
 }) => {
-
   if (_.isEmpty(entriesByMeter)) {
-    return "no data";
+    return "No data available";
   }
 
   const meterWidgets = meters
-    .map(meter => {
-      const widget = widgets.find(widget => widget.name === meter.widget);
+    .map((meter) => {
+      const widget = widgets.find((widget) => widget.name === meter.widget);
       return {
         widget: widget && widget[widgetType],
-        meter
+        meter,
       };
     })
-    .filter(vis => vis.widget !== undefined);
+    .filter((vis) => vis.widget !== undefined);
   return (
     <div
       style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
@@ -51,7 +56,7 @@ const Charts = ({
             </Typography>
             <Chart
               meter={meter}
-              data={data}
+              data={filterDataByDays(data, days)}
               schema={schema}
               days={days}
               width={width}
@@ -71,11 +76,11 @@ Charts.propTypes = {
   meters: PropTypes.arrayOf(meterPropTypes),
   widgets: PropTypes.arrayOf(widgetPropTypes),
   widgetType: PropTypes.oneOf(["month", "week"]),
-  width: PropTypes.number.isRequired
+  width: PropTypes.number.isRequired,
 };
 
 Charts.defaultProps = {
-  entries: {}
+  entries: {},
 };
 
 export default Charts;

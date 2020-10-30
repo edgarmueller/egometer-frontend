@@ -14,7 +14,7 @@ import {
   isSchemasLoading,
   isMetersLoading,
   getEntriesByMeter,
-  getProgressByMeter
+  getProgressByMeter,
 } from "../../reducers";
 import { findBySchemaId } from "../../utils";
 import widgets from "../../widgets";
@@ -22,19 +22,15 @@ import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import WeekPicker from "./WeekPicker";
 import Charts from "../monthly/Charts";
-import {
-  daysOfWeek,
-  getWeek,
-  weekToDate,
-} from "../../common/date";
+import { daysOfWeek, getWeek, weekToDate } from "../../common/date";
 import { getSchemas } from "../../reducers";
 import PickerLayout from "../common/PickerLayout";
 
 const styles = {
   monthMatrix: {
     boxSizing: "border-box",
-    padding: "1em"
-  }
+    padding: "1em",
+  },
 };
 
 export class WeeklyDashboard extends React.Component {
@@ -56,7 +52,7 @@ export class WeeklyDashboard extends React.Component {
       month,
       days: daysOfWeek(weekToDate(year, week)),
       week,
-      mounted: false
+      mounted: false,
     };
   }
 
@@ -75,7 +71,7 @@ export class WeeklyDashboard extends React.Component {
     this.setState({ mounted: true });
   }
 
-  findSchema = schemaId => {
+  findSchema = (schemaId) => {
     return findBySchemaId(this.props.schemas, schemaId);
   };
 
@@ -110,16 +106,16 @@ export class WeeklyDashboard extends React.Component {
         picker={
           <WeekPicker
             date={this.state.date}
-            onChange={days => {
+            onChange={(days) => {
               const lastDay = _.last(days);
               const [year, month, week] = getWeek(lastDay);
               // TODO remove redundant state
               this.setState({
                 date: _.head(days),
-                year, 
+                year,
                 week,
                 days,
-                month: month + 1
+                month: month + 1,
               });
               // TODO: we do not fetch each time
               fetchEntries(year, week);
@@ -160,15 +156,15 @@ export class WeeklyDashboard extends React.Component {
 
 WeeklyDashboard.propTypes = {
   meters: PropTypes.array,
-  widgets: PropTypes.array
+  widgets: PropTypes.array,
 };
 
 WeeklyDashboard.defaultProps = {
   meters: [],
-  widgets: []
+  widgets: [],
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isLoading:
       state.entries.loadingStatus.isLoading ||
@@ -178,7 +174,7 @@ const mapStateToProps = state => {
     entriesByMeter: getEntriesByMeter(state),
     progressByMeter: getProgressByMeter(state),
     error: getMeterError(state) || getSchemaError(state),
-    schemas: getSchemas(state)
+    schemas: getSchemas(state),
   };
 };
 
@@ -186,7 +182,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   fetchEntries(date, week) {
     dispatch(actions.fetchEntriesRequestByWeek(date, week));
   },
-  ...ownProps
+  ...ownProps,
 });
 
 export default compose(
