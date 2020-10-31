@@ -1,27 +1,26 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import TextField from '@material-ui/core/TextField';
-import withStyles from '@material-ui/core/styles/withStyles';
-import PropTypes from 'prop-types';
-import {button, joinClasses, primaryButton} from "../../common/styles";
+import React from "react";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Container from "@material-ui/core/Container";
+import TextField from "@material-ui/core/TextField";
+import withStyles from "@material-ui/core/styles/withStyles";
+import PropTypes from "prop-types";
+import { button, joinClasses, primaryButton } from "../../common/styles";
 
 const styles = {
   button,
-  primaryButton
+  primaryButton,
 };
 
 export class RecoverPasswordForm extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      email: undefined
+      email: undefined,
     };
   }
 
-  handleUpdateEmail = event => {
+  handleUpdateEmail = (event) => {
     this.setState({
       email: event.target.value,
     });
@@ -37,7 +36,7 @@ export class RecoverPasswordForm extends React.Component {
             <TextField
               required
               type="text"
-              label="Mail Address"
+              label="Mail address"
               onChange={this.handleUpdateEmail}
               fullWidth
             />

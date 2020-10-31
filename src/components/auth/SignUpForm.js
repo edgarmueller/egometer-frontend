@@ -10,6 +10,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import withStyles from "@material-ui/core/styles/withStyles";
 import red from "@material-ui/core/colors/red";
 import PropTypes from "prop-types";
+import LinkButton from "../../components/LinkButton";
 
 const RadiumLink = Radium(Link);
 
@@ -103,13 +104,10 @@ export class SignUpForm extends React.Component {
         </div>
 
         <div style={{ marginTop: "1em" }}>
-          <RadiumLink
+          <LinkButton
             to="/auth/recover/password"
-            className={classes.button}
-            style={{ borderRadius: 4 }}
-          >
-            I already have an account
-          </RadiumLink>
+            label="I already have an account"
+          />
           <Button className={classes.button} onClick={handleSubmit}>
             Sign Up
           </Button>
