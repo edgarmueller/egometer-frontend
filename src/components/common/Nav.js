@@ -32,7 +32,7 @@ export const LinkButton = ({ link, label, currentRoute }) => (
     to={link}
     style={{
       backgroundColor: currentRoute === link ? "rgb(65, 102, 170, 0.5)" : null,
-      color: currentRoute === link ? "#fff" : null
+      color: currentRoute === link ? "#fff" : null,
     }}
   >
     {label}
@@ -42,7 +42,7 @@ export const LinkButton = ({ link, label, currentRoute }) => (
 export const Nav = ({ classes, logout, location, history, isAdmin }) => {
   const [currentRoute, setRoute] = useState(location.pathname);
   useEffect(() =>
-    history.listen(location => {
+    history.listen((location) => {
       setRoute(location.pathname);
     })
   );
@@ -55,7 +55,7 @@ export const Nav = ({ classes, logout, location, history, isAdmin }) => {
             style={{
               display: "flex",
               flexDirection: "row",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <Ionicon icon="md-flash" />
@@ -125,29 +125,26 @@ export const Nav = ({ classes, logout, location, history, isAdmin }) => {
 
 Nav.propTypes = {
   classes: PropTypes.shape({
-    logo: PropTypes.string.isRequired
+    logo: PropTypes.string.isRequired,
   }).isRequired,
   logout: PropTypes.func.isRequired,
   isAdmin: PropTypes.bool.isRequired,
   location: PropTypes.any,
-  history: PropTypes.any
+  history: PropTypes.any,
 };
 
 Nav.defaultProps = {};
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   schemas: getSchemas(state),
-  isAdmin: get(state, "user.isAdmin", false)
+  isAdmin: get(state, "user.isAdmin", false),
 });
 
 const styles = {
-  logo
+  logo,
 };
 
 export default compose(
   withProps({ widgets }),
-  connect(
-    mapStateToProps,
-    null
-  )
+  connect(mapStateToProps, null)
 )(withStyles(styles)(Nav));

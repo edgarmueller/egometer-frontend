@@ -1,11 +1,12 @@
 import React from "react";
+import Button from "@material-ui/core/Button";
 import _ from "lodash";
 import { connect } from "react-redux";
 import { routerActions } from "react-router-redux";
 import mailValidator from "email-validator";
 
 import SignUpForm from "./SignUpForm";
-import { signUpWithEmail } from "../../api";
+import { signUpWithEmail, resendVerificationMail } from "../../api";
 
 const getError = (errorData, fieldName) => {
   if (errorData && _.has(errorData.details, `obj.${fieldName}`)) {
@@ -83,13 +84,13 @@ class SignUpPage extends React.Component {
         const mail = getError(errorData, "email");
         const name = getError(errorData, "name");
         const password = getError(errorData, "password");
-        console.log(error.message);
         this.setState({
           isLoading: false,
           success: false,
-          errorMsg: errorData.message || error.message,
+          errorMsg: "Invalid signup data",
           password: "",
           confirmationPassword: "",
+          showResendVerification: error.response.status === 409,
           errors: {
             name,
             mail,
@@ -140,6 +141,17 @@ class SignUpPage extends React.Component {
                 : null,
           }}
         />
+        {this.state.showResendVerification && (
+          <>
+            <p>
+              You already signed up! Do you want to resend the verification mail
+              instead?
+            </p>
+            <Button onClick={() => resendVerificationMail(this.state.mail)}>
+              Resend verification mail
+            </Button>
+          </>
+        )}
         {this.state.error && (
           <p style={{ paddingTop: "1em", color: "red" }}>{this.state.error}</p>
         )}

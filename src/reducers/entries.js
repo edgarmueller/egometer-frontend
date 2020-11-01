@@ -94,6 +94,7 @@ export default (state = initialState, action) => {
           return acc;
         }, {}),
         progressByMeter: action.entries.reduce((acc, entry) => {
+          // TODO: fix progress
           acc[entry.meterId] = 0; //meter.progress;
           return acc;
         }, {}),

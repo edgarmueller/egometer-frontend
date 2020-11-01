@@ -5,12 +5,15 @@ import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
+import Container from "@material-ui/core/Container";
+import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import red from "@material-ui/core/colors/red";
 import PropTypes from "prop-types";
 import LinkButton from "../../components/LinkButton";
+import { CssBaseline } from "@material-ui/core";
 
-const styles = {
+const styles = (theme) => ({
   signUpButton: {
     textDecoration: "none",
     color: "#333435",
@@ -31,12 +34,10 @@ const styles = {
     letterSpacing: "0.065em",
   },
   form: {
-    display: "flex",
-    flexDirection: "column",
-    maxWidth: 280,
-    margin: "0 auto",
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
   },
-};
+});
 
 export class SignUpForm extends React.Component {
   render() {
@@ -53,64 +54,93 @@ export class SignUpForm extends React.Component {
     } = this.props;
 
     return (
-      <div>
-        <div className={classes.form}>
-          <FormControl required error={!_.isEmpty(errors.name)}>
-            <InputLabel htmlFor="name">Name</InputLabel>
-            <Input
-              id="name"
-              onChange={handleUpdateName}
-              placeholder="Enter your name"
-              defaultValue={name}
-            />
-            <FormHelperText id="error-name">{errors.name}</FormHelperText>
-          </FormControl>
-          <FormControl required error={!_.isEmpty(errors.mail)}>
-            <InputLabel htmlFor="mail">Mail</InputLabel>
-            <Input
-              id="mail"
-              onChange={handleUpdateEmail}
-              placeholder="Enter your mail address"
-              defaultValue={mail}
-            />
-            <FormHelperText id="error-mail">{errors.mail}</FormHelperText>
-          </FormControl>
-          <FormControl required error={!_.isEmpty(errors.password)}>
-            <InputLabel htmlFor="password">Password</InputLabel>
-            <Input
-              id="password"
-              onChange={handleUpdatePassword}
-              type="password"
-            />
-            <FormHelperText id="error-passowrd">
-              {errors.password}
-            </FormHelperText>
-          </FormControl>
-          <FormControl required error={!_.isEmpty(errors.confirmationPassword)}>
-            <InputLabel htmlFor="confirm-password">Confirm Password</InputLabel>
-            <Input
-              id="confirm-password"
-              onChange={handleUpdateConfirmationPassword}
-              type="password"
-            />
-            <FormHelperText id="error-confirm-passowrd">
-              {errors.confirmationPassword}
-            </FormHelperText>
-          </FormControl>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div classes={classes.form}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <FormControl required error={!_.isEmpty(errors.name)} fullWidth>
+                <InputLabel htmlFor="name">Name</InputLabel>
+                <Input
+                  id="name"
+                  onChange={handleUpdateName}
+                  placeholder="Enter your name"
+                  defaultValue={name}
+                />
+                <FormHelperText id="error-name">{errors.name}</FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl required error={!_.isEmpty(errors.mail)} fullWidth>
+                <InputLabel htmlFor="mail">Mail</InputLabel>
+                <Input
+                  id="mail"
+                  onChange={handleUpdateEmail}
+                  placeholder="Enter your mail address"
+                  defaultValue={mail}
+                />
+                <FormHelperText id="error-mail">{errors.mail}</FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl
+                required
+                error={!_.isEmpty(errors.password)}
+                fullWidth
+              >
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <Input
+                  id="password"
+                  onChange={handleUpdatePassword}
+                  type="password"
+                />
+                <FormHelperText id="error-passowrd">
+                  {errors.password}
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl
+                required
+                error={!_.isEmpty(errors.confirmationPassword)}
+                fullWidth
+              >
+                <InputLabel htmlFor="confirm-password">
+                  Confirm Password
+                </InputLabel>
+                <Input
+                  id="confirm-password"
+                  onChange={handleUpdateConfirmationPassword}
+                  type="password"
+                />
+                <FormHelperText id="error-confirm-passowrd">
+                  {errors.confirmationPassword}
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+          </Grid>
         </div>
 
-        <div style={{ marginTop: "1em" }}>
-          <LinkButton to="/" label="Back to front page" />
-          <LinkButton
-            to="/auth/recover/password"
-            label="I already have an account"
-          />
-          <Button className={classes.signUpButton} onClick={handleSubmit}>
-            Sign Up
-          </Button>
-        </div>
-        <div style={{ color: red[500] }}>{errors.message}</div>
-      </div>
+        <Grid container>
+          <Grid item xs={12}>
+            <Button className={classes.signUpButton} onClick={handleSubmit}>
+              Sign Up
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
+            <LinkButton
+              to="/auth/recover/password"
+              label="I already have an account"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <LinkButton to="/" label="Back to front page" />
+          </Grid>
+          <Grid item xs={12}>
+            <div style={{ color: red[500] }}>{errors.message}</div>
+          </Grid>
+        </Grid>
+      </Container>
     );
   }
 }
