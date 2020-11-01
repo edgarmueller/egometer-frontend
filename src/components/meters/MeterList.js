@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback, useState, useReducer } from "react";
 import toNumber from "lodash/toNumber";
-import get from "lodash/get";
 import { connect } from "react-redux";
 import { compose, withProps } from "recompose";
 import IconButton from "@material-ui/core/IconButton";

@@ -1,7 +1,5 @@
 import React from "react";
 import _ from "lodash";
-import Radium from "radium";
-import { Link } from "react-router-dom";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -12,10 +10,8 @@ import red from "@material-ui/core/colors/red";
 import PropTypes from "prop-types";
 import LinkButton from "../../components/LinkButton";
 
-const RadiumLink = Radium(Link);
-
 const styles = {
-  button: {
+  signUpButton: {
     textDecoration: "none",
     color: "#333435",
     paddingLeft: "1em",
@@ -104,11 +100,12 @@ export class SignUpForm extends React.Component {
         </div>
 
         <div style={{ marginTop: "1em" }}>
+          <LinkButton to="/" label="Back to front page" />
           <LinkButton
             to="/auth/recover/password"
             label="I already have an account"
           />
-          <Button className={classes.button} onClick={handleSubmit}>
+          <Button className={classes.signUpButton} onClick={handleSubmit}>
             Sign Up
           </Button>
         </div>

@@ -124,8 +124,7 @@ export const logout = () =>
     localStorage.removeItem("egometer.token")
   );
 
-// TODO
-export const signUpWithEmail = (name, email, password) => {
+export const signUpWithEmail = async (name, email, password) => {
   return Axios.post(
     `${API_BASE_URL}/auth/signup`,
     { name, email, password },
@@ -138,7 +137,7 @@ export const signUpWithEmail = (name, email, password) => {
 // TODO
 export const recoverPassword = (email) =>
   Axios.post(
-    `${API_BASE_URL}/password/recovery`,
+    `${API_BASE_URL}/auth/forgot-password`,
     { email },
     {
       [contentType]: applicationJson,
@@ -146,10 +145,10 @@ export const recoverPassword = (email) =>
   );
 
 // TODO
-export const resetPassword = (token, password) => {
+export const resetPassword = (currentPassword, newPassword, token) => {
   return Axios.post(
-    `${API_BASE_URL}/password/recovery/${token}`,
-    { password },
+    `${API_BASE_URL}/auth/reset-password`,
+    { currentPassword, newPassword, newPasswordToken: token },
     {
       [contentType]: applicationJson,
     }
@@ -158,9 +157,10 @@ export const resetPassword = (token, password) => {
 
 // TODO
 export const validateToken = (token) =>
-  Axios.get(`${API_BASE_URL}/password/recovery/${token}`);
+  Axios.get(`${API_BASE_URL}/auth/forgot-password/verify/${token}`);
 
-// TODO
 export const activateAccount = (token) => {
-  return Axios.get(`${API_BASE_URL}/account/activation/${token}`);
+  const resp = Axios.get(`${API_BASE_URL}/auth/email/verify/${token}`);
+  console.log(resp);
+  return resp;
 };

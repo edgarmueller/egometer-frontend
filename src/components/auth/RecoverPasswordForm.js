@@ -5,6 +5,7 @@ import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
+import LinkButton from "../../components/LinkButton";
 import { button, joinClasses, primaryButton } from "../../common/styles";
 
 const styles = {
@@ -42,8 +43,8 @@ export class RecoverPasswordForm extends React.Component {
             />
           </Grid>
           <Grid item container justify="center">
+            <LinkButton to="/" label="Back to front page" />
             <Button
-              type="submit"
               className={joinClasses(classes.button, classes.primaryButton)}
               onClick={() => handleFormSubmit(this.state.email)}
             >

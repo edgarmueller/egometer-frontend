@@ -6,7 +6,6 @@ import mailValidator from "email-validator";
 
 import SignUpForm from "./SignUpForm";
 import { signUpWithEmail } from "../../api";
-import LinkButton from "../LinkButton";
 
 const getError = (errorData, fieldName) => {
   if (errorData && _.has(errorData.details, `obj.${fieldName}`)) {
@@ -84,10 +83,11 @@ class SignUpPage extends React.Component {
         const mail = getError(errorData, "email");
         const name = getError(errorData, "name");
         const password = getError(errorData, "password");
+        console.log(error.message);
         this.setState({
           isLoading: false,
           success: false,
-          errorMsg: error.message,
+          errorMsg: errorData.message || error.message,
           password: "",
           confirmationPassword: "",
           errors: {
@@ -101,7 +101,6 @@ class SignUpPage extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
     if (this.state.isLoading) {
       return <div>Loading...</div>;
     }
@@ -144,9 +143,6 @@ class SignUpPage extends React.Component {
         {this.state.error && (
           <p style={{ paddingTop: "1em", color: "red" }}>{this.state.error}</p>
         )}
-        <div style={{ marginTop: "1em" }}>
-          <LinkButton to="/" label="Back to front page" />
-        </div>
       </div>
     );
   }

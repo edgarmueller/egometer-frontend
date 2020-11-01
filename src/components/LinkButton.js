@@ -8,7 +8,7 @@ import { button } from "../common/styles";
 
 export const RadiumLink = Radium(Link);
 
-export const LinkButton = ({ to, label, currentRoute, classes }) => (
+const LinkButton = ({ to, label, currentRoute, classes }) => (
   <Button
     className={classes.button}
     component={RadiumLink}
