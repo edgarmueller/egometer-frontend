@@ -5,6 +5,11 @@ import Button from "@material-ui/core/Button/Button";
 import TextField from "@material-ui/core/TextField/TextField";
 import isEmpty from "lodash/isEmpty";
 import { joinClasses, primaryButton, button } from "../../common/styles";
+import { Link } from "react-router-dom";
+import Radium from "radium";
+import Ionicon from "react-ionicons";
+
+export const RadiumLink = Radium(Link);
 
 const styles = {
   primaryButton,
@@ -22,13 +27,21 @@ class ResetPasswordPage extends React.Component {
     const { match } = this.props;
     const token = match.params.token;
     validateToken(token).then(
-      () => {
-        this.setState({
-          isValidToken: true,
-          error: undefined,
-        });
+      ({ data }) => {
+        if (data) {
+          this.setState({
+            isValidToken: true,
+            error: undefined,
+          });
+        } else {
+          this.setState({
+            isValidToken: false,
+            error: "An error occurred. Please close this page.",
+          });
+        }
       },
       (error) => {
+        console.log("not ok!");
         this.setState({
           isValidToken: false,
           error: error.response.data.description,
@@ -100,8 +113,23 @@ class ResetPasswordPage extends React.Component {
       return <p>Password has been reset</p>;
     }
 
+    if (!this.state.isValidToken) {
+      return (
+        <>
+          <RadiumLink to="/">
+            <Ionicon icon="md-flash" />
+          </RadiumLink>
+          <p style={{ paddingTop: "1em", color: "red" }}>{this.state.error}</p>
+        </>
+      );
+    }
+
     return (
       <div>
+        <RadiumLink to="/">
+          <Ionicon icon="md-flash" />
+        </RadiumLink>
+        <br />
         <TextField
           required
           type="password"
@@ -130,7 +158,6 @@ class ResetPasswordPage extends React.Component {
           style={{ width: "25ch" }}
         />
         <br />
-
         <div style={{ marginTop: "1em" }}>
           <Button
             type="button"
@@ -145,12 +172,6 @@ class ResetPasswordPage extends React.Component {
           >
             Reset password
           </Button>
-          {!this.state.isValidToken ||
-            (this.state.error && (
-              <p style={{ paddingTop: "1em", color: "red" }}>
-                {this.state.error}
-              </p>
-            ))}
         </div>
       </div>
     );

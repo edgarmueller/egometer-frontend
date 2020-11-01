@@ -155,6 +155,10 @@ export const resetPassword = (currentPassword, newPassword, token) => {
   );
 };
 
+export const resendVerificationMail = (email) => {
+  return Axios.get(`${API_BASE_URL}/auth/resend-verification/${email}`);
+};
+
 // TODO
 export const validateToken = (token) =>
   Axios.get(`${API_BASE_URL}/auth/forgot-password/verify/${token}`);
