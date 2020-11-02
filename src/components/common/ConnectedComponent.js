@@ -11,13 +11,13 @@ export const ConnectedComponent = ({
   date,
   updateOnChange,
   fromEvent,
-  shouldDebounce
+  shouldDebounce,
 }) => {
   const [value, setValue] = useState((data && data.value) || "");
   useEffect(() => data && setValue(data.value), [data, isLoading, date]);
   const { updateEntry, deleteEntry } = useContext(MeterContext);
   const apiCall = useCallback(
-    val => {
+    (val) => {
       if (val) {
         updateEntry(meterId, date)(val, shouldDebounce);
       } else {
@@ -32,7 +32,7 @@ export const ConnectedComponent = ({
     apiCall(value);
   }, [value, apiCall]);
   const updateValue = useCallback(
-    ev => {
+    (ev) => {
       const newValue = fromEvent(ev);
       setValue(newValue);
       if (updateOnChange) {
@@ -41,14 +41,17 @@ export const ConnectedComponent = ({
     },
     [fromEvent, updateOnChange, apiCall]
   );
-  const reset = useCallback(() => setValue(data ? data.value : undefined), [setValue, data]);
+  const reset = useCallback(() => setValue(data ? data.value : undefined), [
+    setValue,
+    data,
+  ]);
   return (
     <React.Fragment>
       {children({
         updateValue,
         data: value,
         submitEntry,
-        reset
+        reset,
       })}
     </React.Fragment>
   );
@@ -62,14 +65,14 @@ ConnectedComponent.propTypes = {
   meterId: PropTypes.string.isRequired,
   data: PropTypes.any,
   date: PropTypes.string.isRequired,
-  shouldDebounce: PropTypes.bool
+  shouldDebounce: PropTypes.bool,
 };
 
 ConnectedComponent.defaultProps = {
-  fromEvent: x => x.target.value,
+  fromEvent: (x) => x.target.value,
   updateOnChange: true,
   data: undefined,
-  shouldDebounce: false
+  shouldDebounce: false,
 };
 
 export default ConnectedComponent;

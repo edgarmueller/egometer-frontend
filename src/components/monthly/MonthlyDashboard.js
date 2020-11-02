@@ -8,7 +8,7 @@ import "../../react-month-picker-input.css";
 import { compose, withProps } from "recompose";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import MonthMatrix from "./MonthMatrix";
+import MonthlyMatrix from "./MonthlyMatrix";
 import {
   getMeters,
   getMeterError,
@@ -16,7 +16,7 @@ import {
   isSchemasLoading,
   isMetersLoading,
   getEntriesByMeter,
-  getProgressByMeter
+  getProgressByMeter,
 } from "../../reducers";
 import widgets from "../../widgets";
 import ErrorSnackbar from "../common/ErrorSnackbar";
@@ -32,8 +32,8 @@ const styles = {
   monthMatrix: {
     boxSizing: "border-box",
     width: "100%",
-    padding: "1em"
-  }
+    padding: "1em",
+  },
 };
 
 export class MonthlyDashboard extends React.Component {
@@ -48,7 +48,7 @@ export class MonthlyDashboard extends React.Component {
     this.state = {
       year,
       month,
-      mounted: false
+      mounted: false,
     };
   }
 
@@ -56,18 +56,18 @@ export class MonthlyDashboard extends React.Component {
     const { entriesByMeter: prevEntriesByMeter } = prevProps;
     const { entriesByMeter } = this.props;
     if (!_.isEqual(entriesByMeter, prevEntriesByMeter)) {
-      const { year, month } = this.state
+      const { year, month } = this.state;
       this.props.fetchEntries(year, month);
     }
   }
 
   componentDidMount() {
-    const { year, month } = this.state
+    const { year, month } = this.state;
     this.props.fetchEntries(year, month);
     this.setState({ mounted: true });
   }
 
-  findSchema = schemaId => {
+  findSchema = (schemaId) => {
     return findBySchemaId(this.props.schemas, schemaId);
   };
 
@@ -107,8 +107,8 @@ export class MonthlyDashboard extends React.Component {
                 border: "1px solid black",
                 borderRadius: "2px",
                 textAlign: "center",
-                lineHeight: 1.5
-              }
+                lineHeight: 1.5,
+              },
             }}
             year={this.state.year}
             month={this.state.month - 1}
@@ -122,7 +122,7 @@ export class MonthlyDashboard extends React.Component {
             days={daysOfMonth(this.state.year, this.state.month)}
             year={this.state.year}
             month={this.state.month}
-            child={MonthMatrix}
+            child={MonthlyMatrix}
             findBySchemaId={this.findSchema}
             meters={meters}
             entriesByMeter={entriesByMeter}
@@ -148,14 +148,14 @@ export class MonthlyDashboard extends React.Component {
 
 MonthlyDashboard.propTypes = {
   meters: PropTypes.array,
-  widgets: PropTypes.array
+  widgets: PropTypes.array,
 };
 
 MonthlyDashboard.defaultProps = {
   meters: [],
-  widgets: []
+  widgets: [],
 };
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isLoading:
       state.entries.loadingStatus.isLoading ||
@@ -165,14 +165,14 @@ const mapStateToProps = state => {
     entriesByMeter: getEntriesByMeter(state),
     progressByMeter: getProgressByMeter(state),
     schemas: getSchemas(state),
-    error: getMeterError(state) || getSchemaError(state)
+    error: getMeterError(state) || getSchemaError(state),
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   fetchEntries(year, month) {
     dispatch(actions.fetchEntriesRequest(year, month));
-  }
+  },
 });
 
 MonthlyDashboard.propTypes = {
@@ -181,11 +181,11 @@ MonthlyDashboard.propTypes = {
   meters: PropTypes.array.isRequired,
   entriesByMeter: PropTypes.object.isRequired,
   schemas: PropTypes.array.isRequired,
-  error: PropTypes.string
+  error: PropTypes.string,
 };
 
 MonthlyDashboard.defaultProps = {
-  error: undefined
+  error: undefined,
 };
 
 export default compose(

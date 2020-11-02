@@ -157,6 +157,7 @@ export class WeeklyDashboard extends React.Component {
 WeeklyDashboard.propTypes = {
   meters: PropTypes.array,
   widgets: PropTypes.array,
+  entriesByMeter: PropTypes.object,
 };
 
 WeeklyDashboard.defaultProps = {

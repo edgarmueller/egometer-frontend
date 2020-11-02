@@ -4,20 +4,20 @@ import Adapter from "enzyme-adapter-react-16";
 import { moodEntries, moodMeter, moodSchema } from "../../__mocks__/fixtures";
 import { Table } from "react-virtualized";
 import { MatrixContainer } from "../../containers/MatrixContainer";
-import MonthMatrix from "./MonthMatrix";
+import MonthlyMatrix from "./MonthlyMatrix";
 import widgets from "../../widgets";
 import { daysOfMonth } from "../../common/date";
 configure({ adapter: new Adapter() });
 
 const entries = [moodEntries];
 
-describe("MonthMatrix", () => {
+describe("MonthlyMatrix", () => {
   it("should render", () => {
     const wrapper = mount(
       <MatrixContainer
-        child={MonthMatrix}
-        entries={{
-          [moodMeter.id]: moodEntries
+        child={MonthlyMatrix}
+        entriesByMeter={{
+          [moodMeter.id]: moodEntries,
         }}
         meters={[moodMeter]}
         findBySchemaId={() => moodSchema.schema}
@@ -39,9 +39,9 @@ describe("MonthMatrix", () => {
 
   it("should render a row for each meter", () => {
     const wrapper = mount(
-      <MonthMatrix
-        entries={{
-          [moodMeter.id]: moodEntries
+      <MonthlyMatrix
+        entriesByMeter={{
+          [moodMeter.id]: moodEntries,
         }}
         meters={[moodMeter]}
         year={2018}

@@ -94,7 +94,6 @@ export const updateEntry = ({ meterId, date, value }) => {
   );
 };
 
-// TODO
 export const deleteEntry = (entry) =>
   Axios.delete(`${API_BASE_URL}/entries/${entry.id}`, createHeaders());
 
@@ -165,6 +164,5 @@ export const validateToken = (token) =>
 
 export const activateAccount = (token) => {
   const resp = Axios.get(`${API_BASE_URL}/auth/email/verify/${token}`);
-  console.log(resp);
   return resp;
 };

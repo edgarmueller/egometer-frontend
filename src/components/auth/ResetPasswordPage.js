@@ -41,7 +41,6 @@ class ResetPasswordPage extends React.Component {
         }
       },
       (error) => {
-        console.log("not ok!");
         this.setState({
           isValidToken: false,
           error: error.response.data.description,

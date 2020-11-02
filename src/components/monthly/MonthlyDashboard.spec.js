@@ -6,7 +6,7 @@ import { MonthlyDashboard } from "./MonthlyDashboard";
 import { moodEntries, moodMeter, moodSchema } from "../../__mocks__/fixtures";
 import mood from "../../widgets/day/mood";
 import configureStore from "../../store/configureStore";
-import MonthMatrix from "./MonthMatrix";
+import MonthlyMatrix from "./MonthlyMatrix";
 
 configure({ adapter: new Adapter() });
 
@@ -14,19 +14,19 @@ describe("Monthly Dashboard", () => {
   it("should render monthly matrix component", () => {
     const store = configureStore({
       meters: {
-        meters: [moodMeter]
+        meters: [moodMeter],
       },
       entries: {
         entries: {
-          [moodMeter.id]: moodEntries
+          [moodMeter.id]: moodEntries,
         },
         loadingStatus: {
-          isLoading: false
-        }
+          isLoading: false,
+        },
       },
       schemas: {
-        schemas: [moodSchema]
-      }
+        schemas: [moodSchema],
+      },
     });
     const fetchEntriesSpy = jest.fn();
     const wrapper = mount(
@@ -35,25 +35,25 @@ describe("Monthly Dashboard", () => {
           isLoading={false}
           schemas={[moodSchema]}
           entriesByMeter={{
-            [moodMeter.id]: moodEntries
+            [moodMeter.id]: moodEntries,
           }}
           meters={[moodMeter]}
           classes={{
-            monthMatrix: ""
+            monthMatrix: "",
           }}
           widgets={[mood]}
           match={{
             params: {
               year: 2019,
-              month: 2
-            }
+              month: 2,
+            },
           }}
           fetchEntries={fetchEntriesSpy}
           findBySchemaId={jest.fn()}
         />
       </Provider>
     );
-    const matrix = wrapper.find(MonthMatrix);
+    const matrix = wrapper.find(MonthlyMatrix);
     const dashboard = wrapper.find(MonthlyDashboard);
     expect(matrix.length).toEqual(1);
     expect(fetchEntriesSpy).toHaveBeenCalledWith(2019, 2);

@@ -8,7 +8,6 @@ import mood from "../../widgets/day/mood";
 import configureStore from "../../store/configureStore";
 import WeeklyMatrix from "./WeeklyMatrix";
 import WeekPicker from "./WeekPicker";
-import PickerLayout from "../common/PickerLayout";
 
 configure({ adapter: new Adapter() });
 
@@ -16,19 +15,19 @@ describe("Weekly Dashboard", () => {
   it("should render weekly matrix component", () => {
     const store = configureStore({
       meters: {
-        meters: [moodMeter]
+        meters: [moodMeter],
       },
       entries: {
         entries: {
-          [moodMeter.id]: moodEntries
+          [moodMeter.id]: moodEntries,
         },
         loadingStatus: {
-          isLoading: false
-        }
+          isLoading: false,
+        },
       },
       schemas: {
-        schemas: [moodSchema]
-      }
+        schemas: [moodSchema],
+      },
     });
     const fetchEntriesSpy = jest.fn();
     const wrapper = mount(
@@ -36,19 +35,19 @@ describe("Weekly Dashboard", () => {
         <WeeklyDashboard
           isLoading={false}
           schemas={[moodSchema]}
-          entries={{
-            [moodMeter.id]: moodEntries
+          entriesByMeter={{
+            [moodMeter.id]: moodEntries,
           }}
           meters={[moodMeter]}
           classes={{
-            monthMatrix: ""
+            monthMatrix: "",
           }}
           widgets={[mood]}
           match={{
             params: {
               year: 2019,
-              week: 2
-            }
+              week: 2,
+            },
           }}
           fetchEntries={fetchEntriesSpy}
           findBySchemaId={jest.fn()}
@@ -64,19 +63,19 @@ describe("Weekly Dashboard", () => {
   it("should update state when changing week", () => {
     const store = configureStore({
       meters: {
-        meters: [moodMeter]
+        meters: [moodMeter],
       },
       entries: {
         entries: {
-          [moodMeter.id]: moodEntries
+          [moodMeter.id]: moodEntries,
         },
         loadingStatus: {
-          isLoading: false
-        }
+          isLoading: false,
+        },
       },
       schemas: {
-        schemas: [moodSchema]
-      }
+        schemas: [moodSchema],
+      },
     });
     const fetchEntriesSpy = jest.fn();
     const wrapper = mount(
@@ -84,33 +83,31 @@ describe("Weekly Dashboard", () => {
         <WeeklyDashboard
           isLoading={false}
           schemas={[moodSchema]}
-          entries={{
-            [moodMeter.id]: moodEntries
+          entriesByMeter={{
+            [moodMeter.id]: moodEntries,
           }}
           meters={[moodMeter]}
           classes={{
-            monthMatrix: ""
+            monthMatrix: "",
           }}
           widgets={[mood]}
           match={{
             params: {
               year: 2019,
-              week: 2
-            }
+              week: 2,
+            },
           }}
           fetchEntries={fetchEntriesSpy}
           findBySchemaId={jest.fn()}
           history={{
-              push: jest.fn()
+            push: jest.fn(),
           }}
         />
       </Provider>
     );
     const weekPicker = wrapper.find(WeekPicker);
     fetchEntriesSpy.mockReset();
-    weekPicker.props().onChange([
-        new Date(Date.UTC(2019, 11, 24))
-    ]);
+    weekPicker.props().onChange([new Date(Date.UTC(2019, 11, 24))]);
     const weeklyDashboard = wrapper.find(WeeklyDashboard);
     const { year, month, week } = weeklyDashboard.state();
     expect(year).toBe(2019);

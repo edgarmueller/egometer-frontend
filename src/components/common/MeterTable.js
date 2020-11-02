@@ -7,11 +7,12 @@ import ErrorBoundary from "react-error-boundary";
 import { withStyles } from "@material-ui/core";
 import { Emoji } from "emoji-mart";
 import Cell from "../cells/Cell";
-import styles from "../monthly/MonthMatrix.css";
+import styles from "../monthly/MonthlyMatrix.css";
 import { pad } from "../../common/date";
 import { createColor, getProgressColor } from "../../common/color";
 import DefaultTableRowRenderer from "../cells/DefaultTableRowRenderer";
 import { findBySchemaId } from "../../utils";
+import { calcWeeklyProgress } from "../../common/progress";
 
 const HEADER_HEIGHT = 60;
 const OVERSCAN_ROW_COUNT = 10;
@@ -168,9 +169,14 @@ class MeterTable extends React.Component {
   };
 
   _rowRenderer = (props) => {
-    const { progressByMeter } = this.props;
+    const { meters, days, entriesByMeter, calcProgress } = this.props;
     const meterId = props.rowData.meterId;
-    const progress = progressByMeter && progressByMeter[meterId];
+    const progress = calcProgress(
+      meters.find((m) => m.id === meterId),
+      entriesByMeter[meterId],
+      _.head(days),
+      _.last(days)
+    );
     return (
       <DefaultTableRowRenderer
         rowKey={props.key}
@@ -217,7 +223,6 @@ class MeterTable extends React.Component {
 
 MeterTable.propTypes = {
   entriesByMeter: PropTypes.object,
-  progressByMeter: PropTypes.object,
   meters: PropTypes.arrayOf(PropTypes.object),
   days: PropTypes.array,
   colorMapping: PropTypes.object,

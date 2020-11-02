@@ -93,11 +93,6 @@ export default (state = initialState, action) => {
           acc[entry.meterId].push(entry);
           return acc;
         }, {}),
-        progressByMeter: action.entries.reduce((acc, entry) => {
-          // TODO: fix progress
-          acc[entry.meterId] = 0; //meter.progress;
-          return acc;
-        }, {}),
       };
     case UPDATE_ENTRY_SUCCESS:
       const e = action.entry;

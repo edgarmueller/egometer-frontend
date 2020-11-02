@@ -13,10 +13,10 @@ const EnumCell = ({
   color,
   isLoading,
   updateEntry,
-  deleteEntry
+  deleteEntry,
 }) => {
   const update = useCallback(
-    val => {
+    (val) => {
       if (data && data.value === val) {
         deleteEntry(meterId, data);
       } else {
@@ -26,7 +26,7 @@ const EnumCell = ({
     [updateEntry, deleteEntry, meterId, data, date]
   );
   const isSelected = useCallback(
-    val => (data !== undefined ? data === val : false),
+    (val) => (data !== undefined ? data === val : false),
     [data]
   );
   return (
@@ -54,7 +54,7 @@ EnumCell.propTypes = {
   labelProvider: PropTypes.func.isRequired,
   schema: PropTypes.any,
   color: PropTypes.string,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
 };
 
 export default withMeterContext(React.memo(EnumCell));

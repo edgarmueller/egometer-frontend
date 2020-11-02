@@ -1,6 +1,7 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import MeterTable from "../common/MeterTable";
+import { calcWeeklyProgress } from "../../common/progress";
 
 class WeeklyMatrix extends React.Component {
   render() {
@@ -12,11 +13,12 @@ class WeeklyMatrix extends React.Component {
       isLoading,
       days,
       widgets,
-      schemas
+      schemas,
     } = this.props;
 
     return (
       <MeterTable
+        calcProgress={calcWeeklyProgress}
         entriesByMeter={entriesByMeter}
         progressByMeter={progressByMeter}
         meters={meters}
@@ -33,11 +35,11 @@ class WeeklyMatrix extends React.Component {
 
 WeeklyMatrix.propTypes = {
   isLoading: PropTypes.bool,
-  meters: PropTypes.arrayOf(PropTypes.object)
+  meters: PropTypes.arrayOf(PropTypes.object),
 };
 
 WeeklyMatrix.defaultProps = {
-  isLoading: false
+  isLoading: false,
 };
 
 export default WeeklyMatrix;

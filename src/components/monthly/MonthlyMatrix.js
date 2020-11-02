@@ -2,8 +2,9 @@ import * as React from "react";
 import { AutoSizer } from "react-virtualized";
 import PropTypes from "prop-types";
 import MeterTable from "../common/MeterTable";
+import { calcMonthlyProgress } from "../../common/progress";
 
-class MonthMatrix extends React.Component {
+class MonthlyMatrix extends React.Component {
   render() {
     const {
       meters,
@@ -13,13 +14,14 @@ class MonthMatrix extends React.Component {
       schemas,
       colorMapping,
       isLoading,
-      widgets
+      widgets,
     } = this.props;
 
     return (
       <AutoSizer disableHeight defaultHeight={768} defaultWidth={1024}>
         {({ width }) => (
           <MeterTable
+            calcProgress={calcMonthlyProgress}
             entriesByMeter={entriesByMeter}
             progressByMeter={progressByMeter}
             meters={meters}
@@ -36,15 +38,15 @@ class MonthMatrix extends React.Component {
   }
 }
 
-MonthMatrix.propTypes = {
+MonthlyMatrix.propTypes = {
   isLoading: PropTypes.bool,
   meters: PropTypes.arrayOf(PropTypes.object),
-  widgets: PropTypes.array.isRequired
+  widgets: PropTypes.array.isRequired,
 };
 
-MonthMatrix.defaultProps = {
+MonthlyMatrix.defaultProps = {
   isLoading: false,
   year: new Date().getFullYear(),
 };
 
-export default MonthMatrix;
+export default MonthlyMatrix;
