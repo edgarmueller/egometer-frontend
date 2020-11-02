@@ -10,14 +10,13 @@ import TitleBar from "./TitleBar";
 const styles = {
   meterTitle,
   titleWrapper,
-  underline
+  underline,
 };
 
 class EnumRenderer extends Component {
-
-  updateEntry = value => () => {
-    this.props.updateEntry(value)
-  }
+  updateEntry = (value) => () => {
+    this.props.updateEntry(value);
+  };
 
   render() {
     const {
@@ -28,28 +27,28 @@ class EnumRenderer extends Component {
       labelProvider,
       imageProvider,
       isSelected,
-      icon
+      icon,
     } = this.props;
 
     if (schema === undefined) {
       return null;
     }
 
-    const labelMapping = schema.enum.map(literal => [
+    const labelMapping = schema.enum.map((literal) => [
       labelProvider(literal),
-      literal
+      literal,
     ]);
 
     return (
       <div
         style={{
           width: width,
-          height: height
+          height: height,
         }}
       >
         <TitleBar meter={meter} icon={icon} />
         <Grid container wrap={"wrap"} justify="space-around">
-          {labelMapping.map(([label, value], idx) => {
+          {labelMapping.map(([label, value]) => {
             return (
               <Grid item key={label}>
                 <IconButtonWithLabel
@@ -73,15 +72,15 @@ class EnumRenderer extends Component {
 
 EnumRenderer.propTypes = {
   schema: PropTypes.shape({
-    items: PropTypes.object
+    items: PropTypes.object,
   }).isRequired,
   labelProvider: PropTypes.func,
-  imageProvider: PropTypes.func
+  imageProvider: PropTypes.func,
 };
 
 EnumRenderer.defaultProps = {
   labelProvider: defaultLiteralLabelProvider,
-  imageProvider: undefined
+  imageProvider: undefined,
 };
 
 export default withStyles(styles)(EnumRenderer);
