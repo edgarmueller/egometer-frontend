@@ -49,7 +49,7 @@ export class LoginPage extends React.Component {
 
     return (
       <div>
-        <h2 style={{ paddingTop: "1em" }}>Welcome to egometer</h2>
+        <h2>Welcome to egometer</h2>
         <LoginForm
           handleFormSubmit={this.handleFormSubmit}
           renderAlert={this.renderAlert}
@@ -67,30 +67,27 @@ LoginPage.propTypes = {
   isAuthenticating: PropTypes.bool.isRequired,
   loginUser: PropTypes.func.isRequired,
   error: PropTypes.string,
-  location: PropTypes.shape({}).isRequired
+  location: PropTypes.shape({}).isRequired,
 };
 
 LoginPage.defaultProps = {
-  error: undefined
+  error: undefined,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const isAuthenticated = state.user.isAuthenticated || false;
   const isAuthenticating = state.user.isLoading || false;
   const error = state.user.error ? state.user.error : undefined;
   return {
     isAuthenticated,
     isAuthenticating,
-    error
+    error,
   };
 };
 
 const mapDispatchToProps = {
   loginUser: loginWithEmail,
-  replace: routerActions.replace
+  replace: routerActions.replace,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

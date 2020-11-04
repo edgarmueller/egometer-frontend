@@ -10,29 +10,13 @@ import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import red from "@material-ui/core/colors/red";
 import PropTypes from "prop-types";
-import LinkButton from "../../components/LinkButton";
+import Link from "../Link";
 import { CssBaseline } from "@material-ui/core";
+import { primaryButton, button, joinClasses} from "../../common/styles";
 
 const styles = (theme) => ({
-  signUpButton: {
-    textDecoration: "none",
-    color: "#333435",
-    paddingLeft: "1em",
-    paddingRight: "1em",
-    display: "inline-flex",
-    marginLeft: "1em",
-    marginRight: "1em",
-    height: "36px",
-    fontWeight: "bold",
-    "&:hover": {
-      backgroundColor: "#80CBC4",
-      color: "#fff",
-    },
-    alignItems: "center",
-    textTransform: "uppercase",
-    fontSize: "0.8em",
-    letterSpacing: "0.065em",
-  },
+  button,
+  primaryButton,
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
@@ -56,8 +40,8 @@ export class SignUpForm extends React.Component {
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <div classes={classes.form}>
-          <Grid container spacing={2}>
+        <div className={classes.form}>
+          <Grid container spacing={2} alignItems="center">
             <Grid item xs={12}>
               <FormControl required error={!_.isEmpty(errors.name)} fullWidth>
                 <InputLabel htmlFor="name">Name</InputLabel>
@@ -121,20 +105,20 @@ export class SignUpForm extends React.Component {
           </Grid>
         </div>
 
-        <Grid container>
-          <Grid item xs={12}>
-            <Button className={classes.signUpButton} onClick={handleSubmit}>
-              Sign Up
-            </Button>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={4}>
+            <Link to="/" label="Back to front page" />
           </Grid>
-          <Grid item xs={12}>
-            <LinkButton
+          <Grid item xs={4}>
+            <Link
               to="/auth/recover/password"
-              label="I already have an account"
+              label="Alreayd have an account?"
             />
           </Grid>
-          <Grid item xs={12}>
-            <LinkButton to="/" label="Back to front page" />
+          <Grid item xs={4}>
+            <Button className={joinClasses(classes.button, classes.primaryButton)} onClick={handleSubmit}>
+              Sign Up
+            </Button>
           </Grid>
           <Grid item xs={12}>
             <div style={{ color: red[500] }}>{errors.message}</div>

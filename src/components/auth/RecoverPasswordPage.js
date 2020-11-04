@@ -62,7 +62,7 @@ class RecoverPasswordPage extends React.Component {
 
     return (
       <div>
-        <h2 style={{ paddingTop: "1em" }}>Welcome to egometer</h2>
+        <h2>Welcome to egometer</h2>
         <RecoverPasswordForm handleFormSubmit={this.handleFormSubmit} />
         {this.state.error && (
           <p style={{ paddingTop: "1em", color: "red" }}>{this.state.error}</p>
