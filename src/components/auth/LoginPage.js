@@ -67,7 +67,7 @@ LoginPage.propTypes = {
   isAuthenticating: PropTypes.bool.isRequired,
   loginUser: PropTypes.func.isRequired,
   error: PropTypes.string,
-  location: PropTypes.shape({}).isRequired,
+  location: PropTypes.object,
 };
 
 LoginPage.defaultProps = {

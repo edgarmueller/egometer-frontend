@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { compose } from "recompose";
+import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
@@ -23,30 +24,30 @@ import { getSchemas, isSchemasLoading } from "../../reducers";
 import * as actions from "../../actions";
 import * as api from "../../api";
 
-const styles = theme => ({
+const styles = (theme) => ({
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing.unit,
   },
   display1,
   root: {
     width: 720,
     marginTop: theme.spacing.unit * 3,
     overflowX: "auto",
-    margin: "0 auto"
+    margin: "0 auto",
   },
   button: {
     margin: "0.25em",
-    float: "right"
+    float: "right",
   },
   table: {
     width: 700,
     margin: "0 auto",
     marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
-  }
+    marginBottom: theme.spacing.unit * 2,
+  },
 });
 
 export class Schemas extends React.Component {
@@ -56,7 +57,7 @@ export class Schemas extends React.Component {
       name: undefined,
       editSchema: undefined,
       open: false,
-      openShow: false
+      openShow: false,
     };
     this.deleteSchema = this.deleteSchema.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -72,25 +73,25 @@ export class Schemas extends React.Component {
   handleClickShow(schema) {
     this.setState({
       selectedSchema: schema,
-      openShow: true
+      openShow: true,
     });
   }
 
   handleCloseShow() {
     this.setState({
-      openShow: false
+      openShow: false,
     });
   }
 
   handleCreate() {
     this.setState({
-      open: true
+      open: true,
     });
   }
 
   handleClose() {
     this.setState({
-      open: false
+      open: false,
     });
   }
 
@@ -116,7 +117,7 @@ export class Schemas extends React.Component {
             </TableHead>
             <TableBody>
               {this.props.schemas ? (
-                this.props.schemas.map(schema => (
+                this.props.schemas.map((schema) => (
                   <TableRow key={schema.id}>
                     <TableCell>
                       <strong>{schema.name}</strong>
@@ -179,30 +180,34 @@ export class Schemas extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+Schemas.propTypes = {
+  deleteSchema: PropTypes.func,
+  fetchSchemas: PropTypes.func,
+  classes: PropTypes.object,
+  schemas: PropTypes.array,
+  isSchemasLoading: PropTypes.bool,
+};
+
+const mapStateToProps = (state) => ({
   schemas: getSchemas(state),
-  isSchemasLoading: isSchemasLoading(state)
+  isSchemasLoading: isSchemasLoading(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   fetchSchemas() {
     dispatch(actions.fetchSchemas());
   },
   deleteSchema(schema) {
-    api
-      .deleteSchema(schema)
-      .then(
-        () => dispatch(actions.fetchSchemas()),
-        error => console.log("error occurred while deleting schema", error)
-      );
-  }
+    api.deleteSchema(schema).then(
+      () => dispatch(actions.fetchSchemas()),
+      // eslint-disable-next-line no-undef
+      (error) => console.log("error occurred while deleting schema", error)
+    );
+  },
 });
 
 export default compose(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
+  connect(mapStateToProps, mapDispatchToProps),
   fetchSchemasOnMount,
   withStyles(styles)
 )(Schemas);

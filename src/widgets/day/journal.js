@@ -14,7 +14,7 @@ export const journalVis = {
   week: undefined,
   month: undefined,
   cell: StringCell,
-  isApplicable: s => (isString(s) ? 1 : -1)
+  isApplicable: (s) => (isString(s) ? 1 : -1),
 };
 
 export default journalVis;

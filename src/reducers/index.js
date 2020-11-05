@@ -4,12 +4,12 @@ import {
   metersReducer,
   getMeters as _getMeters,
   getMeterError as _getMeterError,
-  getIsMetersLoading
+  getIsMetersLoading,
 } from "./meters";
 import {
   findBySchemaName as _findBySchemaName,
   getSchemaError as _getSchemaError,
-  getIsSchemasLoading
+  getIsSchemasLoading,
 } from "./schemas";
 
 import { findMeterById as _findMeterById } from "../reducers/meters";
@@ -22,24 +22,23 @@ const app = combineReducers({
   meters: metersReducer,
   schemas: schemaReducer,
   entries: entriesReducer,
-  user: userReducer
+  user: userReducer,
 });
 
 export default app;
 
-export const getMeters = state => _getMeters(state.meters);
-export const getMeterError = state => _getMeterError(state.meters);
-export const findMeterById = meterId => state =>
+export const getMeters = (state) => _getMeters(state.meters);
+export const getMeterError = (state) => _getMeterError(state.meters);
+export const findMeterById = (meterId) => (state) =>
   _findMeterById(meterId)(state.meters);
 
-export const getSchemas = state => state.schemas.schemas;
-export const getSchemaError = state => _getSchemaError(state.schemas);
-export const findBySchemaName = schemaName => state =>
+export const getSchemas = (state) => state.schemas.schemas;
+export const getSchemaError = (state) => _getSchemaError(state.schemas);
+export const findBySchemaName = (schemaName) => (state) =>
   _findBySchemaName(schemaName)(state.schemas);
 // TODO: rename
-export const getEntriesByMeter = state => state.entries.entries;
-export const getProgressByMeter = state => state.entries.progressByMeter;
+export const getEntriesByMeter = (state) => state.entries.entries;
 
-export const getEntriesError = state => state.entries.error;
-export const isSchemasLoading = state => getIsSchemasLoading(state.schemas);
-export const isMetersLoading = state => getIsMetersLoading(state.meters);
+export const getEntriesError = (state) => state.entries.error;
+export const isSchemasLoading = (state) => getIsSchemasLoading(state.schemas);
+export const isMetersLoading = (state) => getIsMetersLoading(state.meters);

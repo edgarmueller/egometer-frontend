@@ -13,22 +13,22 @@ const MultiEnumCell = ({
   schema,
   color,
   isLoading,
-  updateEntry
+  updateEntry,
 }) => {
   const isSelected = useCallback(
-    val => (data !== undefined ? data.indexOf(val) !== -1 : false),
+    (val) => (data !== undefined ? data.indexOf(val) !== -1 : false),
     [data]
   );
   const updateMulti = useCallback(
     // TODO: if no entries are selected anymore, we should call deleteEntry
-    val => {
+    (val) => {
       if (data === undefined) {
         updateEntry(meterId, date)([val]);
       } else {
         if (data.value.indexOf(val) === -1) {
           updateEntry(meterId, date)(data.value.concat([val]));
         } else {
-          updateEntry(meterId, date)(data.value.filter(x => x !== val));
+          updateEntry(meterId, date)(data.value.filter((x) => x !== val));
         }
       }
     },
@@ -65,7 +65,7 @@ MultiEnumCell.propTypes = {
   schema: PropTypes.any,
   color: PropTypes.string,
   isLoading: PropTypes.bool,
-  updateEntry: PropTypes.func.isRequired
+  updateEntry: PropTypes.func.isRequired,
 };
 
 export default withMeterContext(React.memo(MultiEnumCell));

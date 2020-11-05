@@ -8,7 +8,6 @@ class WeeklyMatrix extends React.Component {
     const {
       colorMapping,
       entriesByMeter,
-      progressByMeter,
       meters,
       isLoading,
       days,
@@ -20,7 +19,6 @@ class WeeklyMatrix extends React.Component {
       <MeterTable
         calcProgress={calcWeeklyProgress}
         entriesByMeter={entriesByMeter}
-        progressByMeter={progressByMeter}
         meters={meters}
         schemas={schemas}
         days={days}
@@ -36,6 +34,11 @@ class WeeklyMatrix extends React.Component {
 WeeklyMatrix.propTypes = {
   isLoading: PropTypes.bool,
   meters: PropTypes.arrayOf(PropTypes.object),
+  widgets: PropTypes.object,
+  schemas: PropTypes.object,
+  colorMapping: PropTypes.object,
+  entriesByMeter: PropTypes.object,
+  days: PropTypes.array,
 };
 
 WeeklyMatrix.defaultProps = {

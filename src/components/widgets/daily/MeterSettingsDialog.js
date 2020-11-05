@@ -8,18 +8,19 @@ import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { connect } from "react-redux";
+import { Grid } from "@material-ui/core";
+import PropTypes from "prop-types";
 import { deleteMeter, updateMeter } from "../../../actions";
 import ColorPicker from "../../common/ColorPicker";
-import { Grid } from "@material-ui/core";
 
 const styles = {
   dialogPaper: {
     minHeight: "70vh",
-    maxHeight: "70vh"
+    maxHeight: "70vh",
   },
   dialog: {
-    minHeight: 300
-  }
+    minHeight: 300,
+  },
 };
 
 class MeterSettingsDialog extends React.PureComponent {
@@ -28,19 +29,19 @@ class MeterSettingsDialog extends React.PureComponent {
     this.state = {
       color: props.meter.color,
       name: props.meter.name,
-      confirmation: ""
+      confirmation: "",
     };
   }
 
-  updateColor = color => {
+  updateColor = (color) => {
     this.setState({ color });
   };
 
-  updateName = event => {
+  updateName = (event) => {
     this.setState({ name: event.target.value });
   };
 
-  updateConfirmation = event => {
+  updateConfirmation = (event) => {
     this.setState({ confirmation: event.target.value });
   };
 
@@ -51,7 +52,7 @@ class MeterSettingsDialog extends React.PureComponent {
       meter,
       handleClose,
       deleteMeter,
-      updateMeter
+      updateMeter,
     } = this.props;
 
     return (
@@ -126,17 +127,18 @@ class MeterSettingsDialog extends React.PureComponent {
               updateMeter({
                 ...meter,
                 name: this.state.name,
-                color: this.state.color
+                color: this.state.color,
               }).then(
-                resp => {
+                () => {
                   handleClose();
                   this.setState({
                     color: "#cecece",
                     name: meter.name,
-                    confirmation: ""
+                    confirmation: "",
                   });
                 },
-                resp => this.setState({ error: resp.response.data.description })
+                (resp) =>
+                  this.setState({ error: resp.response.data.description })
               );
             }}
           >
@@ -148,13 +150,19 @@ class MeterSettingsDialog extends React.PureComponent {
   }
 }
 
+MeterSettingsDialog.propTypes = {
+  open: PropTypes.bool,
+  meter: PropTypes.object,
+  handleClose: PropTypes.func,
+  deleteMeter: PropTypes.func,
+  updateMeter: PropTypes.func,
+  classes: PropTypes.object,
+};
+
 export default compose(
   withStyles(styles),
-  connect(
-    null,
-    {
-      deleteMeter,
-      updateMeter
-    }
-  )
+  connect(null, {
+    deleteMeter,
+    updateMeter,
+  })
 )(MeterSettingsDialog);

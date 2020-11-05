@@ -67,7 +67,7 @@ export class RecoverPasswordForm extends React.Component {
 
 RecoverPasswordForm.propTypes = {
   handleFormSubmit: PropTypes.func.isRequired,
-  classes: PropTypes.shape({}).isRequired,
+  classes: PropTypes.object,
 };
 
 export default withStyles(styles)(RecoverPasswordForm);

@@ -6,7 +6,6 @@ import customBoolean from "./custom/customBoolean";
 import customNumber from "./custom/customNumber";
 import customString from "./custom/customString";
 
-// TODO: should we move name into the component?
 export default [
   mood,
   journal,
@@ -14,5 +13,5 @@ export default [
   quantity,
   customBoolean,
   customNumber,
-  customString
+  customString,
 ];

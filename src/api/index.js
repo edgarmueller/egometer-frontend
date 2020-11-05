@@ -6,6 +6,7 @@ const applicationJson = "application/json";
 
 const createHeaders = (headers) => ({
   headers: {
+    // eslint-disable-next-line no-undef
     Authorization: `Bearer ${localStorage.getItem("egometer.token")}`,
     ...headers,
   },
@@ -110,7 +111,7 @@ export const submitSchema = (name, schema) =>
     })
   );
 
-export const loginUser = (email, password, rememberMe) =>
+export const loginUser = (email, password) =>
   Axios.post(
     `${API_BASE_URL}/auth/login`,
     { email, password },
@@ -120,6 +121,7 @@ export const loginUser = (email, password, rememberMe) =>
 // TODO
 export const logout = () =>
   Axios.post(`${API_BASE_URL}/sign-out`, undefined, createHeaders()).then(() =>
+    // eslint-disable-next-line no-undef
     localStorage.removeItem("egometer.token")
   );
 

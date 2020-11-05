@@ -10,7 +10,7 @@ import { logo } from "../../common/styles";
 const RadiumLink = Radium(Link);
 
 const styles = {
-  logo
+  logo,
 };
 
 const Logo = withStyles(styles)(({ classes }) => (
@@ -21,7 +21,7 @@ const Logo = withStyles(styles)(({ classes }) => (
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      fontSize: "1.5rem"
+      fontSize: "1.5rem",
     }}
   >
     <Ionicon icon="md-flash" />
@@ -29,10 +29,10 @@ const Logo = withStyles(styles)(({ classes }) => (
   </RadiumLink>
 ));
 
-const WithLayout = WrappedComponent => {
-  return class extends React.Component {
+const WithLayout = (WrappedComponent) => {
+  return class WithLayout extends React.Component {
     state = {
-      isNavOpen: false
+      isNavOpen: false,
     };
 
     openNav = () => {

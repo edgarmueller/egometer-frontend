@@ -26,6 +26,7 @@ LinkButton.propTypes = {
   to: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   currentRoute: PropTypes.string,
+  classes: PropTypes.object,
 };
 
 export default withStyles({ button })(LinkButton);

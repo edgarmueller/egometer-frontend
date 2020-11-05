@@ -1,7 +1,7 @@
 import React from "react";
 import _ from "lodash";
 
-export const withLabels = labelProvider => Component => {
+export const withLabels = (labelProvider) => (Component) => {
   class WrappedComponent extends React.Component {
     render() {
       return <Component {...this.props} labelProvider={labelProvider} />;
@@ -11,13 +11,13 @@ export const withLabels = labelProvider => Component => {
   return WrappedComponent;
 };
 
-export const literalLabelProvider = obj => key => obj[key];
+export const literalLabelProvider = (obj) => (key) => obj[key];
 
-export const defaultLiteralLabelProvider = literal => {
+export const defaultLiteralLabelProvider = (literal) => {
   return _.startCase(_.replace(literal, "_", " "));
 };
 
-export const withImages = imageProvider => Component => {
+export const withImages = (imageProvider) => (Component) => {
   class WrappedComponent extends React.Component {
     render() {
       return <Component {...this.props} imageProvider={imageProvider} />;

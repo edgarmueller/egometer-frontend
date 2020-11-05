@@ -55,6 +55,8 @@ EnumCell.propTypes = {
   schema: PropTypes.any,
   color: PropTypes.string,
   isLoading: PropTypes.bool,
+  updateEntry: PropTypes.func,
+  deleteEntry: PropTypes.func,
 };
 
 export default withMeterContext(React.memo(EnumCell));

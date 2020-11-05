@@ -5,7 +5,7 @@ import * as _ from "lodash";
 import { compose, withProps } from "recompose";
 import * as actions from "../../actions";
 import { getMeters, getSchemas } from "../../reducers";
-import { findBySchemaId } from "../../utils"
+import { findBySchemaId } from "../../utils";
 import widgets from "../../widgets";
 import { createProgressSuccessColor } from "../../common/color";
 import NoWidgetFound from "./NoWidgetFound";
@@ -14,12 +14,12 @@ export class Widget extends React.Component {
   constructor(props) {
     super(props);
     const { date, widgets, meter, progress, widgetType } = props;
-    const widget = widgets.find(widget => widget.name === meter.widget);
+    const widget = widgets.find((widget) => widget.name === meter.widget);
     const dailyGoalHit =
-      progress && progress.entries.find(e => e.date === date) !== undefined;
+      progress && progress.entries.find((e) => e.date === date) !== undefined;
     this.state = {
       widget: _.has(widget, widgetType) ? widget[widgetType] : undefined,
-      dailyGoalHit
+      dailyGoalHit,
     };
   }
 
@@ -36,7 +36,7 @@ export class Widget extends React.Component {
       width,
       height,
       isLoading,
-      progress
+      progress,
     } = this.props;
     return (
       !_.isEqual(nextProps.data, data) ||
@@ -51,7 +51,7 @@ export class Widget extends React.Component {
 
   updateWidget = () => {
     const { meter, widgetType, widgets } = this.props;
-    const widget = widgets.find(widget => widget.name === meter.widget);
+    const widget = widgets.find((widget) => widget.name === meter.widget);
     if (widget) {
       this.setState({ widget: widget[widgetType] });
     } else {
@@ -63,7 +63,8 @@ export class Widget extends React.Component {
     const { date, progress } = this.props;
     if (progress) {
       this.setState({
-        dailyGoalHit: progress.entries.find(e => e.date === date) !== undefined
+        dailyGoalHit:
+          progress.entries.find((e) => e.date === date) !== undefined,
       });
     }
   };
@@ -103,7 +104,7 @@ export class Widget extends React.Component {
     return (
       <div
         style={{
-          backgroundColor: dailyGoalHit ? createProgressSuccessColor(1) : null
+          backgroundColor: dailyGoalHit ? createProgressSuccessColor(1) : null,
         }}
       >
         <WidgetComponent
@@ -124,31 +125,41 @@ export class Widget extends React.Component {
 Widget.propTypes = {
   // TODO: what type should date be?
   date: PropTypes.string.isRequired, // actually this is a moment object type
+  data: PropTypes.any,
+  width: PropTypes.number,
+  height: PropTypes.number,
   schema: PropTypes.object,
+  meter: PropTypes.object,
+  progress: PropTypes.object,
+  isLoading: PropTypes.bool,
   // TODO enum
   widgetType: PropTypes.string.isRequired,
+  widgets: PropTypes.array,
   // TODO: what type?
   updateEntry: PropTypes.func.isRequired,
   loadingStatus: PropTypes.shape({
     isLoading: PropTypes.bool.isRequired,
-    meterId: PropTypes.string
-  })
+    meterId: PropTypes.string,
+  }),
 };
 
 Widget.defaultProps = {
-  schema: undefined
+  schema: undefined,
 };
 
 const mapStateToProps = (state, ownProps) => {
-  const foundSchema = findBySchemaId(getSchemas(state), ownProps.meter.schemaId);
+  const foundSchema = findBySchemaId(
+    getSchemas(state),
+    ownProps.meter.schemaId
+  );
   return {
     meters: getMeters(state),
     schema: foundSchema,
-    ...ownProps
+    ...ownProps,
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   fetchMeters() {
     return dispatch(actions.fetchMeters());
   },
@@ -158,23 +169,18 @@ const mapDispatchToProps = dispatch => ({
         {
           meterId,
           date,
-          value
+          value,
         },
         shouldDebounce
       )
     );
   },
   deleteEntry: (meterId, entry) => {
-    return dispatch(
-      actions.deleteEntryRequest(meterId, entry)
-    );
-  }
+    return dispatch(actions.deleteEntryRequest(meterId, entry));
+  },
 });
 
 export default compose(
   withProps({ widgets }),
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps)
 )(Widget);

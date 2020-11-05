@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { compose, withProps } from "recompose";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
 import MatrixContainer from "../../containers/MatrixContainer";
 import WeeklyMatrix from "../weekly/WeeklyMatrix";
 import {
@@ -14,7 +13,6 @@ import {
   isSchemasLoading,
   isMetersLoading,
   getEntriesByMeter,
-  getProgressByMeter,
 } from "../../reducers";
 import { findBySchemaId } from "../../utils";
 import widgets from "../../widgets";
@@ -25,13 +23,6 @@ import Charts from "../monthly/Charts";
 import { daysOfWeek, getWeek, weekToDate } from "../../common/date";
 import { getSchemas } from "../../reducers";
 import PickerLayout from "../common/PickerLayout";
-
-const styles = {
-  monthMatrix: {
-    boxSizing: "border-box",
-    padding: "1em",
-  },
-};
 
 export class WeeklyDashboard extends React.Component {
   constructor(props) {
@@ -77,14 +68,12 @@ export class WeeklyDashboard extends React.Component {
 
   render() {
     const {
-      classes,
       fetchEntries,
       error,
       history,
       isLoading,
       meters,
       entriesByMeter,
-      progressByMeter,
       ...otherProps
     } = this.props;
 
@@ -92,7 +81,7 @@ export class WeeklyDashboard extends React.Component {
       return (
         <div>
           <Typography variant="display1">MONTH</Typography>
-          <div>{this.props.error}</div>
+          <div>{error}</div>
         </div>
       );
     }
@@ -120,6 +109,7 @@ export class WeeklyDashboard extends React.Component {
               // TODO: we do not fetch each time
               fetchEntries(year, week);
               // TODO: can we just update the URL without reloading?
+              // eslint-disable-next-line react/prop-types
               history.push(`/weekly/${year}/${week}`);
             }}
           />
@@ -135,7 +125,6 @@ export class WeeklyDashboard extends React.Component {
             child={WeeklyMatrix}
             meters={meters}
             entriesByMeter={entriesByMeter}
-            progressByMeter={progressByMeter}
             {...otherProps}
           />
         </div>
@@ -147,6 +136,7 @@ export class WeeklyDashboard extends React.Component {
           meters={meters}
           widgets={widgets}
           widgetType="week"
+          // eslint-disable-next-line no-undef
           width={window.innerWidth / 2}
         />
       </PickerLayout>
@@ -155,9 +145,15 @@ export class WeeklyDashboard extends React.Component {
 }
 
 WeeklyDashboard.propTypes = {
+  error: PropTypes.string,
+  schemas: PropTypes.object,
+  match: PropTypes.object,
   meters: PropTypes.array,
   widgets: PropTypes.array,
   entriesByMeter: PropTypes.object,
+  fetchEntries: PropTypes.func.isRequired,
+  history: PropTypes.object,
+  isLoading: PropTypes.bool,
 };
 
 WeeklyDashboard.defaultProps = {
@@ -173,7 +169,6 @@ const mapStateToProps = (state) => {
       isSchemasLoading(state),
     meters: getMeters(state),
     entriesByMeter: getEntriesByMeter(state),
-    progressByMeter: getProgressByMeter(state),
     error: getMeterError(state) || getSchemaError(state),
     schemas: getSchemas(state),
   };
@@ -188,6 +183,5 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 export default compose(
   withProps({ widgets }),
-  withStyles(styles),
   connect(mapStateToProps, mapDispatchToProps)
 )(WeeklyDashboard);

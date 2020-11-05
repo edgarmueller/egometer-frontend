@@ -11,7 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import * as api from "../../api";
 
-const styles = (theme) => ({
+const styles = () => ({
   container: {
     display: "flex",
     flexDirection: "column",
@@ -139,6 +139,9 @@ export class CreateSchemaDialog extends React.Component {
 
 CreateSchemaDialog.propTypes = {
   fetchSchemas: PropTypes.func.isRequired,
+  classes: PropTypes.object,
+  onClose: PropTypes.func,
+  open: PropTypes.bool,
 };
 
 export default withStyles(styles)(CreateSchemaDialog);

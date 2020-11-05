@@ -6,12 +6,13 @@ import NoCellRenderer from "./NoCellRenderer";
 
 // TODO: rename to CellDispatch
 export class Cell extends React.Component {
-  shouldComponentUpdate(nextProps, nextState, snapshot) {
+  shouldComponentUpdate(nextProps) {
+    const { data, widget, style } = this.props;
     return (
-      !_.isEqual(this.props.data, nextProps.data) ||
-      !_.isEqual(this.props.widget, nextProps.widget) ||
+      !_.isEqual(data, nextProps.data) ||
+      !_.isEqual(widget, nextProps.widget) ||
       (this.props.isLoading && !nextProps.isLoading) ||
-      !_.isEqual(this.props.style, nextProps.style)
+      !_.isEqual(style, nextProps.style)
     );
   }
 
@@ -44,6 +45,8 @@ export class Cell extends React.Component {
 
 Cell.propTypes = {
   data: PropTypes.any,
+  widget: PropTypes.object,
+  style: PropTypes.object,
   rowData: PropTypes.object.isRequired,
   date: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,

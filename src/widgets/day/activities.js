@@ -8,7 +8,7 @@ import { isArray } from "../../common/testers";
 import {
   defaultLiteralLabelProvider,
   withImages,
-  withLabels
+  withLabels,
 } from "../../components/widgets/util";
 import MultiEnumPieChart from "../../components/visualizations/MultiEnumPieChart";
 
@@ -31,18 +31,18 @@ const icons = {
   family: "md-home",
   sick: "md-thermometer",
   learning: "md-create",
-  health: "md-medical"
+  health: "md-medical",
 };
 
 const imageProvider = (color, isSelected, value) => {
-  const Icon = props => (
+  const Icon = (props) => (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        cursor: "pointer"
+        cursor: "pointer",
       }}
     >
       <Ionicon {...props} />
@@ -50,7 +50,7 @@ const imageProvider = (color, isSelected, value) => {
   );
   return withProps({
     icon: icons[value],
-    color: isSelected ? color : "black"
+    color: isSelected ? color : "black",
   })(Icon)();
 };
 
@@ -67,7 +67,7 @@ const ActivitiesMeter = {
   cell: withImageProvider(
     withLabels(defaultLiteralLabelProvider)(MultiEnumCell)
   ),
-  isApplicable: s => (isArray(s) ? 1 : -1)
+  isApplicable: (s) => (isArray(s) ? 1 : -1),
 };
 
 export default ActivitiesMeter;

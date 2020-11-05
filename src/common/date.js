@@ -1,7 +1,7 @@
 import _ from "lodash";
 import moment from "moment";
 
-export const pad = s => {
+export const pad = (s) => {
   if (_.isNumber(s)) {
     s = s.toString();
   }
@@ -38,7 +38,7 @@ export function daysOfWeek(date) {
   return days;
 }
 
-export const findMonday = date => {
+export const findMonday = (date) => {
   if (date.getDay() === 1) {
     return date;
   }
@@ -59,13 +59,10 @@ export function lastDayOfMonth(month, year) {
 }
 
 export const weekToDate = (year, week) => {
-  return moment({ year })
-    .startOf("isoWeek")
-    .isoWeek(week)
-    .toDate();
-}
+  return moment({ year }).startOf("isoWeek").isoWeek(week).toDate();
+};
 
-export const getWeek = function(date) {
+export const getWeek = function (date) {
   const momentDate = moment(date);
   return [momentDate.isoWeekYear(), momentDate.month(), momentDate.isoWeek()];
 };

@@ -24,9 +24,9 @@ export function shadeColor2(color, percent) {
 
 /**
  * Calculate a color based on the given color mapping and row data.
- *  
- * @param {*} colorMapping 
- * @param {*} rowData 
+ *
+ * @param {*} colorMapping
+ * @param {*} rowData
  */
 export const createColor = (colorMapping, rowData) => {
   const alpha = 0.4;
@@ -36,7 +36,7 @@ export const createColor = (colorMapping, rowData) => {
   return "#fff";
 };
 
-export const createProgressSuccessColor = alpha =>
+export const createProgressSuccessColor = (alpha) =>
   `rgba(129, 199, 132, ${alpha})`;
 
 export const getProgressColor = (progress, alpha) => {

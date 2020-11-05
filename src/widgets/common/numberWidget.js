@@ -9,8 +9,8 @@ const NumberWidget = {
   week: NumberBarChart,
   month: NumberBarChart,
   cell: NumberCell,
-  isApplicable: s => (isNumber(s) ? 1 : -1),
-  h: 1
+  isApplicable: (s) => (isNumber(s) ? 1 : -1),
+  h: 1,
 };
 
 export default NumberWidget;

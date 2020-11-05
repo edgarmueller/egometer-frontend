@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import ErrorSnackbar from "../common/ErrorSnackbar";
 import { Grid } from "@material-ui/core";
 
@@ -17,5 +18,10 @@ const PickerLayout = ({ picker, children }) => (
     </div>
   </div>
 );
+
+PickerLayout.propTypes = {
+  picker: PropTypes.node,
+  children: PropTypes.arrayOf(PropTypes.node),
+};
 
 export default PickerLayout;

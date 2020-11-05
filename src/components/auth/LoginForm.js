@@ -5,7 +5,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 import Container from "@material-ui/core/Container";
-import { primaryButton, button, joinClasses} from "../../common/styles";
+import { primaryButton, button, joinClasses } from "../../common/styles";
 import Link from "../Link";
 import { CssBaseline } from "@material-ui/core";
 
@@ -111,7 +111,7 @@ export class LoginForm extends React.Component {
 LoginForm.propTypes = {
   handleFormSubmit: PropTypes.func.isRequired,
   renderAlert: PropTypes.func.isRequired,
-  classes: PropTypes.shape({}).isRequired,
+  classes: PropTypes.object,
 };
 
 export default withStyles(styles)(LoginForm);

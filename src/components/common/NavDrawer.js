@@ -15,8 +15,8 @@ const drawerWidth = 180;
 const styles = () => ({
   drawer: {
     width: drawerWidth,
-    flexShrink: 0
-  }
+    flexShrink: 0,
+  },
 });
 
 export const NavDrawer = ({
@@ -26,7 +26,7 @@ export const NavDrawer = ({
   location,
   logout,
   isNavOpen,
-  closeNav
+  closeNav,
 }) => {
   if (isAuthenticated) {
     return (
@@ -51,23 +51,30 @@ export const NavDrawer = ({
 };
 
 NavDrawer.propTypes = {
-  navigateTo: PropTypes.func.isRequired
+  navigateTo: PropTypes.func.isRequired,
+  classes: PropTypes.object,
+  isAuthenticated: PropTypes.bool,
+  history: PropTypes.object,
+  location: PropTypes.object,
+  logout: PropTypes.func,
+  isNavOpen: PropTypes.bool,
+  closeNav: PropTypes.func,
 };
 
 NavDrawer.defaultProps = {
-  user: undefined
+  user: undefined,
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   navigateTo(destination) {
     dispatch(routerActions.push(destination));
   },
   logout() {
     dispatch(logout());
-  }
+  },
 });
 
 export default connect(
-  state => ({ isAuthenticated: state.user.isAuthenticated }),
+  (state) => ({ isAuthenticated: state.user.isAuthenticated }),
   mapDispatchToProps
 )(withStyles(styles)(withRouter(NavDrawer)));

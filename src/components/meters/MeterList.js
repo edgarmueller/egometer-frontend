@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback, useState, useReducer } from "react";
 import toNumber from "lodash/toNumber";
 import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import { compose, withProps } from "recompose";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
@@ -115,6 +116,7 @@ export const Meters = ({
   fetchMeters,
 }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [state, dispatch] = useReducer(localMeterReducer, {
     meterById: metersById(meters),
   });
@@ -283,7 +285,7 @@ export const Meters = ({
         </Table>
         <Dialog
           open={open}
-          onClose={(ev, reason) => {
+          onClose={() => {
             setOpen(false);
             setEditedMeter(undefined);
           }}
@@ -312,6 +314,18 @@ export const Meters = ({
       </Paper>
     </div>
   );
+};
+
+Meters.propTypes = {
+  classes: PropTypes.object,
+  deleteMeter: PropTypes.func,
+  meters: PropTypes.array,
+  updateMeterRequest: PropTypes.func,
+  isMetersLoading: PropTypes.bool,
+  schemas: PropTypes.object,
+  meterError: PropTypes.object,
+  resetMetersError: PropTypes.object,
+  fetchMeters: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

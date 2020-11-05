@@ -47,21 +47,21 @@ export class DailyDashboard extends Component {
     this.props.fetchEntries(year, month);
   }
 
-  handleDateChange = date => {
+  handleDateChange = (date) => {
     this.fetchEntriesByDate(moment(date));
   };
 
-  handleMonthChange = date => {
+  handleMonthChange = (date) => {
     this.fetchEntriesByDate(moment(date));
   };
 
-  fetchEntriesByDate = date => {
+  fetchEntriesByDate = (date) => {
     const { history } = this.props;
     this.setState({
       date,
       year: date.year(),
       month: date.month(),
-      day: date.date()
+      day: date.date(),
     });
     this.props.fetchEntries(date.year(), date.month());
     history.push(
@@ -70,7 +70,13 @@ export class DailyDashboard extends Component {
   };
 
   render() {
-    const { meters, entriesByMeter, isLoading, updateEntry, deleteEntry } = this.props;
+    const {
+      meters,
+      entriesByMeter,
+      isLoading,
+      updateEntry,
+      deleteEntry,
+    } = this.props;
 
     return (
       <PickerLayout
@@ -91,16 +97,16 @@ export class DailyDashboard extends Component {
         <MeterContext.Provider
           value={{
             updateEntry,
-            deleteEntry
+            deleteEntry,
           }}
         >
           <Grid container spacing={2} direction="column">
-            {meters.map((meter, i) => (
+            {meters.map((meter) => (
               <Grid item key={meter.id}>
                 <div
                   style={{
                     marginLeft: "2rem",
-                    marginRight: "2rem"
+                    marginRight: "2rem",
                   }}
                 >
                   <Widget
@@ -109,7 +115,9 @@ export class DailyDashboard extends Component {
                     isLoading={isLoading}
                     date={this.state.date.format("YYYY-MM-DD")}
                     meter={meter}
-                    data={_.isEmpty(entriesByMeter) ? [] : entriesByMeter[meter.id]}
+                    data={
+                      _.isEmpty(entriesByMeter) ? [] : entriesByMeter[meter.id]
+                    }
                     widgetType="day"
                   />
                 </div>
@@ -122,40 +130,44 @@ export class DailyDashboard extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const meters = getMeters(state);
   return {
     entriesByMeter: getEntriesByMeter(state),
     isLoading: state.entries.loadingStatus.isLoading,
     meters,
     widgets,
-    error: state.entries.error
+    error: state.entries.error,
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   ...mapDispatchToCrudMethodProps(dispatch),
   fetchEntries(year, month) {
     dispatch(fetchEntriesRequest(year, month));
   },
   fetchMeters() {
     dispatch(fetchMeters());
-  }
+  },
 });
 
 DailyDashboard.propTypes = {
   error: PropTypes.object,
   meters: PropTypes.array,
   entries: PropTypes.object,
+  entriesByMeter: PropTypes.object,
   isLoading: PropTypes.bool,
   updateEntry: PropTypes.func.isRequired,
-  deleteEntry: PropTypes.func.isRequired
+  deleteEntry: PropTypes.func.isRequired,
+  fetchEntries: PropTypes.func.isRequired,
+  history: PropTypes.object,
+  match: PropTypes.object,
 };
 
 DailyDashboard.defaultProps = {
   meters: [],
   entries: {},
-  isLoading: false
+  isLoading: false,
 };
 
 export default compose(

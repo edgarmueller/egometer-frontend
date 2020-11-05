@@ -6,7 +6,7 @@ const CustomBooleanWidget = {
   ...booleanWidget,
   name: "Boolean",
   label: "yes/no",
-  icon: <Icon />
+  icon: <Icon />,
 };
 
 export default CustomBooleanWidget;

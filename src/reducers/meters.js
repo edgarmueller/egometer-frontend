@@ -7,7 +7,7 @@ import {
   FETCH_METERS_REQUEST,
   UPDATE_METER_REQUEST,
   UPDATE_METER_FAILURE,
-  RESET_METERS_ERROR
+  RESET_METERS_ERROR,
 } from "../actions";
 
 const initialState = {
@@ -16,12 +16,12 @@ const initialState = {
   isLoading: false,
   updatingStatus: {
     isFetching: false,
-    meterId: undefined
-  }
+    meterId: undefined,
+  },
 };
 
 const findMeter = (meters, meterId) =>
-  _.find(meters, meter => meter.id === meterId);
+  _.find(meters, (meter) => meter.id === meterId);
 
 const updateMeterById = (meters, meterId, updateFn) => {
   const m = findMeter(meters, meterId);
@@ -40,8 +40,8 @@ export const metersReducer = (state = initialState, action) => {
         error: undefined,
         updatingStatus: {
           isFetching: true,
-          meterId: action.meter.id
-        }
+          meterId: action.meter.id,
+        },
       };
     case UPDATE_METER_SUCCESS:
       return {
@@ -50,47 +50,47 @@ export const metersReducer = (state = initialState, action) => {
           state.meters,
           action.meter.id,
           () => action.meter
-        )
+        ),
       };
     case UPDATE_METER_FAILURE:
       return {
         ...state,
         error: {
-          message: action.error
-        }
+          message: action.error,
+        },
       };
     case FETCH_METERS_REQUEST:
       return {
         ...state,
-        isLoading: true
+        isLoading: true,
       };
     case RESET_METERS_ERROR:
       return {
         ...state,
-        error: undefined
-      }
+        error: undefined,
+      };
     case FETCH_METERS_SUCCESS:
       return {
         error: undefined,
-        meters: action.meters
+        meters: action.meters,
       };
     case FETCH_METERS_FAILURE:
       return {
         error: action.error,
-        meters: []
+        meters: [],
       };
     case DELETE_METER_SUCCESS:
       return {
         error: undefined,
-        meters: state.meters.filter(meter => meter.id !== action.meterId)
+        meters: state.meters.filter((meter) => meter.id !== action.meterId),
       };
     default:
       return state;
   }
 };
 
-export const findMeterById = meterId => state =>
-  _.find(state.meters, meter => meter.id === meterId);
-export const getMeters = state => state.meters;
-export const getMeterError = state => state.error;
-export const getIsMetersLoading = state => state.isLoading;
+export const findMeterById = (meterId) => (state) =>
+  _.find(state.meters, (meter) => meter.id === meterId);
+export const getMeters = (state) => state.meters;
+export const getMeterError = (state) => state.error;
+export const getIsMetersLoading = (state) => state.isLoading;

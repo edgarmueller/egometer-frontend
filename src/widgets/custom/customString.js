@@ -6,7 +6,7 @@ const CustomStringWidget = {
   ...stringWidget,
   name: "String",
   label: "string",
-  icon: <Icon />
+  icon: <Icon />,
 };
 
 export default CustomStringWidget;

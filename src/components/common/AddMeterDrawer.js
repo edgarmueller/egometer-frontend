@@ -12,7 +12,7 @@ import * as api from "../../api";
 import { findBySchemaName } from "../../utils";
 
 const filterApplicableWidgets = (widgets, schema) => {
-  return _.filter(widgets, widget => widget.isApplicable(schema) > -1);
+  return _.filter(widgets, (widget) => widget.isApplicable(schema) > -1);
 };
 export class AddMeterDrawer extends React.PureComponent {
   constructor(props) {
@@ -28,21 +28,21 @@ export class AddMeterDrawer extends React.PureComponent {
           ? _.head(applicableWidgets).name
           : "",
       applicableVis: applicableWidgets,
-      name: ""
+      name: "",
     };
   }
 
   handleSubmit = (schemaId, name, widget) => {
     api.createMeter(schemaId, name.trim(), widget, "#cecece").then(
       () => this.props.onSubmit(),
-      errorMsg =>
+      (errorMsg) =>
         this.setState({
-          error: errorMsg
+          error: errorMsg,
         })
     );
   };
 
-  findSchema = schemaName => {
+  findSchema = (schemaName) => {
     return findBySchemaName(this.props.schemas, schemaName);
   };
 
@@ -50,26 +50,26 @@ export class AddMeterDrawer extends React.PureComponent {
     const { widgets, schemas } = this.props;
 
     const widgetsByCategory = _.groupBy(
-      _.map(widgets, widget => {
+      _.map(widgets, (widget) => {
         const category = _.isEmpty(widget.category)
           ? "Uncategorized"
           : widget.category;
         return {
           ...widget,
-          category
+          category,
         };
       }),
-      widget => widget.category
+      (widget) => widget.category
     );
 
-    const availableSchemaIds = schemas.map(schema => schema.name);
+    const availableSchemaIds = schemas.map((schema) => schema.name);
     const widgetsPerCategory = _.keys(widgetsByCategory)
-      .filter(category => category !== "Custom")
+      .filter((category) => category !== "Custom")
       .concat(["Custom"])
       .reduce((acc, category) => {
         const availableWidgets = widgetsByCategory[category];
         const applicableWidgets = availableWidgets.filter(
-          vis =>
+          (vis) =>
             vis.name !== undefined &&
             vis.label !== undefined &&
             availableSchemaIds.indexOf(vis.schemaId) !== -1
@@ -85,14 +85,14 @@ export class AddMeterDrawer extends React.PureComponent {
         style={{
           display: "flex",
           alignItems: "center",
-          flexDirection: "column"
+          flexDirection: "column",
         }}
       >
         <Typography variant="h4" style={{ fontWeight: "bold" }}>
           Add meter
         </Typography>
         {_.keys(widgetsPerCategory).length > 0 ? (
-          _.map(_.keys(widgetsPerCategory), category => (
+          _.map(_.keys(widgetsPerCategory), (category) => (
             <Category
               key={category}
               widgets={widgetsPerCategory[category]}
@@ -115,21 +115,19 @@ export class AddMeterDrawer extends React.PureComponent {
 
 AddMeterDrawer.propTypes = {
   onSubmit: PropTypes.func.isRequired,
-  widgets: PropTypes.array.isRequired
+  widgets: PropTypes.array.isRequired,
+  schemas: PropTypes.array,
 };
 
 AddMeterDrawer.defaultProps = {
-  open: false
+  open: false,
 };
 
-const mapStateToProps = state => ({
-  schemas: getSchemas(state)
+const mapStateToProps = (state) => ({
+  schemas: getSchemas(state),
 });
 
 export default compose(
   withProps({ widgets }),
-  connect(
-    mapStateToProps,
-    null
-  )
+  connect(mapStateToProps, null)
 )(AddMeterDrawer);

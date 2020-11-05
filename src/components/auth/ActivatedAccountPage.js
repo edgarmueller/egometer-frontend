@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import PropTypes from "prop-types";
 import Radium from "radium";
 import { Link } from "react-router-dom";
 import { activateAccount } from "../../api";
@@ -9,23 +10,23 @@ class ActivateAccountPage extends React.Component {
   state = {
     success: false,
     status: undefined,
-    isLoading: true
+    isLoading: true,
   };
 
   componentDidMount() {
     const { match } = this.props;
     activateAccount(match.params.token).then(
-      resp =>
+      (resp) =>
         this.setState({
           isLoading: false,
           success: true,
-          status: resp.data
+          status: resp.data,
         }),
-      error =>
+      (error) =>
         this.setState({
           isLoading: false,
           success: false,
-          status: error
+          status: error,
         })
     );
   }
@@ -45,5 +46,9 @@ class ActivateAccountPage extends React.Component {
     }
   }
 }
+
+ActivateAccountPage.propTypes = {
+  match: PropTypes.object,
+};
 
 export default ActivateAccountPage;

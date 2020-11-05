@@ -18,10 +18,10 @@ const styles = {
     fontSize: 20,
     color: "#000",
     backgroundColor: "#f6f7f9",
-    borderRadius: "4px"
+    borderRadius: "4px",
   },
   underline,
-  meterTitle
+  meterTitle,
 };
 
 function isNumeric(n) {
@@ -29,11 +29,11 @@ function isNumeric(n) {
 }
 
 export const DailyNumber = ({ date, data, meter, isLoading, icon }) => {
-  const entry = _.find(data, d => d.date === date);
+  const entry = _.find(data, (d) => d.date === date);
   return (
     <ConnectedComponent
       meterId={meter.id}
-      fromEvent={ev => {
+      fromEvent={(ev) => {
         const val = ev.target.value;
         const isNumber = isNumeric(val);
         return isNumber ? _.toNumber(val) : val;
@@ -49,7 +49,7 @@ export const DailyNumber = ({ date, data, meter, isLoading, icon }) => {
             style={{
               display: "flex",
               flexDirection: "column",
-              boxSizing: "border-box"
+              boxSizing: "border-box",
             }}
           >
             <TitleBar meter={meter} icon={icon} />
@@ -60,7 +60,7 @@ export const DailyNumber = ({ date, data, meter, isLoading, icon }) => {
               onChange={updateValue}
               onBlur={submitEntry}
               inputProps={{
-                pattern: "[0-9]+([.,][0-9]+)?"
+                pattern: "[0-9]+([.,][0-9]+)?",
               }}
             />
           </div>
@@ -75,7 +75,10 @@ DailyNumber.propTypes = {
   date: PropTypes.string.isRequired,
   width: PropTypes.number,
   height: PropTypes.number,
-  updateEntry: PropTypes.func.isRequired
+  updateEntry: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool,
+  meter: PropTypes.object,
+  icon: PropTypes.node,
 };
 
 export default withStyles(styles)(DailyNumber);

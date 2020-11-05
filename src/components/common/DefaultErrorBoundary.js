@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import red from "@material-ui/core/colors/red";
@@ -12,15 +13,15 @@ import { logo } from "../../common/styles";
 export const RadiumLink = Radium(Link);
 
 const styles = {
-  logo
+  logo,
 };
 
 class DefaultErrorBoundary extends React.Component {
   state = {
-    isError: false
+    isError: false,
   };
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     return { isError: true };
   }
 
@@ -33,7 +34,7 @@ class DefaultErrorBoundary extends React.Component {
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
-          paddingTop: "2em"
+          paddingTop: "2em",
         }}
       >
         <RadiumLink className={classes.logo} to="/">
@@ -41,7 +42,7 @@ class DefaultErrorBoundary extends React.Component {
             style={{
               display: "flex",
               flexDirection: "column",
-              alignItems: "center"
+              alignItems: "center",
             }}
           >
             <Ionicon icon="md-flash" />
@@ -57,5 +58,10 @@ class DefaultErrorBoundary extends React.Component {
     );
   }
 }
+
+DefaultErrorBoundary.propTypes = {
+  classes: PropTypes.object,
+  children: PropTypes.arrayOf(PropTypes.node),
+};
 
 export default withStyles(styles)(DefaultErrorBoundary);

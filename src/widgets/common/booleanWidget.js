@@ -9,8 +9,8 @@ const BooleanWidget = {
   week: undefined,
   month: BooleanStats,
   cell: BooleanCell,
-  isApplicable: s => (isBoolean(s) ? 1 : -1),
-  h: 1
+  isApplicable: (s) => (isBoolean(s) ? 1 : -1),
+  h: 1,
 };
 
 export default BooleanWidget;

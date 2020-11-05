@@ -14,20 +14,20 @@ const styles = reactCSS({
       boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
       display: "inline-block",
       cursor: "pointer",
-      margin: 5
+      margin: 5,
     },
     popover: {
       position: "absolute",
-      zIndex: "2"
+      zIndex: "2",
     },
     cover: {
       position: "fixed",
       top: "0px",
       right: "0px",
       bottom: "0px",
-      left: "0px"
-    }
-  }
+      left: "0px",
+    },
+  },
 });
 
 export class ColorPicker extends React.Component {
@@ -35,13 +35,13 @@ export class ColorPicker extends React.Component {
     super(props);
     this.state = {
       open: false,
-      color: props.color
+      color: props.color,
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (this.props.color !== prevProps.color) {
-      this.setState({ color: this.props.color })
+      this.setState({ color: this.props.color });
     }
   }
 
@@ -53,11 +53,11 @@ export class ColorPicker extends React.Component {
     this.setState({ open: false });
   };
 
-  handleChange = color => {
+  handleChange = (color) => {
     this.setState({ color: color.hex });
   };
 
-  handleChangeComplete = color => {
+  handleChangeComplete = (color) => {
     this.props.onChangeComplete(color.hex);
   };
 
@@ -71,7 +71,7 @@ export class ColorPicker extends React.Component {
               width: 25,
               borderRadius: "50%",
               backgroundColor: this.state.color,
-              border: "none"
+              border: "none",
             }}
           />
         </div>
@@ -96,7 +96,8 @@ export class ColorPicker extends React.Component {
 
 ColorPicker.propTypes = {
   onChange: PropTypes.func,
-  onChangeComplete: PropTypes.func
-}
+  onChangeComplete: PropTypes.func,
+  color: PropTypes.string,
+};
 
 export default withStyles(styles)(ColorPicker);

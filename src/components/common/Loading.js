@@ -1,5 +1,5 @@
 import React from "react";
-import { ClipLoader } from "react-spinners";
+import { MoonLoader } from "react-spinners";
 
 const Loading = () => (
   <div
@@ -8,10 +8,10 @@ const Loading = () => (
       top: "50%",
       left: "50%",
       marginLeft: -75,
-      marginTop: -75
+      marginTop: -75,
     }}
   >
-    <ClipLoader sizeUnit={"px"} size={150} color={"#123abc"} />
+    <MoonLoader />
   </div>
 );
 

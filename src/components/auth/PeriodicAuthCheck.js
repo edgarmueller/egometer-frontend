@@ -1,4 +1,6 @@
+/* eslint-disable no-undef */
 import React from "react";
+import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import jwtDecode from "jwt-decode";
 import { logout } from "../../actions";
@@ -50,11 +52,17 @@ class PeriodicAuthCheck extends React.Component {
   }
 }
 
+PeriodicAuthCheck.propTypes = {
+  token: PropTypes.string,
+  loginPath: PropTypes.string,
+  logout: PropTypes.func,
+};
+
 const mapStateToProps = (state) => ({
   token: state.user.token,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = () => ({
   logout,
 });
 

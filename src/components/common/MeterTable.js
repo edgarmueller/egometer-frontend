@@ -12,7 +12,6 @@ import { pad } from "../../common/date";
 import { createColor, getProgressColor } from "../../common/color";
 import DefaultTableRowRenderer from "../cells/DefaultTableRowRenderer";
 import { findBySchemaId } from "../../utils";
-import { calcWeeklyProgress } from "../../common/progress";
 
 const HEADER_HEIGHT = 60;
 const OVERSCAN_ROW_COUNT = 10;
@@ -201,6 +200,8 @@ class MeterTable extends React.Component {
 
     return (
       <Table
+        // TODO
+        // eslint-disable-next-line react/no-string-refs
         ref="Table"
         headerClassName={styles.headerColumn}
         headerHeight={HEADER_HEIGHT}
@@ -230,6 +231,9 @@ MeterTable.propTypes = {
   widgets: PropTypes.array,
   width: PropTypes.number.isRequired,
   style: PropTypes.object,
+  calcProgress: PropTypes.func,
+  schemas: PropTypes.object,
+  classes: PropTypes.object,
 };
 
 export default withStyles(additonalStyles)(MeterTable);

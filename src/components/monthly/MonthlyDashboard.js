@@ -16,7 +16,6 @@ import {
   isSchemasLoading,
   isMetersLoading,
   getEntriesByMeter,
-  getProgressByMeter,
 } from "../../reducers";
 import widgets from "../../widgets";
 import ErrorSnackbar from "../common/ErrorSnackbar";
@@ -79,7 +78,6 @@ export class MonthlyDashboard extends React.Component {
       history,
       isLoading,
       entriesByMeter,
-      progressByMeter,
       meters,
       ...otherProps
     } = this.props;
@@ -126,7 +124,6 @@ export class MonthlyDashboard extends React.Component {
             findBySchemaId={this.findSchema}
             meters={meters}
             entriesByMeter={entriesByMeter}
-            progressByMeter={progressByMeter}
             schemas={otherProps.schemas}
             {...otherProps}
           />
@@ -138,6 +135,7 @@ export class MonthlyDashboard extends React.Component {
             meters={meters}
             widgets={widgets}
             widgetType="month"
+            // eslint-disable-next-line no-undef
             width={window.innerWidth / 2}
           />
         </div>
@@ -149,6 +147,7 @@ export class MonthlyDashboard extends React.Component {
 MonthlyDashboard.propTypes = {
   meters: PropTypes.array,
   widgets: PropTypes.array,
+  match: PropTypes.object,
 };
 
 MonthlyDashboard.defaultProps = {
@@ -163,7 +162,6 @@ const mapStateToProps = (state) => {
       isSchemasLoading(state),
     meters: getMeters(state),
     entriesByMeter: getEntriesByMeter(state),
-    progressByMeter: getProgressByMeter(state),
     schemas: getSchemas(state),
     error: getMeterError(state) || getSchemaError(state),
   };
@@ -182,6 +180,8 @@ MonthlyDashboard.propTypes = {
   entriesByMeter: PropTypes.object.isRequired,
   schemas: PropTypes.array.isRequired,
   error: PropTypes.string,
+  classes: PropTypes.object,
+  history: PropTypes.object,
 };
 
 MonthlyDashboard.defaultProps = {

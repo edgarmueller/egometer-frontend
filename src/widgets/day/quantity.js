@@ -9,14 +9,14 @@ import { isEnum } from "../../common/testers";
 import {
   literalLabelProvider,
   withImages,
-  withLabels
+  withLabels,
 } from "../../components/widgets/util";
 
 const quantityLabels = withLabels(
   literalLabelProvider({
     none: "None",
     a_bit: "A bit",
-    a_lot: "A lot"
+    a_lot: "A lot",
   })
 );
 
@@ -44,8 +44,8 @@ export const quantityEnumWidget = {
   month: undefined,
   cell: quantityLabels(quantityImages(EnumCell)),
   // TODO: also check for enum? why do we need this at all?
-  isApplicable: s => (isEnum(s) ? 1 : -1),
-  h: 1
+  isApplicable: (s) => (isEnum(s) ? 1 : -1),
+  h: 1,
 };
 
 export default quantityEnumWidget;

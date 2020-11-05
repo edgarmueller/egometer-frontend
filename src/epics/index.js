@@ -42,7 +42,7 @@ export function fetchSchemasEpic(action$, store, deps) {
   );
 }
 
-export function fetchMetersEpic(action$, store, deps) {
+export function fetchMetersEpic(action$, _store, deps) {
   return action$.ofType(FETCH_METERS_REQUEST).flatMap(() =>
     Observable.fromPromise(
       deps.api.fetchMeters().then(
@@ -53,7 +53,7 @@ export function fetchMetersEpic(action$, store, deps) {
   );
 }
 
-export function fetchAllAfterLogin(action$, store, deps) {
+export function fetchAllAfterLogin(action$) {
   return action$.ofType(USER_LOGIN_SUCCESS).flatMap(() => [
     // fetch everything initially
     { type: FETCH_SCHEMAS_REQUEST },

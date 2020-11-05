@@ -8,8 +8,8 @@ const StringWidget = {
   week: undefined,
   month: undefined,
   cell: StringCell,
-  isApplicable: s => (isString(s) ? 1 : -1),
-  h: 1
+  isApplicable: (s) => (isString(s) ? 1 : -1),
+  h: 1,
 };
 
 export default StringWidget;

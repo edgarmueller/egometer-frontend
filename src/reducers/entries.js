@@ -94,7 +94,7 @@ export default (state = initialState, action) => {
           return acc;
         }, {}),
       };
-    case UPDATE_ENTRY_SUCCESS:
+    case UPDATE_ENTRY_SUCCESS: {
       const e = action.entry;
       if (_.has(state.entries, e.meterId)) {
         const meterEntries = state.entries[e.meterId];
@@ -121,7 +121,8 @@ export default (state = initialState, action) => {
           },
         };
       }
-    case DELETE_METER_SUCCESS:
+    }
+    case DELETE_METER_SUCCESS: {
       const { meterId } = action;
       if (_.has(state.entries, meterId)) {
         const clonedState = _.cloneDeep(state.entries);
@@ -132,6 +133,7 @@ export default (state = initialState, action) => {
         };
       }
       return state;
+    }
     default:
       return state;
   }

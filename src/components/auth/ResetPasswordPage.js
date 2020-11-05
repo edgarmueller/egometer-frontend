@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { resetPassword, validateToken } from "../../api";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button/Button";
@@ -85,17 +86,15 @@ class ResetPasswordPage extends React.Component {
   };
 
   handleFormSubmit = async (currentPassword, newPassword, token) => {
-    console.log("handleFormSubmit");
     this.setState({ isLoading: true });
     try {
-      const resp = await resetPassword(currentPassword, newPassword, token);
+      await resetPassword(currentPassword, newPassword, token);
       this.setState({
         isLoading: false,
         success: true,
         error: undefined,
       });
     } catch (error) {
-      console.log("error", error);
       this.setState({
         isLoading: false,
         success: false,
@@ -176,5 +175,10 @@ class ResetPasswordPage extends React.Component {
     );
   }
 }
+
+ResetPasswordPage.propTypes = {
+  match: PropTypes.object,
+  classes: PropTypes.object,
+};
 
 export default withStyles(styles)(ResetPasswordPage);

@@ -18,6 +18,7 @@ import Radium from "radium";
 import { Hidden } from "@material-ui/core";
 import Ionicon from "react-ionicons";
 import get from "lodash/get";
+import LinkButton from "../LinkButton";
 
 import widgets from "../../widgets";
 import { getSchemas } from "../../reducers";
@@ -25,19 +26,6 @@ import { logo } from "../../common/styles";
 import { withStyles } from "@material-ui/styles";
 
 export const RadiumLink = Radium(Link);
-
-export const LinkButton = ({ link, label, currentRoute }) => (
-  <Button
-    component={RadiumLink}
-    to={link}
-    style={{
-      backgroundColor: currentRoute === link ? "rgb(65, 102, 170, 0.5)" : null,
-      color: currentRoute === link ? "#fff" : null,
-    }}
-  >
-    {label}
-  </Button>
-);
 
 export const Nav = ({ classes, logout, location, history, isAdmin }) => {
   const [currentRoute, setRoute] = useState(location.pathname);
@@ -70,7 +58,7 @@ export const Nav = ({ classes, logout, location, history, isAdmin }) => {
             <ExtensionIcon />
           </ListItemIcon>
           <LinkButton
-            link="/schemas"
+            to="/schemas"
             label="Schemas"
             currentRoute={currentRoute}
           />
@@ -81,11 +69,7 @@ export const Nav = ({ classes, logout, location, history, isAdmin }) => {
           <ListItemIcon>
             <CalendarViewDayIcon />
           </ListItemIcon>
-          <LinkButton
-            link="/matrix"
-            label="Month"
-            currentRoute={currentRoute}
-          />
+          <LinkButton to="/matrix" label="Month" currentRoute={currentRoute} />
         </ListItem>
       </Hidden>
       <Hidden xsDown>
@@ -93,24 +77,20 @@ export const Nav = ({ classes, logout, location, history, isAdmin }) => {
           <ListItemIcon>
             <CalendarTodayIcon />
           </ListItemIcon>
-          <LinkButton link="/weekly" label="Week" currentRoute={currentRoute} />
+          <LinkButton to="/weekly" label="Week" currentRoute={currentRoute} />
         </ListItem>
       </Hidden>
       <ListItem>
         <ListItemIcon>
           <TodayIcon />
         </ListItemIcon>
-        <LinkButton
-          link="/dashboard"
-          label="Today"
-          currentRoute={currentRoute}
-        />
+        <LinkButton to="/dashboard" label="Today" currentRoute={currentRoute} />
       </ListItem>
       <ListItem>
         <ListItemIcon>
           <BallotIcon />
         </ListItemIcon>
-        <LinkButton link="/meters" label="Meters" currentRoute={currentRoute} />
+        <LinkButton to="/meters" label="Meters" currentRoute={currentRoute} />
       </ListItem>
       <Divider />
       <ListItem>

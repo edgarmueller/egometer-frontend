@@ -8,54 +8,54 @@ import WithLayout from "./common/WithLayout";
 import {
   userIsAuthenticated,
   userIsAdminRedir,
-  userIsNotAuthenticated
+  userIsNotAuthenticated,
 } from "../common/auth";
 import Loading from "./common/Loading";
 import PeriodicAuthCheck from "../components/auth/PeriodicAuthCheck";
 
-const ConnectedSwitch = connect(state => ({
-  location: state.router.location
+const ConnectedSwitch = connect((state) => ({
+  location: state.router.location,
 }))(Switch);
 
 const AsyncLoginPage = Loadable({
   loader: () => import("./auth/LoginPage"),
-  loading: Loading
+  loading: Loading,
 });
 const AsyncSignUpPage = Loadable({
   loader: () => import("./auth/SignUpPage"),
-  loading: Loading
+  loading: Loading,
 });
 const AsyncActivedAccountPage = Loadable({
   loader: () => import("./auth/ActivatedAccountPage"),
-  loading: Loading
+  loading: Loading,
 });
 const AsyncRecoverPasswordPage = Loadable({
   loader: () => import("./auth/RecoverPasswordPage"),
-  loading: Loading
+  loading: Loading,
 });
 const AsyncResetPasswordPage = Loadable({
   loader: () => import("./auth/ResetPasswordPage"),
-  loading: Loading
+  loading: Loading,
 });
 const AsyncDailyDashboard = Loadable({
   loader: () => import("../components/daily/DailyDashboard"),
-  loading: Loading
+  loading: Loading,
 });
 const AsyncSchemaList = Loadable({
   loader: () => import("../components/schemas/SchemaList"),
-  loading: Loading
+  loading: Loading,
 });
 const AsyncMeterList = Loadable({
   loader: () => import("../components/meters/MeterList"),
-  loading: Loading
+  loading: Loading,
 });
 const AsycnMonthlyDashboard = Loadable({
   loader: () => import("../components/monthly/MonthlyDashboard"),
-  loading: Loading
+  loading: Loading,
 });
 const AsycnWeeklyDashboard = Loadable({
   loader: () => import("../components/weekly/WeeklyDashboard"),
-  loading: Loading
+  loading: Loading,
 });
 
 export const App = () => {
@@ -120,7 +120,7 @@ export const App = () => {
           component={userIsAuthenticated(WithLayout(AsyncDailyDashboard))}
         />
       </ConnectedSwitch>
-      <PeriodicAuthCheck loginPath='/login'/>
+      <PeriodicAuthCheck loginPath="/login" />
     </div>
   );
 };

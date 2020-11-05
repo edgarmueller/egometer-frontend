@@ -9,25 +9,25 @@ import {
   YAxis,
   HorizontalGridLines,
   VerticalGridLines,
-  VerticalBarSeries
+  VerticalBarSeries,
 } from "react-vis";
 import { findByDate } from "../../common/date";
 import { green, red } from "../../common/color";
 
 const Stats = ({ meter, values }) => {
-  const nonZeros = values.filter(x => x > 0);
+  const nonZeros = values.filter((x) => x > 0);
   const avg = _.round(_.sum(values) / nonZeros.length, 2);
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center"
+        justifyContent: "center",
       }}
     >
       <span
         style={{
-          color: isNaN(avg) ? null : avg >= meter.dailyGoal ? green : red
+          color: isNaN(avg) ? null : avg >= meter.dailyGoal ? green : red,
         }}
       >
         <strong>Average</strong>: {_.isNaN(avg) ? "N/A" : avg}
@@ -44,7 +44,7 @@ const Stats = ({ meter, values }) => {
 
 Stats.propTypes = {
   meter: PropTypes.object.isRequired,
-  values: PropTypes.array
+  values: PropTypes.array,
 };
 
 class NumberBarChart extends React.Component {
@@ -64,14 +64,14 @@ class NumberBarChart extends React.Component {
       const entry = findByDate(data, d.getDate());
       return {
         x: i,
-        y: entry ? entry.value : 0
+        y: entry ? entry.value : 0,
       };
     });
-    const labels = days.map(day => day.getDate().toString());
+    const labels = days.map((day) => day.getDate().toString());
 
     return (
       <div style={{ display: "flex" }}>
-        <Stats meter={meter} values={values.map(({ x, y }) => y)} />
+        <Stats meter={meter} values={values.map(({ y }) => y)} />
         <XYPlot width={width} height={250} color="#20211f">
           <HorizontalGridLines />
           <VerticalGridLines />
@@ -93,17 +93,19 @@ class NumberBarChart extends React.Component {
 NumberBarChart.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.number
+      value: PropTypes.number,
     })
   ),
   days: PropTypes.array.isRequired,
   schema: PropTypes.shape({
-    enum: PropTypes.array
-  }).isRequired
+    enum: PropTypes.array,
+  }).isRequired,
+  meter: PropTypes.object,
+  width: PropTypes.number,
 };
 
 NumberBarChart.defaultProps = {
-  data: []
+  data: [],
 };
 
 export default NumberBarChart;

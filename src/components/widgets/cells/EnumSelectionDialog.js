@@ -14,19 +14,19 @@ const styles = {
     margin: "0.5em",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   dialogTitle: {
     padding: "10px",
     margin: "0 auto",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   closeGridItem: {
-    paddingTop: "1em"
-  }
+    paddingTop: "1em",
+  },
 };
 
-const isSelected = selected => value => selected.includes(value);
+const isSelected = (selected) => (value) => selected.includes(value);
 
 class EnumSelectionPanel extends React.PureComponent {
   render() {
@@ -38,13 +38,12 @@ class EnumSelectionPanel extends React.PureComponent {
       schema,
       labelProvider,
       onClose,
-      selected
+      selected,
     } = this.props;
-    const labelToLiteralMapping = schema.enum.map(literal => [
+    const labelToLiteralMapping = schema.enum.map((literal) => [
       labelProvider(literal),
-      literal
+      literal,
     ]);
-
 
     return (
       <Grid container justify={"center"}>
@@ -79,6 +78,17 @@ class EnumSelectionPanel extends React.PureComponent {
   }
 }
 
+EnumSelectionPanel.propTypes = {
+  classes: PropTypes.object,
+  color: PropTypes.string,
+  imageProvider: PropTypes.func,
+  labelProvider: PropTypes.func,
+  onClose: PropTypes.func,
+  onSelect: PropTypes.func,
+  schema: PropTypes.object,
+  selected: PropTypes.bool,
+};
+
 class EnumSelectionDialog extends React.PureComponent {
   render() {
     const {
@@ -91,7 +101,7 @@ class EnumSelectionDialog extends React.PureComponent {
       labelProvider,
       selected,
       onClose,
-      onSelect
+      onSelect,
     } = this.props;
     return (
       <Dialog open={open} onClose={onClose}>
@@ -116,7 +126,16 @@ class EnumSelectionDialog extends React.PureComponent {
 }
 
 EnumSelectionDialog.propTypes = {
-  selected: PropTypes.array.isRequired
-}
+  selected: PropTypes.array.isRequired,
+  classes: PropTypes.object,
+  onClose: PropTypes.func,
+  onSelect: PropTypes.func,
+  open: PropTypes.bool,
+  date: PropTypes.string,
+  color: PropTypes.string,
+  imageProvider: PropTypes.func,
+  labelProvider: PropTypes.func,
+  schema: PropTypes.object,
+};
 
 export default withStyles(styles)(EnumSelectionDialog);

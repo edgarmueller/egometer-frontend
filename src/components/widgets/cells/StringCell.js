@@ -7,6 +7,7 @@ import DialogTitle from "@material-ui/core/DialogTitle/DialogTitle";
 import Button from "@material-ui/core/Button/Button";
 import DialogContent from "@material-ui/core/DialogContent/DialogContent";
 import TextField from "@material-ui/core/TextField";
+import PropTypes from "prop-types";
 import ConnectedComponent from "../../../components/common/ConnectedComponent";
 
 const styles = {
@@ -22,12 +23,12 @@ const styles = {
     fontSize: "1.5em",
     "&:hover": {
       backgroundColor: "rgb(65, 102, 170, 0.5)",
-      color: "#fff"
-    }
+      color: "#fff",
+    },
   },
   dialogTitle: {
-    padding: "10px"
-  }
+    padding: "10px",
+  },
 };
 
 export const StringCell = ({
@@ -36,7 +37,7 @@ export const StringCell = ({
   date,
   meterId,
   color,
-  isLoading
+  isLoading,
 }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -53,7 +54,7 @@ export const StringCell = ({
           <div
             className={classes.stringCell}
             style={{
-              backgroundColor: color
+              backgroundColor: color,
             }}
             onClick={() => {
               if (open) {
@@ -107,6 +108,15 @@ export const StringCell = ({
       )}
     </ConnectedComponent>
   );
+};
+
+StringCell.propTypes = {
+  isLoading: PropTypes.bool,
+  classes: PropTypes.object,
+  data: PropTypes.any,
+  meterId: PropTypes.string,
+  color: PropTypes.string,
+  date: PropTypes.string,
 };
 
 export default compose(withStyles(styles))(React.memo(StringCell));

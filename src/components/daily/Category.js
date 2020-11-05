@@ -8,8 +8,8 @@ const styles = {
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
-    marginBottom: "0.5em"
-  }
+    marginBottom: "0.5em",
+  },
 };
 
 const Category = ({
@@ -18,7 +18,7 @@ const Category = ({
   findBySchemaName,
   handleSubmit,
   drawTitle,
-  widgets
+  widgets,
 }) => {
   if (widgets.length === 0) {
     return null;
@@ -30,16 +30,16 @@ const Category = ({
       <div
         style={{
           display: "flex",
-          justifyContent: "center"
+          justifyContent: "center",
         }}
       >
         <div
           style={{
             display: "flex",
-            flexWrap: "wrap"
+            flexWrap: "wrap",
           }}
         >
-          {widgets.map(widget => (
+          {widgets.map((widget) => (
             <IconButtonWithLabel
               key={widget.name}
               label={widget.label}
@@ -61,15 +61,17 @@ const Category = ({
 };
 
 Category.propTypes = {
-  widgets: PropTypes.array.isRequired, // TODO: use prop-types
-  schemas: PropTypes.array, // TODO: use schema prop-types once available
+  widgets: PropTypes.array.isRequired,
+  schemas: PropTypes.array,
   findBySchemaName: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  drawTitle: PropTypes.bool
+  drawTitle: PropTypes.bool,
+  classes: PropTypes.object,
+  category: PropTypes.object,
 };
 
 Category.defaultProps = {
-  schemas: []
+  schemas: [],
 };
 
 export default withStyles(styles)(Category);

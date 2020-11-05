@@ -23,7 +23,7 @@ class RecoverPasswordPage extends React.Component {
     }
     this.setState({ isLoading: true });
     recoverPassword(mail).then(
-      (resp) => {
+      () => {
         this.setState({
           isLoading: false,
           success: true,

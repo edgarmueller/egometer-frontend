@@ -9,14 +9,7 @@ import { mapDispatchToCrudMethodProps } from "../utils/redux-mappers";
 
 export class MatrixContainer extends React.Component {
   render() {
-    const {
-      days,
-      meters,
-      child,
-      schemas,
-      entriesByMeter,
-      progressByMeter
-    } = this.props;
+    const { days, meters, child, schemas, entriesByMeter } = this.props;
     const { widgets, deleteEntry, updateEntry } = this.props;
     const colorMapping = meters.reduce((acc, m) => {
       acc[m.name] = m.color;
@@ -27,13 +20,12 @@ export class MatrixContainer extends React.Component {
       <MeterContext.Provider
         value={{
           updateEntry,
-          deleteEntry
+          deleteEntry,
         }}
       >
         <Child
           widgets={widgets}
           entriesByMeter={entriesByMeter}
-          progressByMeter={progressByMeter}
           days={days}
           meters={meters}
           schemas={schemas}
@@ -44,20 +36,24 @@ export class MatrixContainer extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const meters = getMeters(state);
 
   return {
     isLoading: state.entries.loadingStatus.isLoading,
-    meters
+    meters,
   };
 };
 
 MatrixContainer.propTypes = {
-  // TODO: schemas, meters
-  //const { meters, child, schemas, entries } = this.props;
-  //const { widgets, deleteEntry, updateEntry } = this.props;
-  days: PropTypes.array.isRequired
+  meters: PropTypes.array,
+  days: PropTypes.array.isRequired,
+  deleteEntry: PropTypes.func,
+  updateEntry: PropTypes.func,
+  widgets: PropTypes.array,
+  schemas: PropTypes.array,
+  entriesByMeter: PropTypes.object,
+  child: PropTypes.node,
 };
 
 export default compose(

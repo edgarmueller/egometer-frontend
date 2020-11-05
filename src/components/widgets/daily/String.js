@@ -7,12 +7,12 @@ import TitleBar from "./TitleBar";
 
 export class DailyString extends React.Component {
   state = {
-    initialized: false
+    initialized: false,
   };
 
   render() {
     const { date, data, meter, isLoading, icon } = this.props;
-    const entry = _.find(data, d => d.date === date);
+    const entry = _.find(data, (d) => d.date === date);
 
     return (
       <ConnectedComponent
@@ -29,7 +29,7 @@ export class DailyString extends React.Component {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                boxSizing: "border-box"
+                boxSizing: "border-box",
               }}
             >
               <TitleBar meter={meter} icon={icon} />
@@ -41,7 +41,7 @@ export class DailyString extends React.Component {
                 onChange={updateValue}
                 onBlur={submitEntry}
                 style={{
-                  flexGrow: 1
+                  flexGrow: 1,
                 }}
               />
             </div>
@@ -58,7 +58,8 @@ DailyString.propTypes = {
   date: PropTypes.any.isRequired,
   width: PropTypes.number,
   height: PropTypes.number,
-  isLoading: PropTypes.bool.isRequired
+  isLoading: PropTypes.bool.isRequired,
+  icon: PropTypes.node,
 };
 
 export default DailyString;

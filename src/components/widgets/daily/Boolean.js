@@ -9,11 +9,11 @@ import { meterTitle, underline } from "../../../common/styles";
 
 const styles = {
   meterTitle,
-  underline
+  underline,
 };
 
 const Boolean = ({ meter, date, data, isLoading, icon }) => {
-  const entry = _.find(data, d => d.date === date);
+  const entry = _.find(data, (d) => d.date === date);
 
   return (
     <ConnectedComponent
@@ -22,7 +22,7 @@ const Boolean = ({ meter, date, data, isLoading, icon }) => {
       data={entry}
       date={date}
       updateOnChange
-      fromEvent={x => x}
+      fromEvent={(x) => x}
     >
       {({ updateValue, data: checked }) => {
         return (
@@ -45,11 +45,11 @@ Boolean.propTypes = {
   data: PropTypes.array.isRequired,
   updateEntry: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  icon: PropTypes.node
+  icon: PropTypes.node,
 };
 
 Boolean.defaultProps = {
-  icon: null
+  icon: null,
 };
 
 export default withStyles(styles)(Boolean);

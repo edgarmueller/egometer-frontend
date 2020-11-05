@@ -71,11 +71,15 @@ class EnumRenderer extends Component {
 }
 
 EnumRenderer.propTypes = {
-  schema: PropTypes.shape({
-    items: PropTypes.object,
-  }).isRequired,
+  schema: PropTypes.object,
   labelProvider: PropTypes.func,
   imageProvider: PropTypes.func,
+  isSelected: PropTypes.bool,
+  meter: PropTypes.object,
+  updateEntry: PropTypes.func,
+  icon: PropTypes.node,
+  width: PropTypes.number,
+  height: PropTypes.number,
 };
 
 EnumRenderer.defaultProps = {

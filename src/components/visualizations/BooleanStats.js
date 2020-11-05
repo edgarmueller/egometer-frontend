@@ -1,10 +1,11 @@
 import React, { Fragment } from "react";
 import moment from "moment";
 import sortBy from "lodash/sortBy";
+import PropTypes from "prop-types";
 import { lastDayOfMonth } from "../../common/date";
 
-const calcStreak = data => {
-  const sorted = sortBy(data, e => moment(e.date, "YYYY-MM-DD").toDate());
+const calcStreak = (data) => {
+  const sorted = sortBy(data, (e) => moment(e.date, "YYYY-MM-DD").toDate());
   const streak = sorted.reduce(
     ({ longest, current, prevDate }, { date, value }) => {
       const day = moment(date, "YYYY-MM-DD").date();
@@ -26,7 +27,7 @@ const calcStreak = data => {
   return streak.longest;
 };
 
-const BooleanStats = ({ data, days, meter, width }) => {
+const BooleanStats = ({ data, days }) => {
   if (!data) {
     return <div>No data</div>;
   }
@@ -43,6 +44,11 @@ const BooleanStats = ({ data, days, meter, width }) => {
       </div>
     </Fragment>
   );
+};
+
+BooleanStats.propTypes = {
+  days: PropTypes.array,
+  data: PropTypes.array,
 };
 
 export default BooleanStats;

@@ -19,9 +19,9 @@ const styles = {
     fontWeight: 700,
     "&:hover": {
       backgroundColor: "rgb(65, 102, 170, 0.5)",
-      color: "#fff"
+      color: "#fff",
     },
-  }
+  },
 };
 
 class EnumCellRenderer extends React.Component {
@@ -29,7 +29,7 @@ class EnumCellRenderer extends React.Component {
     super(props);
     this.state = {
       open: false,
-      selected: this.props.singleSelection ? [props.data] : props.data || []
+      selected: this.props.singleSelection ? [props.data] : props.data || [],
     };
     this.handleOnOpenClick = this.handleOnOpenClick.bind(this);
   }
@@ -41,19 +41,21 @@ class EnumCellRenderer extends React.Component {
     this.setState({ open: true });
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps) {
     if (
       (this.props.date && prevProps.date !== this.props.date) ||
-      (!_.isEqual(this.props.data, prevProps.data)) ||
+      !_.isEqual(this.props.data, prevProps.data) ||
       (prevProps.isLoading && !this.props.isLoading)
     ) {
       this.setState({
-        selected: this.props.singleSelection ? [this.props.data] : this.props.data
+        selected: this.props.singleSelection
+          ? [this.props.data]
+          : this.props.data,
       });
     }
   }
 
-  handleClick = value => ev => {
+  handleClick = (value) => () => {
     const { updateEntry, closeOnSelect } = this.props;
     let selected;
     if (this.props.singleSelection) {
@@ -70,7 +72,7 @@ class EnumCellRenderer extends React.Component {
     updateEntry(value);
     this.setState({
       open: !closeOnSelect,
-      selected
+      selected,
     });
   };
 
@@ -85,7 +87,7 @@ class EnumCellRenderer extends React.Component {
       color,
       showImage,
       date,
-      data
+      data,
     } = this.props;
 
     if (_.isEmpty(schema)) {
@@ -100,13 +102,11 @@ class EnumCellRenderer extends React.Component {
           style={{ backgroundColor: color }}
           onClick={this.handleOnOpenClick}
         >
-          {
-            showImage
-              ? imageProvider
-                ? imageProvider(color, false, data)
-                : label
-              : null
-          }
+          {showImage
+            ? imageProvider
+              ? imageProvider(color, false, data)
+              : label
+            : null}
         </div>
         <EnumSelectionDialog
           schema={schema}
@@ -126,12 +126,21 @@ class EnumCellRenderer extends React.Component {
 
 EnumCellRenderer.propTypes = {
   labelProvider: PropTypes.func.isRequired,
+  imageProvider: PropTypes.func.isRequired,
+  closeOnSelect: PropTypes.func.isRequired,
   showImage: PropTypes.bool,
-  singleSelection: PropTypes.bool
+  isLoading: PropTypes.bool,
+  singleSelection: PropTypes.bool,
+  classes: PropTypes.object,
+  updateEntry: PropTypes.func,
+  schema: PropTypes.object,
+  color: PropTypes.string,
+  date: PropTypes.string,
+  data: PropTypes.string,
 };
 
 EnumCellRenderer.defaultProps = {
-  showImage: true
+  showImage: true,
 };
 
 export default compose(withStyles(styles))(EnumCellRenderer);

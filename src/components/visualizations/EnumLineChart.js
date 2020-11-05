@@ -9,7 +9,7 @@ import {
   YAxis,
   HorizontalGridLines,
   VerticalGridLines,
-  LineSeries
+  LineSeries,
 } from "react-vis";
 import { findByDate } from "../../common/date";
 
@@ -30,10 +30,10 @@ class EnumLineChart extends React.Component {
       const entry = findByDate(data, d.getDate());
       return {
         x: i,
-        y: entry ? reversed.indexOf(entry.value) : 0
+        y: entry ? reversed.indexOf(entry.value) : 0,
       };
     });
-    const labels = days.map(day => day.getDate().toString());
+    const labels = days.map((day) => day.getDate().toString());
 
     const offset = 100;
     return (
@@ -48,7 +48,7 @@ class EnumLineChart extends React.Component {
           />
           <YAxis
             title={meter.name}
-            tickFormat={i => labelProvider(reversed[i])}
+            tickFormat={(i) => labelProvider(reversed[i])}
           />
           <LineSeries data={values} color="#20211f" />
         </XYPlot>
@@ -60,7 +60,7 @@ class EnumLineChart extends React.Component {
 EnumLineChart.propTypes = chartPropTypes;
 
 EnumLineChart.defaultProps = {
-  data: []
+  data: [],
 };
 
 export default EnumLineChart;

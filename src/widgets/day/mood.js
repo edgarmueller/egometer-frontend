@@ -12,7 +12,7 @@ import EnumCell from "../../components/widgets/cells/EnumCell";
 import {
   literalLabelProvider,
   withImages,
-  withLabels
+  withLabels,
 } from "../../components/widgets/util";
 import { isEnum, isString } from "../../common/testers";
 
@@ -22,15 +22,15 @@ const labelProvider = withLabels(
     down: "down",
     okayish: "okayish",
     good: "good",
-    dabomb: "superduper"
+    dabomb: "superduper",
   })
 );
 
-export const withMoodImageAndLabelProvider = Component =>
+export const withMoodImageAndLabelProvider = (Component) =>
   withImages((color, isSelected, value) => {
     return withProps({
-      color: isSelected ? color : "black"
-    })(props => {
+      color: isSelected ? color : "black",
+    })(() => {
       switch (value) {
         case "dabomb":
           return (
@@ -78,7 +78,7 @@ export const MoodMeter = {
   week: labelProvider(EnumLineChart),
   month: labelProvider(EnumLineChart),
   cell: withMoodImageAndLabelProvider(EnumCell),
-  isApplicable: schema => (isString(schema) && isEnum(schema) ? 2 : -1),
+  isApplicable: (schema) => (isString(schema) && isEnum(schema) ? 2 : -1),
 };
 
 export default MoodMeter;

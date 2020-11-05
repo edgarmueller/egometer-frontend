@@ -12,7 +12,7 @@ import red from "@material-ui/core/colors/red";
 import PropTypes from "prop-types";
 import Link from "../Link";
 import { CssBaseline } from "@material-ui/core";
-import { primaryButton, button, joinClasses} from "../../common/styles";
+import { primaryButton, button, joinClasses } from "../../common/styles";
 
 const styles = (theme) => ({
   button,
@@ -116,7 +116,10 @@ export class SignUpForm extends React.Component {
             />
           </Grid>
           <Grid item xs={4}>
-            <Button className={joinClasses(classes.button, classes.primaryButton)} onClick={handleSubmit}>
+            <Button
+              className={joinClasses(classes.button, classes.primaryButton)}
+              onClick={handleSubmit}
+            >
               Sign Up
             </Button>
           </Grid>
@@ -130,12 +133,12 @@ export class SignUpForm extends React.Component {
 }
 
 SignUpForm.propTypes = {
+  classes: PropTypes.object,
   handleSubmit: PropTypes.func.isRequired,
   handleUpdateName: PropTypes.func.isRequired,
   handleUpdateEmail: PropTypes.func.isRequired,
   handleUpdatePassword: PropTypes.func.isRequired,
   handleUpdateConfirmationPassword: PropTypes.func.isRequired,
-  classes: PropTypes.shape({}).isRequired,
   errors: PropTypes.shape({
     message: PropTypes.string,
     name: PropTypes.string,

@@ -11,11 +11,11 @@ const styles = {
     paddingBottom: 5,
     paddingLeft: 5,
     paddingRight: 5,
-    flexWrap: "wrap"
+    flexWrap: "wrap",
   },
   label: {
-    fontSize: 10
-  }
+    fontSize: 10,
+  },
 };
 
 class IconButtonWithLabel extends React.Component {
@@ -35,11 +35,12 @@ class IconButtonWithLabel extends React.Component {
 IconButtonWithLabel.propTypes = {
   label: PropTypes.string.isRequired,
   icon: PropTypes.node,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  classes: PropTypes.object,
 };
 
 IconButtonWithLabel.defaultProps = {
-  onSubmit: () => {}
+  onSubmit: () => {},
 };
 
 export default withStyles(styles)(IconButtonWithLabel);

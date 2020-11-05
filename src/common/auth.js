@@ -9,19 +9,19 @@ const locationHelper = locationHelperBuilder({});
 
 // export const userIsAuthenticated = connectedAuthWrapper(userIsAuthenticatedDefaults)
 export const userIsAuthenticated = connectedRouterRedirect({
-  authenticatedSelector: state => state.user.isAuthenticated,
-  authenticatingSelector: state => state.user.isLoading,
+  authenticatedSelector: (state) => state.user.isAuthenticated,
+  authenticatingSelector: (state) => state.user.isLoading,
   wrapperDisplayName: "UserIsAuthenticated",
   AuthenticatingComponent: <LoginPage />,
-  redirectPath: "/login"
+  redirectPath: "/login",
 });
 
 export const userIsAdminRedir = connectedRouterRedirect({
   redirectPath: "/",
   allowRedirectBack: false,
-  authenticatedSelector: state => state.user.isAdmin,
-  predicate: user => user.isAdmin,
-  wrapperDisplayName: "UserIsAdmin"
+  authenticatedSelector: (state) => state.user.isAdmin,
+  predicate: (user) => user.isAdmin,
+  wrapperDisplayName: "UserIsAdmin",
 });
 
 /**
@@ -30,7 +30,7 @@ export const userIsAdminRedir = connectedRouterRedirect({
  */
 export const userIsNotAuthenticated = connectedRouterRedirect({
   // If selector is true, wrapper will not redirect, so we show the page
-  authenticatedSelector: state => state.user.isAuthenticated === false,
+  authenticatedSelector: (state) => state.user.isAuthenticated === false,
   wrapperDisplayName: "UserIsNotAuthenticated",
   // This sends the user either to the query param route if we have one,
   // or to the index page if none is specified and the user is already logged in
@@ -39,10 +39,10 @@ export const userIsNotAuthenticated = connectedRouterRedirect({
   },
   redirectAction: routerActions.replace,
   // This prevents us from adding the query parameter when we send the user away from the login page
-  allowRedirectBack: false
+  allowRedirectBack: false,
 });
 
 export const visibleOnlyAdmin = connectedAuthWrapper({
-  authenticatedSelector: state => state.user !== null && state.user.isAdmin,
-  wrapperDisplayName: "VisibleOnlyAdmin"
+  authenticatedSelector: (state) => state.user !== null && state.user.isAdmin,
+  wrapperDisplayName: "VisibleOnlyAdmin",
 });

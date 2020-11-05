@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { ConnectedRouter } from "react-router-redux";
 import Typography from "typography";
 import grandViewTheme from "typography-theme-grand-view";
-import 'emoji-mart/css/emoji-mart.css'
+import "emoji-mart/css/emoji-mart.css";
 import "./index.css";
 import App from "./components/App";
 import * as serviceWorker from "./serviceWorker";
@@ -16,6 +16,7 @@ import DefaultErrorBoundary from "./components/common/DefaultErrorBoundary";
 const typography = new Typography(grandViewTheme);
 typography.injectStyles();
 
+// eslint-disable-next-line no-undef
 require("dotenv").config();
 
 //if (process.env.NODE_ENV !== "production") {
@@ -35,6 +36,7 @@ ReactDOM.render(
       </DefaultErrorBoundary>
     </ConnectedRouter>
   </Provider>,
+  // eslint-disable-next-line no-undef
   document.getElementById("root")
 );
 

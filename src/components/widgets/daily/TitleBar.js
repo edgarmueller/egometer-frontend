@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Emoji } from 'emoji-mart'
+import { Emoji } from "emoji-mart";
 import { meterTitle, underline } from "../../../common/styles";
 import MeterSettingsDialog from "./MeterSettingsDialog";
 
@@ -13,23 +13,23 @@ const styles = {
     display: "flex",
   },
   settingsButton: {
-    float: "right"
+    float: "right",
   },
   settingsIcon: {
-    fontSize: 20
+    fontSize: 20,
   },
   icon: {
     paddingRight: 10,
     display: "flex",
   },
   container: {
-    minHeight: 44
-  }
+    minHeight: 44,
+  },
 };
 
 class TitleBar extends React.PureComponent {
   state = {
-    openSettings: false
+    openSettings: false,
   };
 
   handleClose = () => {
@@ -47,17 +47,17 @@ class TitleBar extends React.PureComponent {
       <React.Fragment>
         <div className={classes.container}>
           <Grid container alignItems="center">
-            {
-              /*
+            {/*
             <Grid item xs={1}>
               <DragHandle className="drag-handle" />
             </Grid>
-            */
-            }
+            */}
             <Grid item xs={2}>
-              {icon && <span className={classes.icon}>
-                <Emoji emoji={icon} size={24} set='emojione' />
-              </span>}
+              {icon && (
+                <span className={classes.icon}>
+                  <Emoji emoji={icon} size={24} set="emojione" />
+                </span>
+              )}
             </Grid>
             <Grid item xs={10}>
               <div className={classes.meterTitleContainer}>
@@ -70,8 +70,7 @@ class TitleBar extends React.PureComponent {
                 </span>
               </div>
             </Grid>
-            {
-              /*
+            {/*
             <Grid item xs={2}>
               <IconButton
                 aria-label="Settings"
@@ -81,8 +80,7 @@ class TitleBar extends React.PureComponent {
                 <SettingsIcon className={classes.settingsIcon} />
               </IconButton>
             </Grid>
-            */
-            }
+            */}
           </Grid>
         </div>
         <div
@@ -103,11 +101,11 @@ class TitleBar extends React.PureComponent {
 TitleBar.propTypes = {
   classes: PropTypes.object.isRequired,
   meter: PropTypes.object.isRequired,
-  icon: PropTypes.node
+  icon: PropTypes.node,
 };
 
 TitleBar.defaultProps = {
-  icon: null
+  icon: null,
 };
 
 export default withStyles(styles)(TitleBar);

@@ -1,6 +1,7 @@
 import React from "react";
 import { compose } from "redux";
 import * as _ from "lodash";
+import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import ConnectedComponent from "../../../components/common/ConnectedComponent";
 
@@ -17,24 +18,24 @@ const styles = {
     border: "none",
     "&:hover": {
       backgroundColor: "rgb(65, 102, 170, 0.5)",
-      color: "#fff"
-    }
-  }
+      color: "#fff",
+    },
+  },
 };
 
 class NumberInput extends React.PureComponent {
   ref = React.createRef();
 
-  handleOnKeyDown = ev => {
+  handleOnKeyDown = (ev) => {
     this.props.updateValue(ev);
     ev.key === "Enter" && this.ref.current.blur();
   };
 
-  handleOnChange = ev => {
+  handleOnChange = (ev) => {
     this.props.updateValue(ev);
   };
 
-  handleOnBlur = ev => {
+  handleOnBlur = (ev) => {
     this.props.submitEntry(ev);
   };
 
@@ -56,6 +57,15 @@ class NumberInput extends React.PureComponent {
   }
 }
 
+NumberInput.propTypes = {
+  updateValue: PropTypes.func,
+  submitEntry: PropTypes.func,
+  classes: PropTypes.object,
+  data: PropTypes.string,
+  color: PropTypes.string,
+  style: PropTypes.string,
+};
+
 const StyledNumberInput = compose(withStyles(styles))(NumberInput);
 
 const NumberCell = ({ color, date, data, meterId, isLoading, style }) => {
@@ -66,12 +76,21 @@ const NumberCell = ({ color, date, data, meterId, isLoading, style }) => {
       meterId={meterId}
       updateOnChange={false}
       isLoading={isLoading}
-      fromEvent={ev => _.toNumber(ev.target.value)}
+      fromEvent={(ev) => _.toNumber(ev.target.value)}
       shouldDebounce
     >
-      {props => <StyledNumberInput {...props} color={color} style={style} />}
+      {(props) => <StyledNumberInput {...props} color={color} style={style} />}
     </ConnectedComponent>
   );
+};
+
+NumberCell.propTypes = {
+  color: PropTypes.string,
+  date: PropTypes.string,
+  data: PropTypes.string,
+  meterId: PropTypes.string,
+  isLoading: PropTypes.bool,
+  style: PropTypes.object,
 };
 
 export default React.memo(NumberCell);

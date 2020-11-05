@@ -10,30 +10,30 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { connect } from "react-redux";
 import { RESET_ENTRIES_ERROR } from "../../actions";
 
-const styles = theme => ({
+const styles = (theme) => ({
   error: {
     backgroundColor: theme.palette.error.dark,
-    opacity: 0.9
+    opacity: 0.9,
   },
   icon: {
-    fontSize: 20
+    fontSize: 20,
   },
   info: {
-    backgroundColor: theme.palette.primary.dark
+    backgroundColor: theme.palette.primary.dark,
   },
   iconVariant: {
     opacity: 0.9,
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing.unit,
   },
   message: {
     display: "flex",
     alignItems: "center",
-    flexWrap: "wrap"
-  }
+    flexWrap: "wrap",
+  },
 });
 
-const ClientSnackbar = props => {
-  const { classes, className, message, onClose, variant, ...other } = props;
+const ClientSnackbar = (props) => {
+  const { classes, message, onClose, ...other } = props;
   const Icon = ErrorIcon;
 
   return (
@@ -55,13 +55,19 @@ const ClientSnackbar = props => {
           onClick={onClose}
         >
           <CloseIcon className={classes.icon} />
-        </IconButton>
+        </IconButton>,
       ]}
       {...other}
     />
   );
 };
 const StyledSnackbar = withStyles(styles)(ClientSnackbar);
+
+ClientSnackbar.propTypes = {
+  classes: PropTypes.object,
+  message: PropTypes.string,
+  onClose: PropTypes.func,
+};
 
 export const ErrorSnackbar = ({ error, resetError }) => {
   const hasError = error && error.message !== undefined;
@@ -70,13 +76,14 @@ export const ErrorSnackbar = ({ error, resetError }) => {
     <Snackbar
       anchorOrigin={{
         vertical: "top",
-        horizontal: "center"
+        horizontal: "center",
       }}
       open={hasError}
       autoHideDuration={2000}
       onClose={() => resetError()}
     >
-      <StyledSnackbar onClose={() => resetError()}
+      <StyledSnackbar
+        onClose={() => resetError()}
         variant="error"
         message={hasError && error.message}
       />
@@ -86,22 +93,19 @@ export const ErrorSnackbar = ({ error, resetError }) => {
 
 ErrorSnackbar.propTypes = {
   error: PropTypes.object,
-  resetError: PropTypes.func.isRequired
+  resetError: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  error: _.get(state, "entries.error")
+const mapStateToProps = (state) => ({
+  error: _.get(state, "entries.error"),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   resetError() {
     dispatch({
-      type: RESET_ENTRIES_ERROR
+      type: RESET_ENTRIES_ERROR,
     });
-  }
+  },
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ErrorSnackbar);
+export default connect(mapStateToProps, mapDispatchToProps)(ErrorSnackbar);
