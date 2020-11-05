@@ -1,5 +1,11 @@
 import PropTypes from "prop-types";
 
+export const schemaPropType = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  schema: PropTypes.object.isRequired,
+});
+
 export const chartPropTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({

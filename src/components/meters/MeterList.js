@@ -38,6 +38,7 @@ import {
 import { findBySchemaId } from "../../utils";
 import { ErrorSnackbar } from "../common/ErrorSnackbar";
 import AddMeterDrawer from "../common/AddMeterDrawer";
+import { schemaPropType } from "../../prop-types";
 
 const styles = (theme) => ({
   textField: {
@@ -104,7 +105,7 @@ const localMeterReducer = (state, action) => {
   }
 };
 
-export const Meters = ({
+export const MeterList = ({
   classes,
   deleteMeter,
   meters,
@@ -160,7 +161,7 @@ export const Meters = ({
       <Typography variant="h1" className={classes.display1}>
         Manage Meters
       </Typography>
-      <div>
+      <Paper className={classes.root}>
         <Button
           variant="outlined"
           size="small"
@@ -169,15 +170,13 @@ export const Meters = ({
           style={{
             color: "rgb(65, 102, 170)",
             borderRadius: 30,
-            margin: "0.25rem",
+            margin: "0.25em",
           }}
           onClick={() => setDrawerOpen(true)}
         >
           <AddIcon />
-          Meter
+          Add Meter
         </Button>
-      </div>
-      <Paper className={classes.root}>
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
@@ -316,15 +315,15 @@ export const Meters = ({
   );
 };
 
-Meters.propTypes = {
+MeterList.propTypes = {
   classes: PropTypes.object,
   deleteMeter: PropTypes.func,
   meters: PropTypes.array,
   updateMeterRequest: PropTypes.func,
   isMetersLoading: PropTypes.bool,
-  schemas: PropTypes.object,
+  schemas: PropTypes.arrayOf(schemaPropType),
   meterError: PropTypes.object,
-  resetMetersError: PropTypes.object,
+  resetMetersError: PropTypes.func,
   fetchMeters: PropTypes.func,
 };
 
@@ -345,4 +344,4 @@ export default compose(
     fetchMeters,
   }),
   withStyles(styles)
-)(Meters);
+)(MeterList);

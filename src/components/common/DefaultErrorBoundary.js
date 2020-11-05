@@ -61,7 +61,7 @@ class DefaultErrorBoundary extends React.Component {
 
 DefaultErrorBoundary.propTypes = {
   classes: PropTypes.object,
-  children: PropTypes.arrayOf(PropTypes.node),
+  children: PropTypes.node.isRequired,
 };
 
 export default withStyles(styles)(DefaultErrorBoundary);
