@@ -37,24 +37,28 @@ const AsyncResetPasswordPage = Loadable({
   loader: () => import("./auth/ResetPasswordPage"),
   loading: Loading,
 });
+const AsyncProfilePage = Loadable({
+  loader: () => import("./profile/ProfilePage"),
+  loading: Loading,
+});
 const AsyncDailyDashboard = Loadable({
-  loader: () => import("../components/daily/DailyDashboard"),
+  loader: () => import("./daily/DailyDashboard"),
   loading: Loading,
 });
 const AsyncSchemaList = Loadable({
-  loader: () => import("../components/schemas/SchemaList"),
+  loader: () => import("./schemas/SchemaList"),
   loading: Loading,
 });
 const AsyncMeterList = Loadable({
-  loader: () => import("../components/meters/MeterList"),
+  loader: () => import("./meters/MeterList"),
   loading: Loading,
 });
 const AsycnMonthlyDashboard = Loadable({
-  loader: () => import("../components/monthly/MonthlyDashboard"),
+  loader: () => import("./monthly/MonthlyDashboard"),
   loading: Loading,
 });
 const AsycnWeeklyDashboard = Loadable({
-  loader: () => import("../components/weekly/WeeklyDashboard"),
+  loader: () => import("./weekly/WeeklyDashboard"),
   loading: Loading,
 });
 
@@ -114,6 +118,11 @@ export const App = () => {
           exact
           path="/auth/recover/password/:token"
           component={AsyncResetPasswordPage}
+        />
+        <Route
+          exact
+          path="/profile"
+          component={userIsAuthenticated(WithLayout(AsyncProfilePage))}
         />
         <Route
           path="*"

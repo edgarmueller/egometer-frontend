@@ -92,6 +92,12 @@ export const Nav = ({ classes, logout, location, history, isAdmin }) => {
         </ListItemIcon>
         <LinkButton to="/meters" label="Meters" currentRoute={currentRoute} />
       </ListItem>
+      <ListItem>
+        <ListItemIcon>
+          <BallotIcon />
+        </ListItemIcon>
+        <LinkButton to="/profile" label="Profile" currentRoute={currentRoute} />
+      </ListItem>
       <Divider />
       <ListItem>
         <ListItemIcon>

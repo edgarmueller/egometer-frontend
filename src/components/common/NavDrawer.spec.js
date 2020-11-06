@@ -1,5 +1,5 @@
 import React from "react";
-import { configure, mount, shallow } from "enzyme";
+import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
@@ -16,11 +16,11 @@ describe("NavDrawer", () => {
   it("should render logout button when logged in", () => {
     const store = mockStore({
       user: {
-        isAuthenticated: true
+        isAuthenticated: true,
       },
       schemas: {
-        schemas: []
-      }
+        schemas: [],
+      },
     });
     const wrapper = mount(
       <Router>
@@ -33,23 +33,18 @@ describe("NavDrawer", () => {
         </Provider>
       </Router>
     );
-    expect(
-      wrapper
-        .find(ListItem)
-        .last()
-        .text()
-    ).toBe("Logout");
+    expect(wrapper.find(ListItem).last().text()).toBe("Logout");
   });
 
   it("should render schemas link if user is admin", () => {
     const store = mockStore({
       user: {
         isAuthenticated: true,
-        isAdmin: true
+        isAdmin: true,
       },
       schemas: {
-        schemas: []
-      }
+        schemas: [],
+      },
     });
     const wrapper = mount(
       <Router>
@@ -57,15 +52,15 @@ describe("NavDrawer", () => {
           <NavDrawer
             navigateTo={jest.fn()}
             classes={{
-              link: ""
+              link: "",
             }}
             location={{
-              pathname: "weekly"
+              pathname: "weekly",
             }}
           />
         </Provider>
       </Router>
     );
-    expect(wrapper.find(ListItem).length).toBe(5);
+    expect(wrapper.find(ListItem).length).toBe(6);
   });
 });

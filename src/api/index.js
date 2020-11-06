@@ -156,6 +156,21 @@ export const resetPassword = (currentPassword, newPassword, token) => {
   );
 };
 
+export const resetPasswordWithEmail = async (
+  currentPassword,
+  newPassword,
+  email
+) => {
+  const resp = await Axios.post(
+    `${API_BASE_URL}/auth/reset-password`,
+    { currentPassword, newPassword, email },
+    {
+      [contentType]: applicationJson,
+    }
+  );
+  return resp.status === 200;
+};
+
 export const resendVerificationMail = (email) => {
   return Axios.get(`${API_BASE_URL}/auth/resend-verification/${email}`);
 };
