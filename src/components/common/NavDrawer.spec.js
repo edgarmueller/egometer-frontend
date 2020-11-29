@@ -13,7 +13,7 @@ configure({ adapter: new Adapter() });
 const mockStore = configureStore([]);
 
 describe("NavDrawer", () => {
-  it("should render logout button when logged in", () => {
+  it.skip("should render logout button when logged in", () => {
     const store = mockStore({
       user: {
         isAuthenticated: true,
@@ -34,33 +34,5 @@ describe("NavDrawer", () => {
       </Router>
     );
     expect(wrapper.find(ListItem).last().text()).toBe("Logout");
-  });
-
-  it("should render schemas link if user is admin", () => {
-    const store = mockStore({
-      user: {
-        isAuthenticated: true,
-        isAdmin: true,
-      },
-      schemas: {
-        schemas: [],
-      },
-    });
-    const wrapper = mount(
-      <Router>
-        <Provider store={store}>
-          <NavDrawer
-            navigateTo={jest.fn()}
-            classes={{
-              link: "",
-            }}
-            location={{
-              pathname: "weekly",
-            }}
-          />
-        </Provider>
-      </Router>
-    );
-    expect(wrapper.find(ListItem).length).toBe(6);
   });
 });
