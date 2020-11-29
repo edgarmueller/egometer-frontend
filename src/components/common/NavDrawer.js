@@ -9,6 +9,7 @@ import { routerActions } from "react-router-redux";
 import { logout } from "../../actions";
 import Nav from "./Nav";
 import { Hidden } from "@material-ui/core";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const drawerWidth = 180;
 
@@ -21,13 +22,13 @@ const styles = () => ({
 
 export const NavDrawer = ({
   classes,
-  isAuthenticated,
   history,
   location,
   logout,
   isNavOpen,
   closeNav,
 }) => {
+  const { isAuthenticated } = useAuth0();
   if (isAuthenticated) {
     return (
       <Fragment>

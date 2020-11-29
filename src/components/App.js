@@ -1,17 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
+import PropTypes from "prop-types";
 import { Route, Switch } from "react-router";
 import { connect } from "react-redux";
 import Loadable from "react-loadable";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import "./App.css";
 import WithLayout from "./common/WithLayout";
-import {
-  userIsAuthenticated,
-  userIsAdminRedir,
-  userIsNotAuthenticated,
-} from "../common/auth";
 import Loading from "./common/Loading";
 import PeriodicAuthCheck from "../components/auth/PeriodicAuthCheck";
+import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
+import { fetchSchemas, fetchMeters } from "../actions";
 
 const ConnectedSwitch = connect((state) => ({
   location: state.router.location,
@@ -45,10 +43,6 @@ const AsyncDailyDashboard = Loadable({
   loader: () => import("./daily/DailyDashboard"),
   loading: Loading,
 });
-const AsyncSchemaList = Loadable({
-  loader: () => import("./schemas/SchemaList"),
-  loading: Loading,
-});
 const AsyncMeterList = Loadable({
   loader: () => import("./meters/MeterList"),
   loading: Loading,
@@ -62,7 +56,13 @@ const AsycnWeeklyDashboard = Loadable({
   loading: Loading,
 });
 
-export const App = () => {
+export const App = ({ fetchSchemas, fetchMeters }) => {
+  const { isAuthenticated } = useAuth0;
+  useEffect(() => {
+    fetchSchemas();
+    fetchMeters();
+  }, []);
+
   return (
     <div className="App" id="app">
       <CssBaseline />
@@ -70,39 +70,34 @@ export const App = () => {
         <Route
           exact
           path="/login"
-          component={userIsNotAuthenticated(AsyncLoginPage)}
+          component={isAuthenticated ? AsycnWeeklyDashboard : AsyncLoginPage}
         />
-        <Route
-          exact
-          path="/sign-up"
-          component={userIsNotAuthenticated(AsyncSignUpPage)}
-        />
-        <Route
-          exact
-          path="/schemas"
-          component={userIsAuthenticated(
-            userIsAdminRedir(WithLayout(AsyncSchemaList))
-          )}
-        />
+        <Route exact path="/sign-up" component={AsyncSignUpPage} />
         <Route
           exact
           path="/meters"
-          component={userIsAuthenticated(WithLayout(AsyncMeterList))}
+          component={withAuthenticationRequired(WithLayout(AsyncMeterList))}
         />
         <Route
           exact
           path="/matrix/:year(\d{4})?/:month(0?[1-9]|1[012])?"
-          component={userIsAuthenticated(WithLayout(AsycnMonthlyDashboard))}
+          component={withAuthenticationRequired(
+            WithLayout(AsycnMonthlyDashboard)
+          )}
         />
         <Route
           exact
           path="/weekly/:year(\d{4})?/:week(0?[1-9]|[0-9]{2})?"
-          component={userIsAuthenticated(WithLayout(AsycnWeeklyDashboard))}
+          component={withAuthenticationRequired(
+            WithLayout(AsycnWeeklyDashboard)
+          )}
         />
         <Route
           exact
           path="/dashboard/:year(\d{4})?/:month(0?[1-9]|1[012])?/:day(0?[1-9]|1[0-9]|2[0-9]|3[01])?"
-          component={userIsAuthenticated(WithLayout(AsyncDailyDashboard))}
+          component={WithLayout(
+            withAuthenticationRequired(AsyncDailyDashboard)
+          )}
         />
         <Route
           exact
@@ -122,11 +117,15 @@ export const App = () => {
         <Route
           exact
           path="/profile"
-          component={userIsAuthenticated(WithLayout(AsyncProfilePage))}
+          component={withAuthenticationRequired(WithLayout(AsyncProfilePage))}
         />
         <Route
           path="*"
-          component={userIsAuthenticated(WithLayout(AsyncDailyDashboard))}
+          component={
+            isAuthenticated
+              ? withAuthenticationRequired(WithLayout(AsyncDailyDashboard))
+              : AsyncLoginPage
+          }
         />
       </ConnectedSwitch>
       <PeriodicAuthCheck loginPath="/login" />
@@ -134,4 +133,18 @@ export const App = () => {
   );
 };
 
-export default App;
+App.propTypes = {
+  fetchSchemas: PropTypes.func.isRequired,
+  fetchMeters: PropTypes.func.isRequired,
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchSchemas: () => {
+    dispatch(fetchSchemas());
+  },
+  fetchMeters: () => {
+    dispatch(fetchMeters());
+  },
+});
+
+export default connect(undefined, mapDispatchToProps)(App);

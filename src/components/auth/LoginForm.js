@@ -8,6 +8,7 @@ import Container from "@material-ui/core/Container";
 import { primaryButton, button, joinClasses } from "../../common/styles";
 import Link from "../Link";
 import { CssBaseline } from "@material-ui/core";
+import { withAuth0 } from "@auth0/auth0-react";
 
 const styles = (theme) => ({
   primaryButton,
@@ -43,6 +44,14 @@ export class LoginForm extends React.Component {
       password: event.target.value,
     });
   }
+
+  logoutWithRedirect = () => {
+    const { logout } = this.props.auth0;
+    logout({
+      // eslint-disable-next-line no-undef
+      returnTo: window.location.origin,
+    });
+  };
 
   render() {
     const { classes, handleFormSubmit, renderAlert } = this.props;
@@ -93,7 +102,7 @@ export class LoginForm extends React.Component {
               </Grid>
               <Grid item xs={4}>
                 <Button
-                  type="submit"
+                  onClick={() => this.props.auth0.loginWithRedirect()}
                   className={joinClasses(classes.button, classes.primaryButton)}
                 >
                   Login
@@ -112,6 +121,7 @@ LoginForm.propTypes = {
   handleFormSubmit: PropTypes.func.isRequired,
   renderAlert: PropTypes.func.isRequired,
   classes: PropTypes.object,
+  auth0: PropTypes.object,
 };
 
-export default withStyles(styles)(LoginForm);
+export default withStyles(styles)(withAuth0(LoginForm));

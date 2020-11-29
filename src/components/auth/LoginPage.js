@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import PropTypes from "prop-types";
 import { routerActions } from "react-router-redux";
+import { withAuth0 } from "@auth0/auth0-react";
 import qs from "qs";
 
 import LoginForm from "../../components/auth/LoginForm";
@@ -33,7 +34,8 @@ export class LoginPage extends React.Component {
   }
 
   render() {
-    const { isAuthenticated, isAuthenticating, location } = this.props;
+    const { location, auth0 } = this.props;
+    const { isAuthenticated, isLoading } = auth0;
     let redirectUrl;
     if (location) {
       const search = location.search;
@@ -43,7 +45,7 @@ export class LoginPage extends React.Component {
 
     if (isAuthenticated) {
       return (
-        <Redirect to={`${_.isEmpty(redirectUrl) ? "/posts" : redirectUrl}`} />
+        <Redirect to={`${_.isEmpty(redirectUrl) ? "/meters" : redirectUrl}`} />
       );
     }
 
@@ -54,9 +56,7 @@ export class LoginPage extends React.Component {
           handleFormSubmit={this.handleFormSubmit}
           renderAlert={this.renderAlert}
         />
-        {isAuthenticating && (
-          <p style={{ paddingTop: "1em" }}>Logging you in...</p>
-        )}
+        {isLoading && <p style={{ paddingTop: "1em" }}>Logging you in...</p>}
       </div>
     );
   }
@@ -68,6 +68,7 @@ LoginPage.propTypes = {
   loginUser: PropTypes.func.isRequired,
   error: PropTypes.string,
   location: PropTypes.object,
+  auth0: PropTypes.object,
 };
 
 LoginPage.defaultProps = {
@@ -90,4 +91,7 @@ const mapDispatchToProps = {
   replace: routerActions.replace,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withAuth0(LoginPage));

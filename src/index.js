@@ -12,6 +12,11 @@ import { Provider } from "react-redux";
 import { history } from "./store/configureStore";
 import { checkToken } from "./common/util";
 import DefaultErrorBoundary from "./components/common/DefaultErrorBoundary";
+import { Auth0Provider } from "@auth0/auth0-react";
+
+//import { createBrowserHistory } from "history";
+//export default createBrowserHistory();
+//const history = createBrowserHistory();
 
 const typography = new Typography(grandViewTheme);
 typography.injectStyles();
@@ -28,14 +33,30 @@ const store = configureStore();
 
 checkToken(store.dispatch);
 
+const onRedirectCallback = (appState) => {
+  history.push(
+    appState && appState.returnTo ? appState.returnTo : window.location.pathname
+  );
+};
+
 ReactDOM.render(
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <DefaultErrorBoundary>
-        <App />
-      </DefaultErrorBoundary>
-    </ConnectedRouter>
-  </Provider>,
+  <Auth0Provider
+    domain={config.domain}
+    clientId={config.clientId}
+    audience={config.audience}
+    redirectUri={window.location.origin}
+    onRedirectCallback={onRedirectCallback}
+    useRefreshTokens={true}
+    cacheLocation="localstorage"
+  >
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <DefaultErrorBoundary>
+          <App />
+        </DefaultErrorBoundary>
+      </ConnectedRouter>
+    </Provider>
+  </Auth0Provider>,
   // eslint-disable-next-line no-undef
   document.getElementById("root")
 );

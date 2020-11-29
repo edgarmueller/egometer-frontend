@@ -9,7 +9,6 @@ import BallotIcon from "@material-ui/icons/Ballot";
 import TodayIcon from "@material-ui/icons/Today";
 import CalendarViewDayIcon from "@material-ui/icons/CalendarViewDay";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
-import ExtensionIcon from "@material-ui/icons/Extension";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { compose, withProps } from "recompose";
@@ -27,7 +26,7 @@ import { withStyles } from "@material-ui/styles";
 
 export const RadiumLink = Radium(Link);
 
-export const Nav = ({ classes, logout, location, history, isAdmin }) => {
+export const Nav = ({ classes, logout, location, history }) => {
   const [currentRoute, setRoute] = useState(location.pathname);
   useEffect(() =>
     history.listen((location) => {
@@ -52,18 +51,6 @@ export const Nav = ({ classes, logout, location, history, isAdmin }) => {
         </RadiumLink>
       </ListItem>
       <Divider />
-      {isAdmin ? (
-        <ListItem>
-          <ListItemIcon>
-            <ExtensionIcon />
-          </ListItemIcon>
-          <LinkButton
-            to="/schemas"
-            label="Schemas"
-            currentRoute={currentRoute}
-          />
-        </ListItem>
-      ) : null}
       <Hidden xsDown>
         <ListItem>
           <ListItemIcon>

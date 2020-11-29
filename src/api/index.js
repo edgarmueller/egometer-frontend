@@ -1,48 +1,72 @@
 import Axios from "axios";
+import { Auth0Client } from "@auth0/auth0-spa-js";
 import { API_BASE_URL } from "../constants";
 
 const contentType = "Content-Type";
 const applicationJson = "application/json";
 
-const createHeaders = (headers) => ({
+const onRedirectCallback = (appState) => {
+  history.push(
+    appState && appState.returnTo ? appState.returnTo : window.location.pathname
+  );
+};
+
+const auth0 = new Auth0Client({
+  domain: "edmue.eu.auth0.com",
+  client_id: process.env.REACT_APP_AUTH0_CLIENTID,
+  audience: process.env.REACT_APP_AUTH0_AUDIENCE,
+  redirectUri: window.location.origin,
+  onRedirectCallback,
+  useRefreshTokens: true,
+  cacheLocation: "localstorage",
+});
+
+const createHeaders = (headers) => (token) => ({
   headers: {
     // eslint-disable-next-line no-undef
-    Authorization: `Bearer ${localStorage.getItem("egometer.token")}`,
+    Authorization: `Bearer ${token}`,
     ...headers,
   },
 });
 
-export const fetchMeters = () =>
-  Axios.get(`${API_BASE_URL}/meters`, createHeaders());
+export const fetchMeters = async () => {
+  const token = await auth0.getTokenSilently();
+  return Axios.get(`${API_BASE_URL}/meters`, createHeaders()(token));
+};
 
-export const fetchSchemas = () =>
-  Axios.get(
+export const fetchSchemas = async () => {
+  const token = await auth0.getTokenSilently();
+  return Axios.get(
     `${API_BASE_URL}/schemas`,
     createHeaders({
       [contentType]: applicationJson,
-    })
+    })(token)
   );
+};
 
-export const fetchEntries = (year, month) => {
+export const fetchEntries = async (year, month) => {
+  const token = await auth0.getTokenSilently();
   return Axios.get(
     `${API_BASE_URL}/entries?year=${year}&month=${month}`,
     createHeaders({
       [contentType]: applicationJson,
-    })
+    })(token)
   );
 };
 
-export const fetchEntriesByWeek = (year, week) => {
+export const fetchEntriesByWeek = async (year, week) => {
+  const token = await auth0.getTokenSilently();
   return Axios.get(
     `${API_BASE_URL}/entries?year=${year}&week=${week}`,
     createHeaders({
       [contentType]: applicationJson,
-    })
+    })(token)
   );
 };
 
-export const createMeter = (schemaId, name, widget, color) =>
-  Axios.post(
+export const createMeter = async (schemaId, name, widget, color) => {
+  const token = await auth0.getTokenSilently();
+  return Axios.post(
     `${API_BASE_URL}/meters`,
     {
       schemaId,
@@ -52,20 +76,24 @@ export const createMeter = (schemaId, name, widget, color) =>
     },
     createHeaders({
       [contentType]: applicationJson,
-    })
+    })(token)
   );
+};
 
 // TODO
-export const deleteMeter = (meterId) =>
-  Axios.delete(
+export const deleteMeter = async (meterId) => {
+  const token = await auth0.getTokenSilently();
+  return Axios.delete(
     `${API_BASE_URL}/meters/${meterId}`,
     createHeaders({
       [contentType]: applicationJson,
-    })
+    })(token)
   );
+};
 
-export const updateMeter = (meter) =>
-  Axios.patch(
+export const updateMeter = async (meter) => {
+  const token = await auth0.getTokenSilently();
+  return Axios.patch(
     `${API_BASE_URL}/meters/${meter.id}`,
     {
       ...meter,
@@ -73,34 +101,44 @@ export const updateMeter = (meter) =>
     },
     createHeaders({
       [contentType]: applicationJson,
-    })
+    })(token)
   );
+};
 
 // TODO
-export const deleteSchema = (schema) =>
-  Axios.delete(
+export const deleteSchema = async (schema) => {
+  const token = await auth0.getTokenSilently();
+  return Axios.delete(
     `${API_BASE_URL}/schemas/${schema.id}`,
     createHeaders({
       [contentType]: applicationJson,
-    })
+    })(token)
   );
+};
 
-export const updateEntry = ({ meterId, date, value }) => {
+export const updateEntry = async ({ meterId, date, value }) => {
+  const token = await auth0.getTokenSilently();
   return Axios.put(
     `${API_BASE_URL}/entries/${date}/${meterId}`,
     { value },
     createHeaders({
       [contentType]: applicationJson,
-    })
+    })(token)
   );
 };
 
-export const deleteEntry = (entry) =>
-  Axios.delete(`${API_BASE_URL}/entries/${entry.id}`, createHeaders());
+export const deleteEntry = async (entry) => {
+  const token = await auth0.getTokenSilently();
+  return Axios.delete(
+    `${API_BASE_URL}/entries/${entry.id}`,
+    createHeaders()(token)
+  );
+};
 
 // TODO: this should overwrite the value on the server
-export const submitSchema = (name, schema) =>
-  Axios.post(
+export const submitSchema = async (name, schema) => {
+  const token = await auth0.getTokenSilently();
+  return Axios.post(
     `${API_BASE_URL}/schemas`,
     {
       name,
@@ -108,8 +146,9 @@ export const submitSchema = (name, schema) =>
     },
     createHeaders({
       [contentType]: applicationJson,
-    })
+    })(token)
   );
+};
 
 export const loginUser = (email, password) =>
   Axios.post(
