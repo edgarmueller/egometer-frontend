@@ -41,9 +41,9 @@ const onRedirectCallback = (appState) => {
 
 ReactDOM.render(
   <Auth0Provider
-    domain={config.domain}
-    clientId={config.clientId}
-    audience={config.audience}
+    domain={process.env.REACT_APP_AUTH0_DOMAIN}
+    clientId={process.env.REACT_APP_AUTH0_CLIENTID}
+    audience={process.env.REACT_APP_AUTH0_AUDIENCE}
     redirectUri={window.location.origin}
     onRedirectCallback={onRedirectCallback}
     useRefreshTokens={true}
