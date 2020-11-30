@@ -23,11 +23,13 @@ import widgets from "../../widgets";
 import { getSchemas } from "../../reducers";
 import { logo } from "../../common/styles";
 import { withStyles } from "@material-ui/styles";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export const RadiumLink = Radium(Link);
 
-export const Nav = ({ classes, logout, location, history }) => {
+export const Nav = ({ classes, location, history }) => {
   const [currentRoute, setRoute] = useState(location.pathname);
+  const { logout } = useAuth0();
   useEffect(() =>
     history.listen((location) => {
       setRoute(location.pathname);
@@ -90,7 +92,16 @@ export const Nav = ({ classes, logout, location, history }) => {
         <ListItemIcon>
           <ExitToAppIcon />
         </ListItemIcon>
-        <Button onClick={logout}>Logout</Button>
+        <Button
+          onClick={() =>
+            logout({
+              // eslint-disable-next-line no-undef
+              returnTo: window.location.origin,
+            })
+          }
+        >
+          Logout
+        </Button>
       </ListItem>
     </List>
   );

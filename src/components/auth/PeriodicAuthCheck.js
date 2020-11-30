@@ -1,17 +1,8 @@
 /* eslint-disable no-undef */
 import React from "react";
+import { withAuth0 } from "@auth0/auth0-react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import jwtDecode from "jwt-decode";
-import { logout } from "../../actions";
-
-const hasValidToken = (token) => {
-  if (!token) {
-    return false;
-  }
-  const decoded = jwtDecode(token);
-  return decoded.exp > new Date().getTime() / 1000;
-};
 
 class PeriodicAuthCheck extends React.Component {
   constructor(props) {
@@ -20,24 +11,19 @@ class PeriodicAuthCheck extends React.Component {
     this.interval = 10;
   }
 
-  authCheck = (loginPath) => () => {
-    const { token, logout } = this.props;
-    if (!hasValidToken(token)) {
-      if (window.location.hash !== `#${loginPath}`) {
+  authCheck = () => () => {
+    const { auth0 } = this.props;
+    const { isAuthenticated, logout } = auth0;
+    if (!isAuthenticated) {
+      if (window.location.hash !== window.location.origin) {
         logout();
       }
     }
   };
 
   componentDidMount() {
-    const { loginPath, logout } = this.props;
-    this.authCheck(loginPath)();
-    this.interval = setInterval(
-      this.authCheck(loginPath),
-      this.interval * 1000,
-      loginPath,
-      logout
-    );
+    this.authCheck(window.location.origin);
+    this.interval = setInterval(this.authCheck, this.interval * 1000);
   }
 
   componentWillUnmount() {
@@ -53,17 +39,11 @@ class PeriodicAuthCheck extends React.Component {
 }
 
 PeriodicAuthCheck.propTypes = {
-  token: PropTypes.string,
-  loginPath: PropTypes.string,
-  logout: PropTypes.func,
+  auth0: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
   token: state.user.token,
 });
 
-const mapDispatchToProps = () => ({
-  logout,
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(PeriodicAuthCheck);
+export default connect(mapStateToProps)(withAuth0(PeriodicAuthCheck));

@@ -8,17 +8,11 @@ import { withAuth0 } from "@auth0/auth0-react";
 import qs from "qs";
 
 import LoginForm from "../../components/auth/LoginForm";
-import { loginWithEmail } from "../../actions";
 
 export class LoginPage extends React.Component {
   constructor() {
     super();
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.renderAlert = this.renderAlert.bind(this);
-  }
-
-  handleFormSubmit(mail, password) {
-    this.props.loginUser(mail, password);
   }
 
   renderAlert() {
@@ -52,10 +46,7 @@ export class LoginPage extends React.Component {
     return (
       <div>
         <h2>Welcome to egometer</h2>
-        <LoginForm
-          handleFormSubmit={this.handleFormSubmit}
-          renderAlert={this.renderAlert}
-        />
+        <LoginForm renderAlert={this.renderAlert} />
         {isLoading && <p style={{ paddingTop: "1em" }}>Logging you in...</p>}
       </div>
     );
@@ -65,7 +56,6 @@ export class LoginPage extends React.Component {
 LoginPage.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   isAuthenticating: PropTypes.bool.isRequired,
-  loginUser: PropTypes.func.isRequired,
   error: PropTypes.string,
   location: PropTypes.object,
   auth0: PropTypes.object,
@@ -87,7 +77,6 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = {
-  loginUser: loginWithEmail,
   replace: routerActions.replace,
 };
 

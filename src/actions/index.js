@@ -172,42 +172,4 @@ export const receiveEntries = (entries) => ({
   entries,
 });
 
-export const loginWithEmail = (email, password) => (dispatch) => {
-  dispatch({
-    type: USER_LOGIN_REQUEST,
-  });
-  return api.loginUser(email, password).then(
-    (response) => {
-      const { user, token } = response.data;
-      localStorage.setItem("egometer.token", token);
-      localStorage.setItem("egometer.role", user.roles[0]);
-      dispatch({
-        type: USER_LOGIN_SUCCESS,
-        token,
-        role: user.roles[0],
-        userId: user.id,
-      });
-    },
-    (error) => {
-      dispatch({
-        type: USER_LOGIN_FAILURE,
-        error: _.get(error, "response.data.description") || error.message,
-      });
-    }
-  );
-};
-
 export const USER_LOGGED_OUT = "USER_LOGGED_OUT";
-export const logout = () => async (dispatch) => {
-  localStorage.removeItem("egometer.token");
-  localStorage.removeItem("egometer.role");
-  try {
-    await api.logout();
-  } catch {
-    // ignore logout error
-  } finally {
-    dispatch({
-      type: USER_LOGGED_OUT,
-    });
-  }
-};

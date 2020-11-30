@@ -19,22 +19,6 @@ const AsyncLoginPage = Loadable({
   loader: () => import("./auth/LoginPage"),
   loading: Loading,
 });
-const AsyncSignUpPage = Loadable({
-  loader: () => import("./auth/SignUpPage"),
-  loading: Loading,
-});
-const AsyncActivedAccountPage = Loadable({
-  loader: () => import("./auth/ActivatedAccountPage"),
-  loading: Loading,
-});
-const AsyncRecoverPasswordPage = Loadable({
-  loader: () => import("./auth/RecoverPasswordPage"),
-  loading: Loading,
-});
-const AsyncResetPasswordPage = Loadable({
-  loader: () => import("./auth/ResetPasswordPage"),
-  loading: Loading,
-});
 const AsyncProfilePage = Loadable({
   loader: () => import("./profile/ProfilePage"),
   loading: Loading,
@@ -72,7 +56,6 @@ export const App = ({ fetchSchemas, fetchMeters }) => {
           path="/login"
           component={isAuthenticated ? AsycnWeeklyDashboard : AsyncLoginPage}
         />
-        <Route exact path="/sign-up" component={AsyncSignUpPage} />
         <Route
           exact
           path="/meters"
@@ -98,21 +81,6 @@ export const App = ({ fetchSchemas, fetchMeters }) => {
           component={WithLayout(
             withAuthenticationRequired(AsyncDailyDashboard)
           )}
-        />
-        <Route
-          exact
-          path="/auth/account/activation/:token"
-          component={AsyncActivedAccountPage}
-        />
-        <Route
-          exact
-          path="/auth/recover/password"
-          component={AsyncRecoverPasswordPage}
-        />
-        <Route
-          exact
-          path="/auth/recover/password/:token"
-          component={AsyncResetPasswordPage}
         />
         <Route
           exact
