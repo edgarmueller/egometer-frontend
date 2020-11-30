@@ -1,4 +1,3 @@
-import _ from "lodash";
 import * as api from "../api";
 
 export const FETCH_METERS_REQUEST = "FETCH_METERS_REQUEST";
