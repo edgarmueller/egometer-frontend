@@ -1,9 +1,7 @@
 import React from "react";
 import * as _ from "lodash";
-import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import PropTypes from "prop-types";
-import { routerActions } from "react-router-redux";
 import { withAuth0 } from "@auth0/auth0-react";
 import qs from "qs";
 
@@ -65,22 +63,4 @@ LoginPage.defaultProps = {
   error: undefined,
 };
 
-const mapStateToProps = (state) => {
-  const isAuthenticated = state.user.isAuthenticated || false;
-  const isAuthenticating = state.user.isLoading || false;
-  const error = state.user.error ? state.user.error : undefined;
-  return {
-    isAuthenticated,
-    isAuthenticating,
-    error,
-  };
-};
-
-const mapDispatchToProps = {
-  replace: routerActions.replace,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withAuth0(LoginPage));
+export default withAuth0(LoginPage);

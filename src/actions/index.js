@@ -17,10 +17,6 @@ export const UPDATE_METER_REQUEST = "UPDATE_METER_REQUEST";
 export const UPDATE_METER_SUCCESS = "UPDATE_METER_SUCCESS";
 export const UPDATE_METER_FAILURE = "UPDATE_METER_FAILURE";
 
-export const USER_LOGIN_REQUEST = "USER_LOGIN_REQUEST";
-export const USER_LOGIN_SUCCESS = "USER_LOGIN_SUCCESS";
-export const USER_LOGIN_FAILURE = "USER_LOGIN_FAILURE";
-
 export const setMeters = (meters) => {
   const mapped = meters.map(({ widget, ...otherProps }) => ({
     ...otherProps,
@@ -170,5 +166,3 @@ export const receiveEntries = (entries) => ({
   type: FETCH_ENTRIES_SUCCESS,
   entries,
 });
-
-export const USER_LOGGED_OUT = "USER_LOGGED_OUT";

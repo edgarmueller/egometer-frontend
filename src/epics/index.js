@@ -20,7 +20,6 @@ import {
   UPDATE_ENTRY_FAILURE,
   UPDATE_ENTRY_REQUEST,
   UPDATE_ENTRY_SUCCESS,
-  USER_LOGIN_SUCCESS,
   FETCH_SCHEMAS_REQUEST,
   FETCH_METERS_REQUEST,
   UPDATE_METER_REQUEST,
@@ -51,14 +50,6 @@ export function fetchMetersEpic(action$, _store, deps) {
       )
     )
   );
-}
-
-export function fetchAllAfterLogin(action$) {
-  return action$.ofType(USER_LOGIN_SUCCESS).flatMap(() => [
-    // fetch everything initially
-    { type: FETCH_SCHEMAS_REQUEST },
-    { type: FETCH_METERS_REQUEST },
-  ]);
 }
 
 export function fetchEntriesEpic(action$, store, deps) {
@@ -182,6 +173,5 @@ export const rootEpic = combineEpics(
   updateEntryEpic,
   deleteEntryEpic,
   updateEntryDebounceEpic,
-  updateMeterDebounceEpic,
-  fetchAllAfterLogin
+  updateMeterDebounceEpic
 );

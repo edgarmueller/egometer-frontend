@@ -15,14 +15,12 @@ import {
 import { findMeterById as _findMeterById } from "../reducers/meters";
 import schemaReducer from "./schemas";
 import entriesReducer from "./entries";
-import userReducer from "./user";
 
 const app = combineReducers({
   router: routerReducer,
   meters: metersReducer,
   schemas: schemaReducer,
   entries: entriesReducer,
-  user: userReducer,
 });
 
 export default app;

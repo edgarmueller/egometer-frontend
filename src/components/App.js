@@ -19,10 +19,6 @@ const AsyncLoginPage = Loadable({
   loader: () => import("./auth/LoginPage"),
   loading: Loading,
 });
-const AsyncProfilePage = Loadable({
-  loader: () => import("./profile/ProfilePage"),
-  loading: Loading,
-});
 const AsyncDailyDashboard = Loadable({
   loader: () => import("./daily/DailyDashboard"),
   loading: Loading,
@@ -81,11 +77,6 @@ export const App = ({ fetchSchemas, fetchMeters }) => {
           component={WithLayout(
             withAuthenticationRequired(AsyncDailyDashboard)
           )}
-        />
-        <Route
-          exact
-          path="/profile"
-          component={withAuthenticationRequired(WithLayout(AsyncProfilePage))}
         />
         <Route
           path="*"

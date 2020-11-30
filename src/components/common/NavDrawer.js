@@ -1,10 +1,8 @@
 import React, { Fragment } from "react";
 import Drawer from "@material-ui/core/Drawer";
 import { withStyles } from "@material-ui/core/styles";
-import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
-import { routerActions } from "react-router-redux";
 
 import Nav from "./Nav";
 import { Hidden } from "@material-ui/core";
@@ -50,7 +48,6 @@ export const NavDrawer = ({
 };
 
 NavDrawer.propTypes = {
-  navigateTo: PropTypes.func.isRequired,
   classes: PropTypes.object,
   isAuthenticated: PropTypes.bool,
   history: PropTypes.object,
@@ -59,17 +56,4 @@ NavDrawer.propTypes = {
   closeNav: PropTypes.func,
 };
 
-NavDrawer.defaultProps = {
-  user: undefined,
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  navigateTo(destination) {
-    dispatch(routerActions.push(destination));
-  },
-});
-
-export default connect(
-  (state) => ({ isAuthenticated: state.user.isAuthenticated }),
-  mapDispatchToProps
-)(withStyles(styles)(withRouter(NavDrawer)));
+export default withStyles(styles)(withRouter(NavDrawer));

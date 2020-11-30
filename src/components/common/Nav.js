@@ -81,12 +81,6 @@ export const Nav = ({ classes, location, history }) => {
         </ListItemIcon>
         <LinkButton to="/meters" label="Meters" currentRoute={currentRoute} />
       </ListItem>
-      <ListItem>
-        <ListItemIcon>
-          <BallotIcon />
-        </ListItemIcon>
-        <LinkButton to="/profile" label="Profile" currentRoute={currentRoute} />
-      </ListItem>
       <Divider />
       <ListItem>
         <ListItemIcon>

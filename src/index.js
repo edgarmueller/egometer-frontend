@@ -10,13 +10,8 @@ import * as serviceWorker from "./serviceWorker";
 import configureStore from "./store/configureStore";
 import { Provider } from "react-redux";
 import { history } from "./store/configureStore";
-import { checkToken } from "./common/util";
 import DefaultErrorBoundary from "./components/common/DefaultErrorBoundary";
 import { Auth0Provider } from "@auth0/auth0-react";
-
-//import { createBrowserHistory } from "history";
-//export default createBrowserHistory();
-//const history = createBrowserHistory();
 
 const typography = new Typography(grandViewTheme);
 typography.injectStyles();
@@ -24,26 +19,24 @@ typography.injectStyles();
 // eslint-disable-next-line no-undef
 require("dotenv").config();
 
-//if (process.env.NODE_ENV !== "production") {
-//  const { whyDidYouUpdate } = require("why-did-you-update");
-//  whyDidYouUpdate(React);
-//}
-
 const store = configureStore();
-
-checkToken(store.dispatch);
 
 const onRedirectCallback = (appState) => {
   history.push(
+    // eslint-disable-next-line no-undef
     appState && appState.returnTo ? appState.returnTo : window.location.pathname
   );
 };
 
 ReactDOM.render(
   <Auth0Provider
+    // eslint-disable-next-line no-undef
     domain={process.env.REACT_APP_AUTH0_DOMAIN}
+    // eslint-disable-next-line no-undef
     clientId={process.env.REACT_APP_AUTH0_CLIENTID}
+    // eslint-disable-next-line no-undef
     audience={process.env.REACT_APP_AUTH0_AUDIENCE}
+    // eslint-disable-next-line no-undef
     redirectUri={window.location.origin}
     onRedirectCallback={onRedirectCallback}
     useRefreshTokens={true}
