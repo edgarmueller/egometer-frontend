@@ -89,7 +89,6 @@ export const createMeter = async (schemaId, name, widget, color) => {
   );
 };
 
-// TODO
 export const deleteMeter = async (meterId) => {
   const token = await auth0.getTokenSilently();
   return Axios.delete(

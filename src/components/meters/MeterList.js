@@ -21,6 +21,7 @@ import { Picker } from "emoji-mart";
 import AddIcon from "@material-ui/icons/Add";
 import { fetchMeters } from "../../actions";
 import ColorPicker from "../common/ColorPicker";
+import Loading from "../common/Loading";
 import widgets from "../../widgets";
 import {
   deleteMeter,
@@ -152,7 +153,7 @@ export const MeterList = ({
   ]);
 
   if (isMetersLoading) {
-    return <div>Loading meters</div>;
+    return <Loading />;
   }
 
   return (

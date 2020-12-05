@@ -73,14 +73,15 @@ export const fetchSchemas = () => (dispatch) => {
 
 export const deleteMeter = (meterId) => (dispatch) => {
   return api.deleteMeter(meterId).then(
-    (resp) =>
+    () =>
       dispatch({
         type: DELETE_METER_SUCCESS,
-        meterId: resp.data.id,
+        meterId,
       }),
     (error) =>
       dispatch({
         type: DELETE_METER_FAILURE,
+        meterId,
         error,
       })
   );
