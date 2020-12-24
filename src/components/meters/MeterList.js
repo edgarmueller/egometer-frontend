@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState, useReducer } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import toNumber from "lodash/toNumber";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -70,42 +70,6 @@ const isNumberSchema = (schema) => {
   return schema && schema.type === "number";
 };
 
-const metersById = (meters) => {
-  return meters.reduce((acc, m) => {
-    acc[m.id] = m;
-    return acc;
-  }, {});
-};
-
-const UPDATE_ALL = "UPDATE_ALL";
-const UPDATE_SINGLE = "UPDATE_SINGLE";
-
-const updateLocalMeter = (state, meterId, propName, propValue) => {
-  return {
-    ...state,
-    [meterId]: {
-      ...state[meterId],
-      [propName]: propValue,
-    },
-  };
-};
-
-const localMeterReducer = (state, action) => {
-  switch (action.type) {
-    case UPDATE_ALL:
-      return action.payload;
-    case UPDATE_SINGLE:
-      return updateLocalMeter(
-        state,
-        action.id,
-        action.propName,
-        action.payload
-      );
-    default:
-      return state;
-  }
-};
-
 export const MeterList = ({
   classes,
   deleteMeter,
@@ -118,10 +82,21 @@ export const MeterList = ({
   fetchMeters,
 }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [state, dispatch] = useReducer(localMeterReducer, {
-    meterById: metersById(meters),
-  });
+  const [metersById, setMetersById] = useState(
+    meters
+      ? meters.reduce((acc, meter) => {
+          acc[meter.id] = meter;
+          return acc;
+        }, {})
+      : {}
+  );
+  useEffect(() => {
+    const metersAccumulated = meters.reduce((acc, meter) => {
+      acc[meter.id] = meter;
+      return acc;
+    }, {});
+    setMetersById(metersAccumulated);
+  }, [meters, setMetersById]);
   const confirmDialog = useCallback(() => {
     setDrawerOpen(false);
     fetchMeters();
@@ -130,27 +105,30 @@ export const MeterList = ({
   const [editedMeter, setEditedMeter] = useState(undefined);
   const handleUpdateMeter = useCallback(
     (meter, propName, propValue) => {
-      dispatch({
-        type: UPDATE_SINGLE,
-        id: meter.id,
-        propName,
-        payload: propValue,
-      });
+      const metersAccumulated = meters.reduce((acc, m) => {
+        if (m.id === meter.id) {
+          acc[m.id] = {
+            ...m,
+            [propName]: propValue,
+          };
+        } else {
+          acc[m.id] = m;
+        }
+        return acc;
+      }, {});
+      setMetersById(metersAccumulated);
       updateMeterRequest({
         ...meter,
         [propName]: propValue,
       });
     },
-    [updateMeterRequest]
+    [updateMeterRequest, setMetersById, meters]
   );
 
   const handleDeleteMeter = useCallback(
     (meter) => () => deleteMeter(meter.id),
     [deleteMeter]
   );
-  useEffect(() => dispatch({ type: UPDATE_ALL, payload: metersById(meters) }), [
-    meters,
-  ]);
 
   if (isMetersLoading) {
     return <Loading />;
@@ -193,8 +171,9 @@ export const MeterList = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {meters ? (
-              meters.map((meter) => {
+            {Object.keys(metersById).length !== 0 ? (
+              Object.keys(metersById).map((meterId) => {
+                const meter = metersById[meterId];
                 const schema = findBySchemaId(schemas, meter.schemaId);
                 return (
                   <TableRow key={meter.id}>
@@ -240,7 +219,7 @@ export const MeterList = ({
                     </TableCell>
                     <TableCell>
                       <TextField
-                        value={meter.weekylGoal}
+                        value={meter.weeklyGoal}
                         onChange={(ev) =>
                           handleUpdateMeter(
                             meter,

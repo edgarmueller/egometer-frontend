@@ -14,10 +14,6 @@ const initialState = {
   error: undefined,
   meters: [],
   isLoading: false,
-  updatingStatus: {
-    isFetching: false,
-    meterId: undefined,
-  },
 };
 
 const findMeter = (meters, meterId) =>
@@ -38,10 +34,6 @@ export const metersReducer = (state = initialState, action) => {
       return {
         ...state,
         error: undefined,
-        updatingStatus: {
-          isFetching: true,
-          meterId: action.meter.id,
-        },
       };
     case UPDATE_METER_SUCCESS:
       return {

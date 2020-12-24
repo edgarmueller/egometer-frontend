@@ -1,7 +1,6 @@
 import React from "react";
 
 const MeterContext = React.createContext({});
-//MeterContext.displayName = "MeterContext";
 
 export const withMeterContext = (Component) => {
   // eslint-disable-next-line react/display-name
