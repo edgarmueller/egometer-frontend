@@ -39,7 +39,7 @@ ReactDOM.render(
     // eslint-disable-next-line no-undef
     redirectUri={window.location.origin}
     onRedirectCallback={onRedirectCallback}
-    useRefreshTokens={true}
+    useRefreshTokens
     cacheLocation="localstorage"
   >
     <Provider store={store}>

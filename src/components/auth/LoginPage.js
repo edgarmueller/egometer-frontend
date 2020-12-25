@@ -71,8 +71,6 @@ export class LoginPage extends React.Component {
 }
 
 LoginPage.propTypes = {
-  isAuthenticated: PropTypes.bool.isRequired,
-  isAuthenticating: PropTypes.bool.isRequired,
   error: PropTypes.string,
   location: PropTypes.object,
   classes: PropTypes.object,

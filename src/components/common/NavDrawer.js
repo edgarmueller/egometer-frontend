@@ -3,10 +3,10 @@ import Drawer from "@material-ui/core/Drawer";
 import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
-
-import Nav from "./Nav";
 import { Hidden } from "@material-ui/core";
 import { useAuth0 } from "@auth0/auth0-react";
+
+import Nav from "./Nav";
 
 const drawerWidth = 180;
 

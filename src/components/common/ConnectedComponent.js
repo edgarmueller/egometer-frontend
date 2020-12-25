@@ -66,7 +66,7 @@ ConnectedComponent.propTypes = {
   data: PropTypes.any,
   date: PropTypes.string.isRequired,
   shouldDebounce: PropTypes.bool,
-  children: PropTypes.arrayOf(PropTypes.node),
+  children: PropTypes.func,
 };
 
 ConnectedComponent.defaultProps = {
