@@ -3,9 +3,22 @@ import * as _ from "lodash";
 import { Redirect } from "react-router";
 import PropTypes from "prop-types";
 import { withAuth0 } from "@auth0/auth0-react";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Button from "@material-ui/core/Button";
 import qs from "qs";
+import Loading from "../common/Loading";
+import { primaryButton, joinClasses } from "../../common/styles";
 
-import LoginForm from "../../components/auth/LoginForm";
+const styles = (theme) => ({
+  primaryButton,
+  secondaryButton: {
+    color: "#333435",
+  },
+  form: {
+    width: "100%", // Fix IE 11 issue.
+    marginTop: theme.spacing(3),
+  },
+});
 
 export class LoginPage extends React.Component {
   constructor() {
@@ -26,7 +39,7 @@ export class LoginPage extends React.Component {
   }
 
   render() {
-    const { location, auth0 } = this.props;
+    const { location, auth0, classes } = this.props;
     const { isAuthenticated, isLoading } = auth0;
     let redirectUrl;
     if (location) {
@@ -42,11 +55,17 @@ export class LoginPage extends React.Component {
     }
 
     return (
-      <div>
+      <>
         <h2>Welcome to egometer</h2>
-        <LoginForm renderAlert={this.renderAlert} />
-        {isLoading && <p style={{ paddingTop: "1em" }}>Logging you in...</p>}
-      </div>
+        <Button
+          onClick={() => this.props.auth0.loginWithRedirect()}
+          className={joinClasses(classes.button, classes.primaryButton)}
+        >
+          Login
+        </Button>
+        {isLoading && <Loading />}
+        {this.renderAlert()}
+      </>
     );
   }
 }
@@ -56,6 +75,7 @@ LoginPage.propTypes = {
   isAuthenticating: PropTypes.bool.isRequired,
   error: PropTypes.string,
   location: PropTypes.object,
+  classes: PropTypes.object,
   auth0: PropTypes.object,
 };
 
@@ -63,4 +83,4 @@ LoginPage.defaultProps = {
   error: undefined,
 };
 
-export default withAuth0(LoginPage);
+export default withStyles(styles)(withAuth0(LoginPage));

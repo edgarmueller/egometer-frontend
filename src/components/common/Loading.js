@@ -7,8 +7,8 @@ const Loading = () => (
       position: "fixed",
       top: "50%",
       left: "50%",
-      marginLeft: -75,
-      marginTop: -75,
+      marginLeft: -40,
+      marginTop: -55,
     }}
   >
     <MoonLoader />
