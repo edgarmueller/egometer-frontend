@@ -88,7 +88,7 @@ export class AddMeterDrawer extends React.PureComponent {
           flexDirection: "column",
         }}
       >
-        <Typography variant="h4" style={{ fontWeight: "bold" }}>
+        <Typography variant="h6" style={{ fontWeight: "bold" }}>
           Add meter
         </Typography>
         {_.keys(widgetsPerCategory).length > 0 ? (
