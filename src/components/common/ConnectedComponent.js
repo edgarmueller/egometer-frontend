@@ -14,7 +14,11 @@ export const ConnectedComponent = ({
   shouldDebounce,
 }) => {
   const [value, setValue] = useState((data && data.value) || "");
-  useEffect(() => data && setValue(data.value), [data, isLoading, date]);
+  useEffect(() => setValue((data && data.value) || ""), [
+    data,
+    isLoading,
+    date,
+  ]);
   const { updateEntry, deleteEntry } = useContext(MeterContext);
   const apiCall = useCallback(
     (val) => {
@@ -63,7 +67,9 @@ ConnectedComponent.propTypes = {
   updateOnChange: PropTypes.bool,
   // TODO: maybe rename prop to initData?
   meterId: PropTypes.string.isRequired,
-  data: PropTypes.any,
+  data: PropTypes.shape({
+    value: PropTypes.any,
+  }),
   date: PropTypes.string.isRequired,
   shouldDebounce: PropTypes.bool,
   children: PropTypes.func,

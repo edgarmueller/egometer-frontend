@@ -27,8 +27,71 @@ describe("ConnectedComponent", () => {
     expect(wrapper.find("div").length).toBe(1);
   });
 
+  it("should pass data property", () => {
+    let val;
+    wrapper = shallow(
+      <ConnectedComponent
+        data={{ value: "foo" }}
+        date={testDate}
+        isLoading={false}
+        meterId="dummyId"
+      >
+        {({ data }) => {
+          val = data;
+          return <div>Test</div>;
+        }}
+      </ConnectedComponent>
+    );
+
+    //wrapper.setProps({ data: })
+    expect(val).toBe("foo");
+  });
+
+  it("should pass updated data to children", () => {
+    let val;
+    const wrapper = mount(
+      <ConnectedComponent
+        data={{ value: "foo" }}
+        date={testDate}
+        isLoading={false}
+        meterId="dummyId"
+      >
+        {({ data }) => {
+          val = data;
+          return <div>Test</div>;
+        }}
+      </ConnectedComponent>
+    );
+
+    wrapper.setProps({ data: { value: "bar" } });
+    wrapper.update();
+    expect(val).toBe("bar");
+    wrapper.unmount();
+  });
+
+  it("should pass updated empty data to children", () => {
+    let val;
+    const wrapper = mount(
+      <ConnectedComponent
+        data={{ value: "foo" }}
+        date={testDate}
+        isLoading={false}
+        meterId="dummyId"
+      >
+        {({ data }) => {
+          val = data;
+          return <div>Test</div>;
+        }}
+      </ConnectedComponent>
+    );
+
+    wrapper.setProps({ data: { value: "" } });
+    wrapper.update();
+    expect(val).toBe("");
+    wrapper.unmount();
+  });
+
   it("should provide data to its children", () => {
-    let provided = undefined;
     const wrapper = mount(
       <ConnectedComponent
         data={{ value: "init" }}
@@ -44,7 +107,7 @@ describe("ConnectedComponent", () => {
     );
     wrapper.setProps({ data: { value: "foo" } });
     wrapper.update();
-    expect(wrapper.find('div').childAt(0).text()).toBe('foo')
+    expect(wrapper.find("div").childAt(0).text()).toBe("foo");
     wrapper.unmount();
   });
 
@@ -77,7 +140,7 @@ describe("ConnectedComponent", () => {
         value={{
           updateEntry: () => () => {
             called = true;
-          }
+          },
         }}
       >
         <ConnectedComponent
@@ -105,7 +168,7 @@ describe("ConnectedComponent", () => {
         value={{
           updateEntry: () => () => {
             called = true;
-          }
+          },
         }}
       >
         <ConnectedComponent
@@ -134,7 +197,7 @@ describe("ConnectedComponent", () => {
         value={{
           updateEntry: () => () => {
             called = true;
-          }
+          },
         }}
       >
         <ConnectedComponent
