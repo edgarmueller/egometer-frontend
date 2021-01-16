@@ -1,6 +1,6 @@
 import React from "react";
 import BookIcon from "@material-ui/icons/Book";
-import StringWidget from "../../components/widgets/daily/String";
+import StringWidget from "../../components/widgets/daily/DailyString";
 import StringCell from "../../components/widgets/cells/StringCell";
 import { isString } from "../../common/testers";
 

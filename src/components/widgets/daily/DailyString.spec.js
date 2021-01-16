@@ -5,7 +5,7 @@ import { configure, mount } from "enzyme";
 import { TextField } from "@material-ui/core";
 import configureStore from "redux-mock-store";
 import { Provider } from "react-redux";
-import { DailyString } from "./String";
+import { DailyString } from "./DailyString";
 import { testDate } from "../../../__mocks__/fixtures";
 
 // TODO: move adapter to common test code
@@ -24,7 +24,7 @@ describe("Journal", () => {
       name: unused,
       widget: unused,
       schemaId: unused,
-      color: unused
+      color: unused,
     };
     const wrapper = mount(
       <Provider store={store}>
@@ -32,15 +32,15 @@ describe("Journal", () => {
           isLoading={false}
           meter={journalMeter}
           classes={{
-            divStyle: {}
+            divStyle: {},
           }}
           date={moment(testDate).format("YYYY-MM-DD")}
           data={[
             {
               date: testDate,
               meterId: journalMeterId,
-              value: "test text is tasty"
-            }
+              value: "test text is tasty",
+            },
           ]}
           width={600}
           height={400}

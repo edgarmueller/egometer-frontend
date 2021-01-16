@@ -1,4 +1,4 @@
-import DailyString from "../../components/widgets/daily/String";
+import DailyString from "../../components/widgets/daily/DailyString";
 import { isString } from "../../common/testers";
 import { StringCell } from "../../components/widgets/cells/StringCell";
 

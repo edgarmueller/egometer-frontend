@@ -2,7 +2,7 @@ import React from "react";
 import { TextField } from "@material-ui/core";
 import * as _ from "lodash";
 import PropTypes from "prop-types";
-import ConnectedComponent from "../../../components/common/ConnectedComponent";
+import ConnectedComponent from "../../common/ConnectedComponent";
 import TitleBar from "./TitleBar";
 
 export class DailyString extends React.Component {
