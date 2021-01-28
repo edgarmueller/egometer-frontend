@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import * as _ from "lodash";
-import { compose, withProps } from "recompose";
 import * as actions from "../../actions";
 import { getMeters, getSchemas } from "../../reducers";
 import { findBySchemaId } from "../../utils";
@@ -145,6 +144,7 @@ Widget.propTypes = {
 
 Widget.defaultProps = {
   schema: undefined,
+  widgets,
 };
 
 const mapStateToProps = (state, ownProps) => {
@@ -180,7 +180,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default compose(
-  withProps({ widgets }),
-  connect(mapStateToProps, mapDispatchToProps)
-)(Widget);
+export default connect(mapStateToProps, mapDispatchToProps)(Widget);

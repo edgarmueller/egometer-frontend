@@ -1,5 +1,4 @@
 import React from "react";
-import { compose } from "recompose";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -159,10 +158,7 @@ MeterSettingsDialog.propTypes = {
   classes: PropTypes.object,
 };
 
-export default compose(
-  withStyles(styles),
-  connect(null, {
-    deleteMeter,
-    updateMeter,
-  })
-)(MeterSettingsDialog);
+export default connect(null, {
+  deleteMeter,
+  updateMeter,
+})(withStyles(styles)(MeterSettingsDialog));

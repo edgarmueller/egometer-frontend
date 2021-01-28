@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import moment from "moment";
 import MonthPickerInput from "react-month-picker-input";
 import "../../react-month-picker-input.css";
-import { compose, withProps } from "recompose";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import MonthlyMatrix from "./MonthlyMatrix";
@@ -186,10 +185,10 @@ MonthlyDashboard.propTypes = {
 
 MonthlyDashboard.defaultProps = {
   error: undefined,
+  widgets,
 };
 
-export default compose(
-  withProps({ widgets }),
-  withStyles(styles),
-  connect(mapStateToProps, mapDispatchToProps)
-)(MonthlyDashboard);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(MonthlyDashboard));

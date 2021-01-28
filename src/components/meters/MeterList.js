@@ -2,7 +2,6 @@ import React, { useCallback, useState, useEffect } from "react";
 import toNumber from "lodash/toNumber";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { compose, withProps } from "recompose";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -307,6 +306,10 @@ MeterList.propTypes = {
   fetchMeters: PropTypes.func,
 };
 
+MeterList.defaultProps = {
+  widgets,
+};
+
 const mapStateToProps = (state) => ({
   meters: getMeters(state),
   isMetersLoading: isMetersLoading(state),
@@ -314,14 +317,10 @@ const mapStateToProps = (state) => ({
   meterError: getMeterError(state),
 });
 
-export default compose(
-  withProps({ widgets }),
-  connect(mapStateToProps, {
-    resetMetersError,
-    deleteMeter,
-    updateMeter,
-    updateMeterRequest,
-    fetchMeters,
-  }),
-  withStyles(styles)
-)(MeterList);
+export default connect(mapStateToProps, {
+  resetMetersError,
+  deleteMeter,
+  updateMeter,
+  updateMeterRequest,
+  fetchMeters,
+})(withStyles(styles)(MeterList));

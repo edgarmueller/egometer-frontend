@@ -11,7 +11,6 @@ import CalendarViewDayIcon from "@material-ui/icons/CalendarViewDay";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { compose, withProps } from "recompose";
 import { Link } from "react-router-dom";
 import Radium from "radium";
 import { Hidden } from "@material-ui/core";
@@ -110,7 +109,9 @@ Nav.propTypes = {
   history: PropTypes.any,
 };
 
-Nav.defaultProps = {};
+Nav.defaultProps = {
+  widgets,
+};
 
 const mapStateToProps = (state) => ({
   schemas: getSchemas(state),
@@ -121,7 +122,4 @@ const styles = {
   logo,
 };
 
-export default compose(
-  withProps({ widgets }),
-  connect(mapStateToProps, null)
-)(withStyles(styles)(Nav));
+export default connect(mapStateToProps, null)(withStyles(styles)(Nav));

@@ -1,7 +1,6 @@
 import React from "react";
 import _ from "lodash";
 import { connect } from "react-redux";
-import { compose, withProps } from "recompose";
 import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import MatrixContainer from "../../containers/MatrixContainer";
@@ -164,7 +163,7 @@ WeeklyDashboard.propTypes = {
 
 WeeklyDashboard.defaultProps = {
   meters: [],
-  widgets: [],
+  widgets,
 };
 
 const mapStateToProps = (state) => {
@@ -187,7 +186,4 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   ...ownProps,
 });
 
-export default compose(
-  withProps({ widgets }),
-  connect(mapStateToProps, mapDispatchToProps)
-)(WeeklyDashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(WeeklyDashboard);

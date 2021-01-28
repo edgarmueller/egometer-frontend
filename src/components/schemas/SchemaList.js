@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { compose } from "recompose";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -17,7 +16,6 @@ import AddIcon from "@material-ui/icons/Add";
 import InspectIcon from "@material-ui/icons/FindInPage";
 import { ShowMessageDialog } from "../common/ShowMessageDialog";
 import CreateSchemaDialog from "./CreateSchemaDialog";
-import { fetchSchemasOnMount } from "../../common/hocs";
 import { display1 } from "../../common/styles";
 import { getSchemas, isSchemasLoading } from "../../reducers";
 
@@ -59,41 +57,40 @@ export class Schemas extends React.Component {
       open: false,
       openShow: false,
     };
-    this.deleteSchema = this.deleteSchema.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleCreate = this.handleCreate.bind(this);
-    this.handleClickShow = this.handleClickShow.bind(this);
-    this.handleCloseShow = this.handleCloseShow.bind(this);
   }
 
-  deleteSchema(schema) {
+  componentDidMount() {
+    this.props.fetchSchemas();
+  }
+
+  deleteSchema = (schema) => {
     this.props.deleteSchema(schema);
-  }
+  };
 
-  handleClickShow(schema) {
+  handleClickShow = (schema) => {
     this.setState({
       selectedSchema: schema,
       openShow: true,
     });
-  }
+  };
 
-  handleCloseShow() {
+  handleCloseShow = () => {
     this.setState({
       openShow: false,
     });
-  }
+  };
 
-  handleCreate() {
+  handleCreate = () => {
     this.setState({
       open: true,
     });
-  }
+  };
 
-  handleClose() {
+  handleClose = () => {
     this.setState({
       open: false,
     });
-  }
+  };
 
   render() {
     const { classes } = this.props;
@@ -206,8 +203,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  fetchSchemasOnMount,
-  withStyles(styles)
-)(Schemas);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Schemas));

@@ -1,5 +1,4 @@
 import { connect } from "react-redux";
-import { compose, withProps } from "recompose";
 import React from "react";
 import PropTypes from "prop-types";
 import widgets from "../widgets";
@@ -56,7 +55,11 @@ MatrixContainer.propTypes = {
   child: PropTypes.any,
 };
 
-export default compose(
-  withProps({ widgets }),
-  connect(mapStateToProps, mapDispatchToCrudMethodProps)
+MatrixContainer.defaultProps = {
+  widgets,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToCrudMethodProps
 )(MatrixContainer);

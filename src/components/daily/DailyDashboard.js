@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
-import { compose, withProps } from "recompose";
 import * as _ from "lodash";
 
 import { formatDate, parseDate } from "react-day-picker/moment";
@@ -168,9 +167,7 @@ DailyDashboard.defaultProps = {
   meters: [],
   entries: {},
   isLoading: false,
+  widgets,
 };
 
-export default compose(
-  withProps({ widgets }),
-  connect(mapStateToProps, mapDispatchToProps)
-)(DailyDashboard);
+export default connect(mapStateToProps, mapDispatchToProps)(DailyDashboard);

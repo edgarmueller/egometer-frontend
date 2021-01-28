@@ -39,7 +39,6 @@
     "react-virtualized": "^9.21.2",
     "react-vis": "^1.11.7",
     "reactcss": "^1.2.3",
-    "recompose": "^0.30.0",
     "redux": "^3.7.2",
     "redux-auth-wrapper": "^2.0.2",
     "redux-observable": "^0.18.0",

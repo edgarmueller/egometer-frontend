@@ -4,7 +4,6 @@ import SentimentSatisfiedRounded from "@material-ui/icons/SentimentSatisfiedRoun
 import SentimentSatisfied from "@material-ui/icons/SentimentSatisfied";
 import SentimentDissatisfiedRounded from "@material-ui/icons/SentimentDissatisfiedRounded";
 import SentimentVeryDissatisfiedRounded from "@material-ui/icons/SentimentVeryDissatisfiedRounded";
-import { withProps } from "recompose";
 
 import EnumLineChart from "../../components/visualizations/EnumLineChart";
 import DailyEnum from "../../components/widgets/daily/Enum";
@@ -27,45 +26,40 @@ const labelProvider = withLabels(
 );
 
 export const withMoodImageAndLabelProvider = (Component) =>
-  withImages((color, isSelected, value) => {
-    return withProps({
-      color: isSelected ? color : "black",
-    })(() => {
-      switch (value) {
-        case "dabomb":
-          return (
-            <SentimentVerySatisfiedRounded
-              style={{ color: isSelected ? color : "black" }}
-            />
-          );
-        case "good":
-          return (
-            <SentimentSatisfiedRounded
-              style={{ color: isSelected ? color : "black" }}
-            />
-          );
-        case "okayish":
-          return (
-            <SentimentSatisfied
-              style={{ color: isSelected ? color : "black" }}
-            />
-          );
-        case "down":
-          return (
-            <SentimentDissatisfiedRounded
-              style={{ color: isSelected ? color : "black" }}
-            />
-          );
-        case "bad":
-          return (
-            <SentimentVeryDissatisfiedRounded
-              style={{ color: isSelected ? color : "black" }}
-            />
-          );
-        default:
-          return null;
-      }
-    })();
+  withImages(({ selectionColor, isSelected, value }) => {
+    const color = isSelected ? selectionColor : "black";
+    switch (value) {
+      case "dabomb":
+        return (
+          <SentimentVerySatisfiedRounded
+            style={{ color: isSelected ? color : "black" }}
+          />
+        );
+      case "good":
+        return (
+          <SentimentSatisfiedRounded
+            style={{ color: isSelected ? color : "black" }}
+          />
+        );
+      case "okayish":
+        return (
+          <SentimentSatisfied style={{ color: isSelected ? color : "black" }} />
+        );
+      case "down":
+        return (
+          <SentimentDissatisfiedRounded
+            style={{ color: isSelected ? color : "black" }}
+          />
+        );
+      case "bad":
+        return (
+          <SentimentVeryDissatisfiedRounded
+            style={{ color: isSelected ? color : "black" }}
+          />
+        );
+      default:
+        return null;
+    }
   })(labelProvider(Component));
 
 export const MoodMeter = {

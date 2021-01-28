@@ -20,14 +20,20 @@ const quantityLabels = withLabels(
   })
 );
 
-const quantityImages = withImages((color, isSelected, value) => {
+const quantityImages = withImages(({ selectionColor, isSelected, value }) => {
   switch (value) {
     case "none":
-      return <Brightness3 style={{ color: isSelected ? color : "black" }} />;
+      return (
+        <Brightness3 style={{ color: isSelected ? selectionColor : "black" }} />
+      );
     case "a_bit":
-      return <Brightness2 style={{ color: isSelected ? color : "black" }} />;
+      return (
+        <Brightness2 style={{ color: isSelected ? selectionColor : "black" }} />
+      );
     case "a_lot":
-      return <Brightness1 style={{ color: isSelected ? color : "black" }} />;
+      return (
+        <Brightness1 style={{ color: isSelected ? selectionColor : "black" }} />
+      );
     default:
       return <div />;
   }

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { compose } from "recompose";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
@@ -10,14 +9,14 @@ import { updateEntryRequest } from "../../actions";
 import { getMeters } from "../../reducers";
 
 const styles = {
-  button: buttonStyle
+  button: buttonStyle,
 };
 
 export class EntrySubmitForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: undefined
+      value: undefined,
     };
   }
 
@@ -36,7 +35,7 @@ export class EntrySubmitForm extends Component {
       meterId,
       date,
       updateEntryRequest,
-      onSubmit
+      onSubmit,
     } = this.props;
 
     // TODO: meter schema should be made availble here
@@ -52,7 +51,7 @@ export class EntrySubmitForm extends Component {
         <TextField
           autoFocus
           InputProps={inputProps}
-          onChange={ev =>
+          onChange={(ev) =>
             this.setState({ value: toSchemaType(ev.target.value) })
           }
         />
@@ -65,7 +64,7 @@ export class EntrySubmitForm extends Component {
             updateEntryRequest({
               meterId,
               date,
-              value: this.state.value
+              value: this.state.value,
             });
           }}
         >
@@ -79,13 +78,9 @@ export class EntrySubmitForm extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
   meters: getMeters(state),
-  ...ownProps
+  ...ownProps,
 });
 
-export default compose(
-  withStyles(styles),
-  connect(
-    mapStateToProps,
-    { updateEntryRequest }
-  )
-)(EntrySubmitForm);
+export default connect(mapStateToProps, { updateEntryRequest })(
+  withStyles(styles)(EntrySubmitForm)
+);

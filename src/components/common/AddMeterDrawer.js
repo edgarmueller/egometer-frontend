@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
-import { compose, withProps } from "recompose";
 import Typography from "@material-ui/core/Typography";
 
 import Category from "../daily/Category";
@@ -121,13 +120,11 @@ AddMeterDrawer.propTypes = {
 
 AddMeterDrawer.defaultProps = {
   open: false,
+  widgets,
 };
 
 const mapStateToProps = (state) => ({
   schemas: getSchemas(state),
 });
 
-export default compose(
-  withProps({ widgets }),
-  connect(mapStateToProps, null)
-)(AddMeterDrawer);
+export default connect(mapStateToProps, null)(AddMeterDrawer);
