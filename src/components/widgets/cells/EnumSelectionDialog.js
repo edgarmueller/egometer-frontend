@@ -86,7 +86,7 @@ EnumSelectionPanel.propTypes = {
   onClose: PropTypes.func,
   onSelect: PropTypes.func,
   schema: PropTypes.object,
-  selected: PropTypes.bool,
+  selected: PropTypes.oneOfType([PropTypes.bool, PropTypes.array]),
 };
 
 class EnumSelectionDialog extends React.PureComponent {

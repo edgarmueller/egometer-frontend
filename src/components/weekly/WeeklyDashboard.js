@@ -146,7 +146,13 @@ export class WeeklyDashboard extends React.Component {
 
 WeeklyDashboard.propTypes = {
   error: PropTypes.string,
-  schemas: PropTypes.object,
+  schemas: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      schema: PropTypes.object,
+    })
+  ),
   match: PropTypes.object,
   meters: PropTypes.array,
   widgets: PropTypes.array,

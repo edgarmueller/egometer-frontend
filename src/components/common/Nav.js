@@ -105,7 +105,6 @@ Nav.propTypes = {
   classes: PropTypes.shape({
     logo: PropTypes.string.isRequired,
   }).isRequired,
-  logout: PropTypes.func.isRequired,
   isAdmin: PropTypes.bool.isRequired,
   location: PropTypes.any,
   history: PropTypes.any,

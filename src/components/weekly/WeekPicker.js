@@ -94,6 +94,6 @@ export default class WeekPicker extends React.Component {
 }
 
 WeekPicker.propTypes = {
-  date: PropTypes.string,
+  date: PropTypes.instanceOf(Date),
   onChange: PropTypes.func,
 };

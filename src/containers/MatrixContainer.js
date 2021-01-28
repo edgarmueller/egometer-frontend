@@ -53,7 +53,7 @@ MatrixContainer.propTypes = {
   widgets: PropTypes.array,
   schemas: PropTypes.array,
   entriesByMeter: PropTypes.object,
-  child: PropTypes.node,
+  child: PropTypes.any,
 };
 
 export default compose(

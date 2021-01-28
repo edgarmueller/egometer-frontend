@@ -66,7 +66,7 @@ BooleanCell.propTypes = {
   isLoading: PropTypes.bool,
   date: PropTypes.string,
   data: PropTypes.string,
-  style: PropTypes.string,
+  style: PropTypes.object,
 };
 
 export default withStyles(styles)(BooleanCell);

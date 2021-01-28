@@ -127,7 +127,7 @@ class EnumCellRenderer extends React.Component {
 EnumCellRenderer.propTypes = {
   labelProvider: PropTypes.func.isRequired,
   imageProvider: PropTypes.func.isRequired,
-  closeOnSelect: PropTypes.func.isRequired,
+  closeOnSelect: PropTypes.bool,
   showImage: PropTypes.bool,
   isLoading: PropTypes.bool,
   singleSelection: PropTypes.bool,

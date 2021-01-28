@@ -232,7 +232,13 @@ MeterTable.propTypes = {
   width: PropTypes.number.isRequired,
   style: PropTypes.object,
   calcProgress: PropTypes.func,
-  schemas: PropTypes.object,
+  schemas: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      schema: PropTypes.object,
+    })
+  ),
   classes: PropTypes.object,
 };
 
