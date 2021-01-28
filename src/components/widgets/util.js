@@ -17,10 +17,10 @@ export const defaultLiteralLabelProvider = (literal) => {
   return _.startCase(_.replace(literal, "_", " "));
 };
 
-export const withImages = (imageProvider) => (Component) => {
+export const withImages = (ImageProvider) => (Component) => {
   class WrappedComponent extends React.Component {
     render() {
-      return <Component {...this.props} imageProvider={imageProvider} />;
+      return <Component {...this.props} imageProvider={ImageProvider} />;
     }
   }
   WrappedComponent.displayName = "withImages";

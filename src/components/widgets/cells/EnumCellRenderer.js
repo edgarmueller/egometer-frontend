@@ -104,7 +104,11 @@ class EnumCellRenderer extends React.Component {
         >
           {showImage
             ? imageProvider
-              ? imageProvider(color, false, data)
+              ? imageProvider({
+                  selectionColor: color,
+                  isSelected: false,
+                  value: data,
+                })
               : label
             : null}
         </div>

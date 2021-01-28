@@ -57,7 +57,11 @@ class EnumRenderer extends Component {
                   label={label}
                   icon={
                     imageProvider
-                      ? imageProvider(meter.color, isSelected(value), value)
+                      ? imageProvider({
+                          selectionColor: meter.color,
+                          isSelected: isSelected(value),
+                          value,
+                        })
                       : null
                   }
                 />

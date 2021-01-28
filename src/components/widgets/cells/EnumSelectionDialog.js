@@ -60,7 +60,11 @@ class EnumSelectionPanel extends React.PureComponent {
                   label={label}
                   icon={
                     imageProvider
-                      ? imageProvider(color, isSelected(selected)(value), value)
+                      ? imageProvider({
+                          selectionColor: color,
+                          isSelected: isSelected(selected)(value),
+                          value,
+                        })
                       : null
                   }
                 />

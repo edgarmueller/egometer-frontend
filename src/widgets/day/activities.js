@@ -1,7 +1,7 @@
 import React from "react";
-import Icon from "@material-ui/icons/Category";
+import CategoryIcon from "@material-ui/icons/Category";
 import Ionicon from "react-ionicons";
-import { withProps } from "recompose";
+import PropTypes from "prop-types";
 import MultiEnum from "../../components/widgets/daily/MultiEnum";
 import MultiEnumCell from "../../components/widgets/cells/MultiEnumCell";
 import { isArray } from "../../common/testers";
@@ -34,8 +34,8 @@ const icons = {
   health: "md-medical",
 };
 
-const imageProvider = (color, isSelected, value) => {
-  const Icon = (props) => (
+const Icon = ({ selectionColor, isSelected, value }) => {
+  return (
     <div
       style={{
         display: "flex",
@@ -45,22 +45,28 @@ const imageProvider = (color, isSelected, value) => {
         cursor: "pointer",
       }}
     >
-      <Ionicon {...props} />
+      <Ionicon
+        icon={icons[value]}
+        color={isSelected ? selectionColor : "black"}
+      />
     </div>
   );
-  return withProps({
-    icon: icons[value],
-    color: isSelected ? color : "black",
-  })(Icon)();
 };
 
-const withImageProvider = withImages(imageProvider);
+Icon.propTypes = {
+  selectionColor: PropTypes.string,
+  isSelected: PropTypes.boolean,
+  value: PropTypes.any,
+};
+
+const withImageProvider = withImages(Icon);
+
 const ActivitiesMeter = {
   schemaId: "Activities",
   name: "Activity tags",
   label: "Activities",
   category: "General",
-  icon: <Icon />,
+  icon: <CategoryIcon />,
   day: withImageProvider(withLabels(defaultLiteralLabelProvider)(MultiEnum)),
   week: MultiEnumPieChart,
   month: MultiEnumPieChart,

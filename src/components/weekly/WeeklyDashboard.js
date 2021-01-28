@@ -181,8 +181,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  fetchEntries(date, week) {
-    dispatch(actions.fetchEntriesRequestByWeek(date, week));
+  fetchEntries(year, week) {
+    dispatch(actions.fetchEntriesRequestByWeek(year, week));
   },
   ...ownProps,
 });
