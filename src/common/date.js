@@ -58,9 +58,14 @@ export function lastDayOfMonth(month, year) {
   return new Date(year, month, 0).getDate();
 }
 
-export const weekToDate = (year, week) => {
-  return moment({ year }).startOf("isoWeek").isoWeek(week).toDate();
-};
+export function weekToDate(y, w) {
+  var simple = new Date(Date.UTC(y, 0, 1 + (w - 1) * 7));
+  var dow = simple.getDay();
+  var ISOweekStart = simple;
+  if (dow <= 4) ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+  else ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+  return ISOweekStart;
+}
 
 export const getWeek = function (date) {
   const momentDate = moment(date);
