@@ -78,7 +78,7 @@ EnumRenderer.propTypes = {
   schema: PropTypes.object,
   labelProvider: PropTypes.func,
   imageProvider: PropTypes.func,
-  isSelected: PropTypes.bool,
+  isSelected: PropTypes.func,
   meter: PropTypes.object,
   updateEntry: PropTypes.func,
   icon: PropTypes.node,

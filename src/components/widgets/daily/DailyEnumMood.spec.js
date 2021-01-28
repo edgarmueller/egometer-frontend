@@ -5,11 +5,7 @@ import { configure, mount } from "enzyme";
 import Button from "@material-ui/core/Button";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
-import {
-  moodMeterId,
-  moodSchema,
-  testDate
-} from "../../../__mocks__/fixtures";
+import { moodMeterId, moodSchema, testDate } from "../../../__mocks__/fixtures";
 import DailyEnum from "./Enum";
 import IconButtonWithLabel from "../../common/IconButtonWithLabel";
 
@@ -25,13 +21,13 @@ describe("Mood meter", () => {
           schema={moodSchema.schema}
           meter={{ id: moodMeterId }}
           classes={{ mood: "" }}
-          date={moment(testDate)}
+          date={testDate}
           data={[
             {
               date: testDate,
               meterId: moodMeterId,
-              value: "good"
-            }
+              value: "good",
+            },
           ]}
         />
       </Provider>

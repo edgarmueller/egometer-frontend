@@ -21,7 +21,7 @@ const PickerLayout = ({ picker, children }) => (
 
 PickerLayout.propTypes = {
   picker: PropTypes.node,
-  children: PropTypes.arrayOf(PropTypes.node),
+  children: PropTypes.node,
 };
 
 export default PickerLayout;

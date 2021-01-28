@@ -6,6 +6,12 @@ import { App } from "./App";
 configure({ adapter: new Adapter() });
 
 it("fetches meters and schemas on mount", () => {
-  const wrapper = shallow(<App classes={{ logo: "" }} />);
+  const wrapper = shallow(
+    <App
+      classes={{ logo: "" }}
+      fetchSchemas={jest.fn()}
+      fetchMeters={jest.fn()}
+    />
+  );
   expect(wrapper.find("div").length).toBe(1);
 });

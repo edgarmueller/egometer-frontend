@@ -23,7 +23,7 @@ export class Enum extends Component {
 
 Enum.propTypes = {
   date: PropTypes.string,
-  data: PropTypes.string,
+  data: PropTypes.array,
   updateEntry: PropTypes.func,
 };
 
