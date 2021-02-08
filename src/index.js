@@ -6,7 +6,6 @@ import grandViewTheme from "typography-theme-grand-view";
 import "emoji-mart/css/emoji-mart.css";
 import "./index.css";
 import App from "./components/App";
-import * as serviceWorker from "./serviceWorker";
 import configureStore from "./store/configureStore";
 import { Provider } from "react-redux";
 import { history } from "./store/configureStore";
@@ -53,5 +52,3 @@ ReactDOM.render(
   // eslint-disable-next-line no-undef
   document.getElementById("root")
 );
-
-serviceWorker.register();
