@@ -7,9 +7,10 @@ import NoCellRenderer from "./NoCellRenderer";
 // TODO: rename to CellDispatch
 export class Cell extends React.Component {
   shouldComponentUpdate(nextProps) {
-    const { data, widget, style } = this.props;
+    const { data, widget, style, date } = this.props;
     return (
       !_.isEqual(data, nextProps.data) ||
+      !_.isEqual(date, nextProps.date) ||
       !_.isEqual(widget, nextProps.widget) ||
       (this.props.isLoading && !nextProps.isLoading) ||
       !_.isEqual(style, nextProps.style)
@@ -18,7 +19,16 @@ export class Cell extends React.Component {
 
   render() {
     const today = moment().format("YYYY-MM-DD");
-    const { data, rowData, date, isLoading, color, widget, style } = this.props;
+    const {
+      data,
+      meterId,
+      schema,
+      date,
+      isLoading,
+      color,
+      widget,
+      style,
+    } = this.props;
 
     if (widget === undefined || widget.cell === undefined) {
       return <NoCellRenderer />;
@@ -30,10 +40,10 @@ export class Cell extends React.Component {
     return (
       <WidgetCell
         isLoading={isLoading}
-        schema={rowData.schema}
+        schema={schema}
         data={data}
         date={date}
-        meterId={rowData.meterId}
+        meterId={meterId}
         color={
           hasData ? color : today === date ? "rgba(246, 246, 31, 0.56)" : null
         }
@@ -47,7 +57,8 @@ Cell.propTypes = {
   data: PropTypes.any,
   widget: PropTypes.object,
   style: PropTypes.object,
-  rowData: PropTypes.object.isRequired,
+  meterId: PropTypes.string,
+  schema: PropTypes.object,
   date: PropTypes.string.isRequired,
   isLoading: PropTypes.bool.isRequired,
   color: PropTypes.string.isRequired,

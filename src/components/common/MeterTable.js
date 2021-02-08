@@ -150,7 +150,8 @@ class MeterTable extends React.Component {
                       }}
                       color={color}
                       widget={widget}
-                      rowData={props.rowData}
+                      schema={props.rowData.schema}
+                      meterId={props.rowData.meterId}
                       isLoading={isLoading}
                       date={date}
                       data={cellData}

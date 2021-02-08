@@ -130,7 +130,7 @@ class EnumSelectionDialog extends React.PureComponent {
 }
 
 EnumSelectionDialog.propTypes = {
-  selected: PropTypes.array.isRequired,
+  selected: PropTypes.array,
   classes: PropTypes.object,
   onClose: PropTypes.func,
   onSelect: PropTypes.func,
@@ -140,6 +140,10 @@ EnumSelectionDialog.propTypes = {
   imageProvider: PropTypes.func,
   labelProvider: PropTypes.func,
   schema: PropTypes.object,
+};
+
+EnumSelectionDialog.defaultProps = {
+  selected: [],
 };
 
 export default withStyles(styles)(EnumSelectionDialog);

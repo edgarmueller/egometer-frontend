@@ -1,9 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Checkbox from "@material-ui/core/Checkbox";
 import CheckCircle from "@material-ui/icons/CheckCircle";
 import withStyles from "@material-ui/core/styles/withStyles";
 import ConnectedComponent from "../../../components/common/ConnectedComponent";
-import PropTypes from "prop-types";
 
 const styles = {
   checkbox: {
