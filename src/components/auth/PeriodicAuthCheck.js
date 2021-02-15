@@ -10,7 +10,7 @@ class PeriodicAuthCheck extends React.Component {
     this.interval = 10;
   }
 
-  authCheck = () => () => {
+  authCheck = () => {
     const { auth0 } = this.props;
     const { isAuthenticated, logout } = auth0;
     if (!isAuthenticated) {
@@ -21,7 +21,6 @@ class PeriodicAuthCheck extends React.Component {
   };
 
   componentDidMount() {
-    this.authCheck(window.location.origin);
     this.interval = setInterval(this.authCheck, this.interval * 1000);
   }
 

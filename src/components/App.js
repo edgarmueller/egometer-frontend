@@ -46,6 +46,7 @@ export const App = ({ fetchSchemas, fetchMeters }) => {
   return (
     <div className="App" id="app">
       <CssBaseline />
+      <PeriodicAuthCheck loginPath="/login" />
       <ConnectedSwitch>
         <Route
           exact
@@ -87,7 +88,6 @@ export const App = ({ fetchSchemas, fetchMeters }) => {
           }
         />
       </ConnectedSwitch>
-      <PeriodicAuthCheck loginPath="/login" />
     </div>
   );
 };
