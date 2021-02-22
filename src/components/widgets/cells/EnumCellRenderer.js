@@ -50,7 +50,7 @@ class EnumCellRenderer extends React.Component {
       this.setState({
         selected: this.props.singleSelection
           ? [this.props.data]
-          : this.props.data,
+          : this.props.data || [],
       });
     }
   }
@@ -140,7 +140,7 @@ EnumCellRenderer.propTypes = {
   schema: PropTypes.object,
   color: PropTypes.string,
   date: PropTypes.string,
-  data: PropTypes.string,
+  data: PropTypes.oneOfType([PropTypes.any, PropTypes.arrayOf(PropTypes.any)]),
 };
 
 EnumCellRenderer.defaultProps = {

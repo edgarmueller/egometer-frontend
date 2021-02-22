@@ -65,7 +65,9 @@ BooleanCell.propTypes = {
   color: PropTypes.string,
   isLoading: PropTypes.bool,
   date: PropTypes.string,
-  data: PropTypes.string,
+  data: PropTypes.shape({
+    value: PropTypes.any,
+  }),
   style: PropTypes.object,
 };
 
