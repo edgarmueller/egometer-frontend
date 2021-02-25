@@ -36,7 +36,7 @@ ReactDOM.render(
     // eslint-disable-next-line no-undef
     audience={process.env.REACT_APP_AUTH0_AUDIENCE}
     // eslint-disable-next-line no-undef
-    redirectUri={process.env.REACT_APP_AUTH_REDIRECT_URL}
+    redirectUri={process.env.REACT_APP_AUTH0_REDIRECT_URL}
     onRedirectCallback={onRedirectCallback}
     useRefreshTokens
     cacheLocation="localstorage"
