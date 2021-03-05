@@ -6,22 +6,20 @@ import PropTypes from "prop-types";
 class PeriodicAuthCheck extends React.Component {
   constructor(props) {
     super(props);
-    // interval in seconds
-    this.interval = 10;
+    // interval in seconds, every 10 mins
+    this.interval = 10 * 60;
   }
 
-  authCheck = () => {
+  refresh = () => {
     const { auth0 } = this.props;
-    const { isAuthenticated, logout } = auth0;
-    if (!isAuthenticated) {
-      if (window.location.hash !== window.location.origin) {
-        logout();
-      }
+    const { getAccessTokenSilently, isAuthenticated } = auth0;
+    if (isAuthenticated) {
+      getAccessTokenSilently();
     }
   };
 
   componentDidMount() {
-    this.interval = setInterval(this.authCheck, this.interval * 1000);
+    this.interval = setInterval(this.refresh, this.interval * 1000);
   }
 
   componentWillUnmount() {
