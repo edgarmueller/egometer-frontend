@@ -140,16 +140,19 @@ export const RESET_ENTRIES_ERROR = "RESET_ENTRIES_ERROR";
 /**
  * Fetch entries for a given month based on the given date.
  *
- * @param date a YYYY-MM-DD formatted day string
+ * @param year the year to query
+ * @param month the month to query
  * @param meterId optional meter id, if omitted, data of all meters is fetched
  * @returns {{type: string, date: *, meterId: *}}
  */
-export const fetchEntriesRequest = (year, month, meterId = undefined) => ({
-  type: FETCH_ENTRIES_REQUEST,
-  year,
-  month,
-  meterId,
-});
+export const fetchEntriesRequest = (year, month, meterId = undefined) => {
+  return {
+    type: FETCH_ENTRIES_REQUEST,
+    year,
+    month,
+    meterId,
+  };
+};
 
 export const fetchEntriesRequestByWeek = (year, week, meterId = undefined) => ({
   type: FETCH_ENTRIES_REQUEST,

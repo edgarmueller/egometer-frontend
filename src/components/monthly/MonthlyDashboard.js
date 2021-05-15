@@ -50,15 +50,6 @@ export class MonthlyDashboard extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
-    const { entriesByMeter: prevEntriesByMeter } = prevProps;
-    const { entriesByMeter } = this.props;
-    if (!_.isEqual(entriesByMeter, prevEntriesByMeter)) {
-      const { year, month } = this.state;
-      this.props.fetchEntries(year, month);
-    }
-  }
-
   componentDidMount() {
     const { year, month } = this.state;
     this.props.fetchEntries(year, month);
@@ -110,7 +101,12 @@ export class MonthlyDashboard extends React.Component {
             year={this.state.year}
             month={this.state.month - 1}
             onChange={(maskedValue, selectedYear, selectedMonth) => {
-              fetchEntries(selectedYear, selectedMonth);
+              this.setState((prevState) => ({
+                ...prevState,
+                month: selectedMonth + 1,
+                year: selectedYear,
+              }));
+              fetchEntries(selectedYear, selectedMonth + 1);
               history.push(`/matrix/${selectedYear}/${selectedMonth + 1}`);
             }}
             closeOnSelect={true}

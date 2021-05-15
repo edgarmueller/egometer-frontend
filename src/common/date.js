@@ -67,7 +67,7 @@ export function weekToDate(y, w) {
   return ISOweekStart;
 }
 
-export const getWeek = function (date) {
+export const getWeek = (date) => {
   const momentDate = moment(date);
   return [momentDate.isoWeekYear(), momentDate.month(), momentDate.isoWeek()];
 };
