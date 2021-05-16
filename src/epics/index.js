@@ -135,20 +135,21 @@ export function updateEntryDebounceEpic(action$, store, deps) {
     filter(({ shouldDebounce }) => shouldDebounce),
     debounceTime(500),
     switchMap(({ entry }) => {
-      return from(deps.api.updateEntry(entry))
-        .flatMap((resp) => {
+      return from(deps.api.updateEntry(entry)).pipe(
+        mergeMap((resp) => {
           return of({
             type: UPDATE_ENTRY_SUCCESS,
             entry: resp.data,
           });
-        })
-        .catch((error) => {
+        }),
+        catchError((error) => {
           return of({
             type: UPDATE_ENTRY_FAILURE,
             meterId: entry.meterId,
             error: error.message,
           });
-        });
+        })
+      );
     })
   );
 }
@@ -158,20 +159,21 @@ export function updateMeterDebounceEpic(action$, store, deps) {
     ofType(UPDATE_METER_REQUEST),
     debounceTime(500),
     switchMap(({ meter }) => {
-      return from(deps.api.updateMeter(meter))
-        .flatMap((resp) => {
+      return from(deps.api.updateMeter(meter)).pipe(
+        mergeMap((resp) => {
           return of({
             type: UPDATE_METER_SUCCESS,
             meter: resp.data,
           });
-        })
-        .catch((error) => {
+        }),
+        catchError((error) => {
           return of({
             type: UPDATE_METER_FAILURE,
             meterId: meter.id,
             error: error.message,
           });
-        });
+        })
+      );
     })
   );
 }
