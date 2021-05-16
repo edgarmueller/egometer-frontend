@@ -8,9 +8,10 @@ import grandViewTheme from "typography-theme-grand-view";
 import "emoji-mart/css/emoji-mart.css";
 import "./index.css";
 import App from "./components/App";
-import configureStore from "./store/configureStore";
+import { configureStore } from "./store/configureStore";
 import { history } from "./store/configureStore";
 import DefaultErrorBoundary from "./components/common/DefaultErrorBoundary";
+import { rootEpic } from "./epics";
 
 const typography = new Typography(grandViewTheme);
 typography.injectStyles();
@@ -18,7 +19,8 @@ typography.injectStyles();
 // eslint-disable-next-line no-undef
 require("dotenv").config();
 
-const store = configureStore();
+const { store, epicMiddleware } = configureStore();
+epicMiddleware.run(rootEpic);
 
 const onRedirectCallback = (appState) => {
   history.push(

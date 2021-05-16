@@ -1,6 +1,6 @@
 import * as _ from "lodash";
+import { of } from "rxjs";
 import "rxjs/add/operator/toArray";
-import { ActionsObservable } from "redux-observable";
 import {
   fetchEntriesRequest,
   updateEntryRequest,
@@ -19,7 +19,7 @@ describe("updateEntryEpic", () => {
         updateEntry: () => Promise.resolve(_.head(counterEntries)),
       },
     };
-    const action$ = ActionsObservable.of(
+    const action$ = of(
       updateEntryRequest({
         meterId: counterMeterId,
         date: "2018-07-06",
@@ -39,7 +39,7 @@ describe("updateEntryEpic", () => {
         updateEntry: () => Promise.reject({ message: "expected failure" }),
       },
     };
-    const action$ = ActionsObservable.of(
+    const action$ = of(
       updateEntryRequest({
         meterId: counterMeterId,
         date: "2018-07-06",
@@ -65,7 +65,7 @@ describe("fetchEntriesEpic", () => {
       },
     };
     // passed date doesn't really matter
-    const action$ = ActionsObservable.of(fetchEntriesRequest(2018, 6));
+    const action$ = of(fetchEntriesRequest(2018, 6));
     const output$ = fetchEntriesEpic(action$, null, deps);
     output$.toArray().subscribe((actions) => {
       expect(actions[0].type).toBe(FETCH_ENTRIES_SUCCESS);
@@ -82,7 +82,7 @@ describe("fetchEntriesEpic", () => {
       },
     };
     // passed date doesn't really matter
-    const action$ = ActionsObservable.of(fetchEntriesRequest(2018, 6));
+    const action$ = of(fetchEntriesRequest(2018, 6));
     const output$ = fetchEntriesEpic(action$, null, deps);
     output$.toArray().subscribe((actions) => {
       expect(actions[0].type).toBe(FETCH_ENTRIES_FAILURE);

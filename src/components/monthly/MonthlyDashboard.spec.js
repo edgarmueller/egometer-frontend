@@ -1,18 +1,19 @@
-import React from "react";
 import { configure, mount } from "enzyme";
-import { Provider } from "react-redux";
 import Adapter from "enzyme-adapter-react-16";
-import { MonthlyDashboard } from "./MonthlyDashboard";
-import { moodEntries, moodMeter, moodSchema } from "../../__mocks__/fixtures";
+import React from "react";
+import { Provider } from "react-redux";
+import { configureStore } from "../../store/configureStore";
 import mood from "../../widgets/day/mood";
-import configureStore from "../../store/configureStore";
+import { moodEntries, moodMeter, moodSchema } from "../../__mocks__/fixtures";
+import { MonthlyDashboard } from "./MonthlyDashboard";
 import MonthlyMatrix from "./MonthlyMatrix";
+import { rootEpic } from "../../epics";
 
 configure({ adapter: new Adapter() });
 
 describe("Monthly Dashboard", () => {
   it("should render monthly matrix component", () => {
-    const store = configureStore({
+    const { store, epicMiddleware } = configureStore({
       meters: {
         meters: [moodMeter],
       },
@@ -28,6 +29,7 @@ describe("Monthly Dashboard", () => {
         schemas: [moodSchema],
       },
     });
+    epicMiddleware.run(rootEpic);
     const fetchEntriesSpy = jest.fn();
     const wrapper = mount(
       <Provider store={store}>

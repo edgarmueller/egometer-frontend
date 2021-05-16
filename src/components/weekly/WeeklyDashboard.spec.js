@@ -1,11 +1,12 @@
-import React from "react";
 import { configure, mount } from "enzyme";
-import { Provider } from "react-redux";
 import Adapter from "enzyme-adapter-react-16";
-import { WeeklyDashboard } from "./WeeklyDashboard";
-import { moodEntries, moodMeter, moodSchema } from "../../__mocks__/fixtures";
+import React from "react";
+import { Provider } from "react-redux";
+import { configureStore } from "../../store/configureStore";
+import { rootEpic } from "../../epics";
 import mood from "../../widgets/day/mood";
-import configureStore from "../../store/configureStore";
+import { moodEntries, moodMeter, moodSchema } from "../../__mocks__/fixtures";
+import { WeeklyDashboard } from "./WeeklyDashboard";
 import WeeklyMatrix from "./WeeklyMatrix";
 import WeekPicker from "./WeekPicker";
 
@@ -13,7 +14,7 @@ configure({ adapter: new Adapter() });
 
 describe("Weekly Dashboard", () => {
   it("should render weekly matrix component", () => {
-    const store = configureStore({
+    const { store, epicMiddleware } = configureStore({
       meters: {
         meters: [moodMeter],
       },
@@ -29,6 +30,7 @@ describe("Weekly Dashboard", () => {
         schemas: [moodSchema],
       },
     });
+    epicMiddleware.run(rootEpic);
     const fetchEntriesSpy = jest.fn();
     const wrapper = mount(
       <Provider store={store}>
@@ -61,7 +63,7 @@ describe("Weekly Dashboard", () => {
   });
 
   it("should update state when changing week", () => {
-    const store = configureStore({
+    const { store, epicMiddleware } = configureStore({
       meters: {
         meters: [moodMeter],
       },
@@ -77,6 +79,7 @@ describe("Weekly Dashboard", () => {
         schemas: [moodSchema],
       },
     });
+    epicMiddleware.run(rootEpic);
     const fetchEntriesSpy = jest.fn();
     const wrapper = mount(
       <Provider store={store}>

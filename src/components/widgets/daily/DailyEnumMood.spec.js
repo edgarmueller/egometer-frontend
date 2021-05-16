@@ -1,8 +1,6 @@
 import React from "react";
-import moment from "moment";
 import Adapter from "enzyme-adapter-react-16";
 import { configure, mount } from "enzyme";
-import Button from "@material-ui/core/Button";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
 import { moodMeterId, moodSchema, testDate } from "../../../__mocks__/fixtures";
