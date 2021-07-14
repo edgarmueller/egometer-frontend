@@ -14,7 +14,7 @@ const onRedirectCallback = (appState) => {
 let auth0;
 if (!navigator.userAgent.includes("jsdom")) {
   auth0 = new Auth0Client({
-    domain: "edmue.eu.auth0.com",
+    domain: process.env.REACT_APP_AUTH0_DOMAIN,
     client_id: process.env.REACT_APP_AUTH0_CLIENTID,
     audience: process.env.REACT_APP_AUTH0_AUDIENCE,
     redirectUri: window.location.origin,
