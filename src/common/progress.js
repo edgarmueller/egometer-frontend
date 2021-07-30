@@ -13,7 +13,7 @@ const weeksInMonth = (year, month) => {
 export const filterEntriesByDate = (entries, fromDate, toDate) => {
   return entries.filter(
     ({ date }) =>
-      moment(date, "YYYY-MM-DD") > fromDate &&
+      moment(date, "YYYY-MM-DD") >= fromDate &&
       moment(date, "YYYY-MM-DD" < toDate)
   );
 };
