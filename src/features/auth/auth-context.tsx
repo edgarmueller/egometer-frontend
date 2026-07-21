@@ -68,7 +68,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token])
 
   const setSession = useCallback((newToken: string, newUser: User) => {

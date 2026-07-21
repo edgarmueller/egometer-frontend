@@ -1,7 +1,5 @@
+import { AppRoutes } from '@/routes'
+
 export default function App() {
-  return (
-    <div className="flex min-h-screen items-center justify-center">
-      <p className="text-muted-foreground">egometer is loading…</p>
-    </div>
-  )
+  return <AppRoutes />
 }
