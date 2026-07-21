@@ -2,63 +2,102 @@
 
 ## A customizable habit tracker
 
-<p>
-    <img src="/screenshots/daily-dashboard.png?raw=true" />
-    <img src="/screenshots/monthly-matrix.png?raw=true" />
-</p>
+egometer is a habit tracker that lets you track your habits via so-called **meters**.
+You define meters (e.g. "Meditation", "Mood", "Water intake"), then log daily
+**entries** against them and review your history via daily, weekly, and monthly
+dashboards.
 
-egometer is a habit tracker that lets you track your habits via so-called meters.
+It consists of a backend (see `egometer-api`) and this frontend, talking to it over a
+plain REST + JWT API.
 
-A meter is a data definition based on a JSON schema which is stored on the backend.
-The frontend takes care of visualizing the stored data of the meters.
-
-It consists of a backend (see egometer-backend) and a frontend part.
-This repo represents the frontend part.
-
-**NOTE**: This is a WIP side project of mine, but feel free to leave any feedback, bug reports,
+**NOTE**: This is a WIP side project, but feel free to leave any feedback, bug reports,
 feature requests etc.
+
+> The screenshots in `screenshots/` are from the previous (Create React App +
+> Material UI) version of this app and no longer reflect the current UI — they're kept
+> around for historical reference until updated.
+
+## Meter types
+
+Every meter has one of six fixed types, each with its own daily input, calendar-cell,
+and chart rendering:
+
+| Type         | Value shape                                     | Description                          |
+| ------------ | ------------------------------------------------ | ------------------------------------- |
+| `BOOLEAN`    | `boolean`                                         | Simple yes/no for whether you did something |
+| `NUMBER`     | `number`                                          | A numeric value, e.g. glasses of water |
+| `TEXT`       | `string`                                          | Free-form journal entry               |
+| `MOOD`       | `'bad' \| 'down' \| 'okayish' \| 'good' \| 'dabomb'` | How you felt, five-point scale     |
+| `QUANTITY`   | `'none' \| 'a_bit' \| 'a_lot'`                    | A rough amount                        |
+| `ACTIVITIES` | `string[]` (subset of a fixed 19-tag vocabulary)  | Which activities you did, multi-select |
 
 ## Dashboards
 
-egometer can be used in two different ways, either via the daily dashboard, or, alternatively via the monthly dashboard.
-While the daily dashboard display all meters via their `day` visualization component and therefore allows easier editing,
-the monthly dashboard is meant to give you an overview of the current month, although it also allows entering data via the `cell`
-component property of a widget.
+- **Daily** (`/daily/:date`) — a fixed-order list of all your meters with their input
+  widget for the selected day, e.g. a checkbox for booleans, a mood picker, tag chips
+  for activities. Edits save immediately (optimistic).
+- **Monthly** (`/monthly/:year/:month`) — a calendar grid per meter, each cell a
+  compact rendering of that day's value, plus an aggregate chart for the month.
+  Clicking a cell jumps to that day's daily dashboard for editing.
+- **Weekly** (`/weekly/:year/:week`) — the same idea as monthly, over a single
+  ISO week.
+- **Meters** (`/meters`) — create, edit, and delete meters (name, type, color, icon,
+  optional daily/weekly goals).
 
-Widgets on the daily dashboard can be dragged around. The layout will be saved on the client via local storage.
+Meters render in a fixed order for now — no drag-and-drop reordering (a `sortOrder`
+field exists on the backend for when that lands).
 
-The monthly dashboard actually consists of two components, one is a calendar-like cell-based view for each meter per day while the other one consists of aggregated data views.
+## Tech stack
 
-## Meter format
-
-A meter basically describes what data format is used (via a reference to a schema, see the `schemaId` proeprty) and how it should be displayed (via the `widget` and `color` properties).
-Meters are displayed on the client via what is called a 'widget'. A widget is linked to a meter instance via its `schemaId` and `name` properties. These properties must match the `schemaId` and `widget` properties of the meter.
-
-## Widget format
-
-A widget is capable of displaying the data of a meter. It's linked to a meter via its `schemaId` and `name` properties.
-The following is a list of all available properites of a widget:
-
-- `schemaId`: the ID of the JSON schema this meters maps to
-- `day`: the visualization component for the daily dashboard
-- `month`: the visualization component for the monthly dashboard; typically used for displaying the data in an aggregated view
-- `cell`: the visualization component that is used per cell within the calendar view of a month
-- `isApplicable`: determines whether the widget can display a given schema (currently unused)
-- `name`: the name of the widget
-- `label`: the label that is used to display the widget within the `AddMeterDialog`
-- `icon`: a React element that displays an icon for the widget within the `AddMeterDialog`
-- `category`: the category this widget belongs to, e.g. 'health' or 'work'. Used while adding a meter to categorize meters
-
-All available meters for the entire app are configured within `widgets/index.js`.
+- [Vite](https://vitejs.dev/) + React 18 + TypeScript
+- [React Router](https://reactrouter.com/) for routing
+- [TanStack Query](https://tanstack.com/query) for all server state (no Redux)
+- [Tailwind CSS](https://tailwindcss.com/) + hand-written shadcn/ui-style primitives
+  (`src/components/ui`)
+- [react-hook-form](https://react-hook-form.com/) + [zod](https://zod.dev/) for forms
+- [date-fns](https://date-fns.org/) for date math
+- [recharts](https://recharts.org/) for charts
 
 ## Development
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
-
 ### Getting started
 
-- Clone [egometer-backend](https://github.com/edgarmueller/egometer-backend)
-  and follow instructions to setup the backend
-- Install dependencies via `yarn install`
-- Run `yarn run start` to start dev mode
-- Run `yarn test` to execute all tests
+- Clone [egometer-api](https://github.com/edgarmueller/egometer-api) and follow its
+  instructions to set up the backend.
+- Copy `.env.example` to `.env` and point `VITE_API_URL` at your backend
+  (defaults to `http://localhost:3000/api/v1`).
+- Install dependencies: `npm install`
+- Start the dev server: `npm run dev`
+- Type-check + production build: `npm run build`
+- Lint: `npm run lint`
+
+### Project structure
+
+```
+src/
+  main.tsx, App.tsx, routes.tsx
+  lib/                  # api-client (JWT-aware fetch wrapper), query-client, utils
+  features/
+    auth/                # api, hooks, auth-context (JWT), login/register pages
+    meters/               # api, hooks, meter types/icons, MeterForm/MeterList
+    entries/
+      api.ts, hooks.ts    # useEntries(range), useUpsertEntry, useDeleteEntry
+      widgets/             # one module per meter type: { DayInput, Cell, Chart }
+      widget-registry.ts   # MeterType -> Widget
+  pages/                 # DailyDashboardPage, MonthlyDashboardPage,
+                          # WeeklyDashboardPage, MetersSettingsPage
+  components/
+    ui/                  # hand-written shadcn-style primitives
+    AppLayout.tsx, ProtectedRoute.tsx
+```
+
+### API contract
+
+The frontend expects a backend exposing (base URL from `VITE_API_URL`):
+
+- `POST /auth/register`, `POST /auth/login`, `GET /auth/me`
+- `GET/POST /meters`, `PATCH/DELETE /meters/:id`
+- `GET /entries?from=YYYY-MM-DD&to=YYYY-MM-DD`
+- `PUT /entries/:meterId/:date` (upsert), `DELETE /entries/:id`
+
+All authenticated requests send `Authorization: Bearer <token>`.
