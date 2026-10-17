@@ -9,7 +9,7 @@ import WithLayout from "./common/WithLayout";
 import Loading from "./common/Loading";
 import { useAuth } from "./auth/AuthProvider";
 import requireAuth from "./auth/requireAuth";
-import { fetchSchemas, fetchMeters } from "../actions";
+import { fetchMeters } from "../actions";
 
 const ConnectedSwitch = connect((state) => ({
   location: state.router.location,
@@ -41,11 +41,10 @@ const MonthlyDashboardPage = requireAuth(WithLayout(AsycnMonthlyDashboard));
 const WeeklyDashboardPage = requireAuth(WithLayout(AsycnWeeklyDashboard));
 const DailyDashboardPage = requireAuth(WithLayout(AsyncDailyDashboard));
 
-export const App = ({ fetchSchemas, fetchMeters }) => {
+export const App = ({ fetchMeters }) => {
   const { isAuthenticated } = useAuth();
   useEffect(() => {
     if (isAuthenticated) {
-      fetchSchemas();
       fetchMeters();
     }
   }, [isAuthenticated]);
@@ -78,14 +77,10 @@ export const App = ({ fetchSchemas, fetchMeters }) => {
 };
 
 App.propTypes = {
-  fetchSchemas: PropTypes.func.isRequired,
   fetchMeters: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchSchemas: () => {
-    dispatch(fetchSchemas());
-  },
   fetchMeters: () => {
     dispatch(fetchMeters());
   },

@@ -5,6 +5,7 @@ import stringWidget from "../common/stringWidget";
 const CustomStringWidget = {
   ...stringWidget,
   name: "String",
+  meterType: "text",
   label: "string",
   icon: <Icon />,
 };

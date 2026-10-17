@@ -6,7 +6,7 @@ import { isString } from "../../common/testers";
 
 export const journalVis = {
   name: "String",
-  schemaId: "String",
+  meterType: "text",
   category: "General",
   label: "Journal",
   icon: <BookIcon />,

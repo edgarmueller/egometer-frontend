@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import * as _ from "lodash";
 import * as actions from "../../actions";
-import { getMeters, getSchemas } from "../../reducers";
-import { findBySchemaId } from "../../utils";
+import { getMeters } from "../../reducers";
 import widgets from "../../widgets";
 import { createProgressSuccessColor } from "../../common/color";
 import NoWidgetFound from "./NoWidgetFound";
@@ -147,17 +146,11 @@ Widget.defaultProps = {
   widgets,
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const foundSchema = findBySchemaId(
-    getSchemas(state),
-    ownProps.meter.schemaId
-  );
-  return {
-    meters: getMeters(state),
-    schema: foundSchema,
-    ...ownProps,
-  };
-};
+const mapStateToProps = (state, ownProps) => ({
+  meters: getMeters(state),
+  schema: ownProps.meter.schema,
+  ...ownProps,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   fetchMeters() {

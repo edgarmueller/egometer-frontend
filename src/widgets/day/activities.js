@@ -62,7 +62,7 @@ Icon.propTypes = {
 const withImageProvider = withImages(Icon);
 
 const ActivitiesMeter = {
-  schemaId: "Activities",
+  meterType: "activities",
   name: "Activity tags",
   label: "Activities",
   category: "General",

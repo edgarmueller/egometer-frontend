@@ -4,7 +4,7 @@ import BooleanStats from "../../components/visualizations/BooleanStats";
 import BooleanCell from "../../components/widgets/cells/BooleanCell";
 
 const BooleanWidget = {
-  schemaId: "Boolean",
+  meterType: "boolean",
   day: DailyBoolean,
   week: undefined,
   month: BooleanStats,

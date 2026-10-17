@@ -64,7 +64,7 @@ export const withMoodImageAndLabelProvider = (Component) =>
 
 export const MoodMeter = {
   name: "EnumMood",
-  schemaId: "Mood",
+  meterType: "mood",
   label: "Mood",
   icon: <SentimentSatisfiedRounded />,
   category: "General",

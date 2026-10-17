@@ -17,7 +17,6 @@ const filterDataByDays = (data = [], days) => {
 const Charts = ({
   days,
   entriesByMeter,
-  findBySchemaId,
   meters,
   widgets,
   width,
@@ -42,7 +41,7 @@ const Charts = ({
     >
       {meterWidgets.map(({ meter, widget }) => {
         const data = entriesByMeter[meter.id];
-        const schema = findBySchemaId(meter.schemaId);
+        const schema = meter.schema;
 
         if (schema === undefined) {
           return null;
@@ -71,7 +70,6 @@ const Charts = ({
 Charts.propTypes = {
   days: PropTypes.array,
   entriesByMeter: entriesPropType,
-  findBySchemaId: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
   meters: PropTypes.arrayOf(meterPropTypes),
   widgets: PropTypes.arrayOf(widgetPropTypes),

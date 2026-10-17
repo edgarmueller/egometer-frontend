@@ -19,7 +19,6 @@ import get from "lodash/get";
 import LinkButton from "../LinkButton";
 
 import widgets from "../../widgets";
-import { getSchemas } from "../../reducers";
 import { logo } from "../../common/styles";
 import { withStyles } from "@material-ui/styles";
 import { useAuth } from "../auth/AuthProvider";
@@ -112,7 +111,6 @@ Nav.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  schemas: getSchemas(state),
   isAdmin: get(state, "user.isAdmin", false),
 });
 

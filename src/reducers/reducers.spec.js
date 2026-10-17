@@ -1,12 +1,8 @@
 import {
   getEntriesByMeter,
   getMeterError,
-  getSchemas,
-  findBySchemaName,
   getEntriesError,
-  isSchemasLoading,
   isMetersLoading,
-  getSchemaError,
   findMeterById,
 } from ".";
 
@@ -19,16 +15,6 @@ describe("Reducer getters", () => {
         },
       })
     ).toEqual({ foo: "bar" });
-  });
-
-  it("should return schemas", () => {
-    expect(
-      getSchemas({
-        schemas: {
-          schemas: [{ type: "object" }],
-        },
-      })
-    ).toHaveLength(1);
   });
 
   it("should find a meter by an id", () => {
@@ -49,34 +35,6 @@ describe("Reducer getters", () => {
     });
   });
 
-  it("should find a schema by name", () => {
-    expect(
-      findBySchemaName("fooSchema")({
-        schemas: {
-          schemas: [
-            {
-              name: "fooSchema",
-              schema: { type: "number" },
-            },
-          ],
-        },
-      })
-    ).toEqual({
-      name: "fooSchema",
-      schema: { type: "number" },
-    });
-  });
-
-  it("should return loading status of schemas", () => {
-    expect(
-      isSchemasLoading({
-        schemas: {
-          isPending: true,
-        },
-      })
-    ).toBe(true);
-  });
-
   it("should return loading status of meters", () => {
     expect(
       isMetersLoading({
@@ -85,16 +43,6 @@ describe("Reducer getters", () => {
         },
       })
     ).toBe(true);
-  });
-
-  it("should return schemas error", () => {
-    expect(
-      getSchemaError({
-        schemas: {
-          error: "Unknown error",
-        },
-      })
-    ).toEqual("Unknown error");
   });
 
   it("should return meter errors", () => {

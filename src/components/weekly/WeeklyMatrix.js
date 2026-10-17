@@ -12,7 +12,6 @@ class WeeklyMatrix extends React.Component {
       isLoading,
       days,
       widgets,
-      schemas,
     } = this.props;
 
     return (
@@ -20,7 +19,6 @@ class WeeklyMatrix extends React.Component {
         calcProgress={calcWeeklyProgress}
         entriesByMeter={entriesByMeter}
         meters={meters}
-        schemas={schemas}
         days={days}
         colorMapping={colorMapping}
         widgets={widgets}
@@ -35,13 +33,6 @@ WeeklyMatrix.propTypes = {
   isLoading: PropTypes.bool,
   meters: PropTypes.arrayOf(PropTypes.object),
   widgets: PropTypes.array,
-  schemas: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      schema: PropTypes.object,
-    })
-  ),
   colorMapping: PropTypes.object,
   entriesByMeter: PropTypes.object,
   days: PropTypes.array,
