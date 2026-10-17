@@ -25,3 +25,6 @@ yarn-error.log*
 .idea
 .netlify
 *.un~
+
+# eslint cache of react-scripts
+.eslintcache
