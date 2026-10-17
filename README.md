@@ -57,8 +57,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### Getting started
 
-- Clone [egometer-backend](https://github.com/edgarmueller/egometer-backend)
-  and follow instructions to setup the backend
-- Install dependencies via `yarn install`
-- Run `yarn run start` to start dev mode
-- Run `yarn test` to execute all tests
+- Clone [egometer-api](https://github.com/edgarmueller/egometer-api)
+  and follow its instructions to set up the backend
+- Use Node.js 12 or 14 (see `.nvmrc`), e.g. via `nvm use`
+- Install dependencies via `npm install`
+- Copy `.env.example` to `.env` and adjust `REACT_APP_BASE_URL` if the API doesn't run on `http://localhost:3000`
+- Run `npm start` to start dev mode, then open `http://localhost:3001` and create an account
+- Run `npm test` to execute all tests
+
+### Authentication
+
+Users sign up and log in with email and password against the egometer API.
+The returned token is kept in local storage and sent with every API request;
+when it expires or the API rejects it, the user is logged out.
