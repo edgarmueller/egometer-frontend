@@ -13,26 +13,51 @@ import {
 import MultiEnumPieChart from "../../components/visualizations/MultiEnumPieChart";
 
 const icons = {
-  work: "md-cash",
-  chill: "md-sunny",
+  // the default options of an activities meter
+  family: "md-home",
   friends: "md-contacts",
-  love: "md-heart",
+  partner: "md-heart",
   sports: "md-bicycle",
-  party: "md-beer",
-  movies: "md-film",
+  outdoors: "md-leaf",
+  travel: "md-plane",
   reading: "md-book",
   gaming: "md-game-controller-b",
+  movies_tv: "md-film",
+  music: "md-musical-notes",
+  work: "md-cash",
+  chores: "md-brush",
+  learning: "md-create",
+  side_project: "md-star",
+  // other tags that might be added to a meter
+  chill: "md-sunny",
+  love: "md-heart",
+  party: "md-beer",
+  movies: "md-film",
   shopping: "md-basket",
   traveling: "md-plane",
   food: "md-restaurant",
+  cooking: "md-restaurant",
   nature: "md-leaf",
+  walking: "md-walk",
   cleaning: "md-trash",
-  pet_project: "md-star",
-  family: "md-home",
   sick: "md-thermometer",
-  learning: "md-create",
   health: "md-medical",
 };
+// for tags without an icon of their own
+const DEFAULT_ICON = "md-pricetag";
+
+const labels = {
+  movies_tv: "Movies & TV",
+};
+
+// built-in tags like side_project are prettified, tags added by users
+// are shown as they were typed
+export const activityLabel = (tag) =>
+  labels[tag] ||
+  (/^[a-z0-9_]+$/.test(tag) ? defaultLiteralLabelProvider(tag) : tag);
+
+export const activityIcon = (tag) =>
+  icons[tag.toLowerCase().replace(/ /g, "_")] || DEFAULT_ICON;
 
 const Icon = ({ selectionColor, isSelected, value }) => {
   return (
@@ -46,7 +71,7 @@ const Icon = ({ selectionColor, isSelected, value }) => {
       }}
     >
       <Ionicon
-        icon={icons[value]}
+        icon={activityIcon(value)}
         color={isSelected ? selectionColor : "black"}
       />
     </div>
@@ -67,12 +92,10 @@ const ActivitiesMeter = {
   label: "Activities",
   category: "General",
   icon: <CategoryIcon />,
-  day: withImageProvider(withLabels(defaultLiteralLabelProvider)(MultiEnum)),
-  week: MultiEnumPieChart,
-  month: MultiEnumPieChart,
-  cell: withImageProvider(
-    withLabels(defaultLiteralLabelProvider)(MultiEnumCell)
-  ),
+  day: withImageProvider(withLabels(activityLabel)(MultiEnum)),
+  week: withLabels(activityLabel)(MultiEnumPieChart),
+  month: withLabels(activityLabel)(MultiEnumPieChart),
+  cell: withImageProvider(withLabels(activityLabel)(MultiEnumCell)),
   isApplicable: (s) => (isArray(s) ? 1 : -1),
 };
 

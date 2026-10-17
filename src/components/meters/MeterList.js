@@ -32,6 +32,7 @@ import { display1 } from "../../common/styles";
 import { getMeters, isMetersLoading, getMeterError } from "../../reducers";
 import { ErrorSnackbar } from "../common/ErrorSnackbar";
 import AddMeterDrawer from "../common/AddMeterDrawer";
+import TagsDialog from "./TagsDialog";
 
 const styles = (theme) => ({
   textField: {
@@ -90,6 +91,8 @@ export const MeterList = ({
   }, [setDrawerOpen, fetchMeters]);
   const [open, setOpen] = useState(false);
   const [editedMeter, setEditedMeter] = useState(undefined);
+  // activities meter whose tags are being edited
+  const [taggedMeter, setTaggedMeter] = useState(undefined);
   const handleUpdateMeter = useCallback(
     (meter, propName, propValue) => {
       const metersAccumulated = meters.reduce((acc, m) => {
@@ -173,7 +176,17 @@ export const MeterList = ({
                         }
                       />
                     </TableCell>
-                    <TableCell>{meter.type}</TableCell>
+                    <TableCell>
+                      {meter.type}
+                      {meter.type === "activities" && (
+                        <Button
+                          size="small"
+                          onClick={() => setTaggedMeter(meter)}
+                        >
+                          Edit tags
+                        </Button>
+                      )}
+                    </TableCell>
                     <TableCell>
                       <IconButton
                         aria-label="Delete meter"
@@ -263,6 +276,13 @@ export const MeterList = ({
             />
           </div>
         </Dialog>
+        <TagsDialog
+          open={taggedMeter !== undefined}
+          meterName={taggedMeter && taggedMeter.name}
+          tags={(taggedMeter && taggedMeter.options) || []}
+          onSave={(tags) => handleUpdateMeter(taggedMeter, "options", tags)}
+          onClose={() => setTaggedMeter(undefined)}
+        />
         <Drawer open={isDrawerOpen} onClose={() => setDrawerOpen(false)}>
           <AddMeterDrawer
             open={isDrawerOpen}
