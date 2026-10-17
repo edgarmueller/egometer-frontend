@@ -5,7 +5,7 @@ import EnumRenderer from "./EnumRenderer";
 
 export class Enum extends Component {
   render() {
-    const { data, date, updateEntry } = this.props;
+    const { data, date, updateEntry, deleteEntry } = this.props;
 
     const dailyData = _.find(data, (d) => d.date === date);
     const isSelected = (val) =>
@@ -15,7 +15,10 @@ export class Enum extends Component {
       <EnumRenderer
         {...this.props}
         isSelected={isSelected}
-        updateEntry={(val) => updateEntry(val)}
+        // selecting the current value again clears it
+        updateEntry={(val) =>
+          isSelected(val) ? deleteEntry(dailyData) : updateEntry(val)
+        }
       />
     );
   }
@@ -25,6 +28,7 @@ Enum.propTypes = {
   date: PropTypes.string,
   data: PropTypes.array,
   updateEntry: PropTypes.func,
+  deleteEntry: PropTypes.func,
 };
 
 export default Enum;

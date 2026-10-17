@@ -10,7 +10,7 @@ export const moodMeter = {
   widget: "EnumMood",
   schema: {
     type: "string",
-    enum: ["bad", "down", "okayish", "good", "dabomb"]
+    enum: ["awful", "bad", "okay", "good", "great"]
   },
   color: "#cecece"
 };
@@ -19,7 +19,7 @@ export const moodSchema = {
   name: "mood",
   schema: {
     type: "string",
-    enum: ["bad", "down", "okayish", "good", "dabomb"]
+    enum: ["awful", "bad", "okay", "good", "great"]
   }
 };
 
@@ -41,7 +41,7 @@ export const moodEntries = [
     id: "5abfbf3b8fdd856d4c35f776",
     date: "2018-04-14",
     meterId: moodMeterId,
-    value: "okayish"
+    value: "okay"
   }
 ];
 

@@ -7,11 +7,14 @@ import Category from "../daily/Category";
 import widgets from "../../widgets";
 import * as api from "../../api";
 
+// the app's accent color; selected values are drawn in the meter's color
+const DEFAULT_COLOR = "#4166aa";
+
 export class AddMeterDrawer extends React.PureComponent {
   state = {};
 
   handleSubmit = (meterType, name) => {
-    api.createMeter(meterType, name.trim(), "#cecece").then(
+    api.createMeter(meterType, name.trim(), DEFAULT_COLOR).then(
       () => this.props.onSubmit(),
       (error) =>
         this.setState({

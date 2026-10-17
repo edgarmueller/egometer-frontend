@@ -1,5 +1,6 @@
 // Mirrors the meter types of the API, see GET /api/v1/meter-types
-export const MOOD_VALUES = ["bad", "down", "okayish", "good", "dabomb"];
+// ordered from worst to best
+export const MOOD_VALUES = ["awful", "bad", "okay", "good", "great"];
 export const QUANTITY_VALUES = ["none", "a_bit", "a_lot"];
 
 // name of the widget (see src/widgets) that displays a meter of each type

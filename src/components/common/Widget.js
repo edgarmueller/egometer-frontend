@@ -26,6 +26,11 @@ export class Widget extends React.Component {
     return updateEntry(meter.id, date)(value, shouldDebounce);
   };
 
+  deleteEntry = (entry) => {
+    const { deleteEntry, meter } = this.props;
+    return deleteEntry(meter.id, entry);
+  };
+
   shouldComponentUpdate(nextProps) {
     const {
       data,
@@ -133,6 +138,7 @@ Widget.propTypes = {
   // TODO enum
   widgetType: PropTypes.string.isRequired,
   widgets: PropTypes.array,
+  deleteEntry: PropTypes.func,
   // TODO: what type?
   updateEntry: PropTypes.func.isRequired,
   loadingStatus: PropTypes.shape({
