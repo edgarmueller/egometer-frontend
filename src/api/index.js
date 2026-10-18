@@ -3,7 +3,6 @@ import { API_BASE_URL } from "../constants";
 import _ from "lodash";
 import moment from "moment";
 import { getToken } from "./session";
-import { withWidget } from "../common/meterTypes";
 import { lastDayOfMonth, pad, weekToDate } from "../common/date";
 
 const contentType = "Content-Type";
@@ -58,11 +57,7 @@ export const signUp = (email, password) =>
 
 export const fetchMeters = async () => {
   const token = getToken();
-  const resp = await Axios.get(
-    `${API_BASE_URL}/meters`,
-    createHeaders()(token)
-  );
-  return { ...resp, data: resp.data.map(withWidget) };
+  return Axios.get(`${API_BASE_URL}/meters`, createHeaders()(token));
 };
 
 // the local calendar day, which is what the dashboards show
@@ -96,14 +91,13 @@ export const fetchEntriesByWeek = async (year, week) => {
 
 export const createMeter = async (type, name, color) => {
   const token = getToken();
-  const resp = await Axios.post(
+  return Axios.post(
     `${API_BASE_URL}/meters`,
     { type, name, color },
     createHeaders({
       [contentType]: applicationJson,
     })(token)
   );
-  return { ...resp, data: withWidget(resp.data) };
 };
 
 export const deleteMeter = async (meterId) => {
@@ -132,14 +126,13 @@ export const updateMeter = async (meter) => {
       changes[field] = null;
     }
   });
-  const resp = await Axios.patch(
+  return Axios.patch(
     `${API_BASE_URL}/meters/${meter.id}`,
     changes,
     createHeaders({
       [contentType]: applicationJson,
     })(token)
   );
-  return { ...resp, data: withWidget(resp.data) };
 };
 
 export const updateEntry = async ({ meterId, date, value }) => {

@@ -1,66 +1,67 @@
-import React, { useCallback, useState, useEffect } from "react";
-import toNumber from "lodash/toNumber";
+import React, { useCallback, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import IconButton from "@material-ui/core/IconButton";
-import Paper from "@material-ui/core/Paper";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import { withStyles } from "@material-ui/core/styles";
-import DeleteIcon from "@material-ui/icons/Delete";
-import { Emoji } from "emoji-mart";
-import { Dialog, DialogTitle, Button } from "@material-ui/core";
-import { Drawer } from "@material-ui/core";
-import { Picker } from "emoji-mart";
-import AddIcon from "@material-ui/icons/Add";
-import { fetchMeters } from "../../actions";
-import ColorPicker from "../common/ColorPicker";
-import Loading from "../common/Loading";
-import widgets from "../../widgets";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import ButtonBase from "@mui/material/ButtonBase";
+import Card from "@mui/material/Card";
+import Chip from "@mui/material/Chip";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
+import AddRounded from "@mui/icons-material/AddRounded";
+import DeleteOutlineRounded from "@mui/icons-material/DeleteOutlineRounded";
+import LocalOfferOutlined from "@mui/icons-material/LocalOfferOutlined";
+import TuneRounded from "@mui/icons-material/TuneRounded";
 import {
   deleteMeter,
+  fetchMeters,
   resetMetersError,
-  updateMeter,
   updateMeterRequest,
 } from "../../actions";
-import { display1 } from "../../common/styles";
 import { getMeters, isMetersLoading, getMeterError } from "../../reducers";
-import { ErrorSnackbar } from "../common/ErrorSnackbar";
-import AddMeterDrawer from "../common/AddMeterDrawer";
+import { meterType } from "../../common/meterTypes";
+import PageHeader from "../layout/PageHeader";
+import Loading from "../common/Loading";
+import EmptyState from "../common/EmptyState";
+import MeterAvatar from "../common/MeterAvatar";
+import ColorPicker, { COLORS } from "../common/ColorPicker";
+import ErrorSnackbar from "../common/ErrorSnackbar";
+import AddMeterDialog from "./AddMeterDialog";
+import IconPicker from "./IconPicker";
 import TagsDialog from "./TagsDialog";
 
-const styles = (theme) => ({
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-  },
-  display1,
-  root: {
-    marginTop: theme.spacing(3),
-    overflowX: "auto",
-    margin: "0 auto",
-  },
-  button: {
-    margin: "0.25em",
-    float: "right",
-  },
-  table: {
-    width: 700,
-    margin: "0 auto",
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-});
+const GoalField = ({ label, value, onChange }) => (
+  <TextField
+    size="small"
+    type="number"
+    label={label}
+    value={value || ""}
+    onChange={(event) => onChange(Number(event.target.value))}
+    slotProps={{ htmlInput: { min: 0, step: "any" } }}
+    sx={{ width: 120 }}
+  />
+);
+
+GoalField.propTypes = {
+  label: PropTypes.string,
+  value: PropTypes.number,
+  onChange: PropTypes.func,
+};
 
 export const MeterList = ({
-  classes,
   deleteMeter,
   meters,
   updateMeterRequest,
@@ -69,246 +70,239 @@ export const MeterList = ({
   resetMetersError,
   fetchMeters,
 }) => {
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [metersById, setMetersById] = useState(
-    meters
-      ? meters.reduce((acc, meter) => {
-          acc[meter.id] = meter;
-          return acc;
-        }, {})
-      : {}
-  );
-  useEffect(() => {
-    const metersAccumulated = meters.reduce((acc, meter) => {
-      acc[meter.id] = meter;
-      return acc;
-    }, {});
-    setMetersById(metersAccumulated);
-  }, [meters, setMetersById]);
-  const confirmDialog = useCallback(() => {
-    setDrawerOpen(false);
-    fetchMeters();
-  }, [setDrawerOpen, fetchMeters]);
-  const [open, setOpen] = useState(false);
-  const [editedMeter, setEditedMeter] = useState(undefined);
-  // activities meter whose tags are being edited
+  // edits are shown right away and saved once typing pauses
+  const [editedMeters, setEditedMeters] = useState(meters);
+  useEffect(() => setEditedMeters(meters), [meters]);
+  const [isAddOpen, setAddOpen] = useState(false);
+  // the meters whose icon, tags or deletion are being edited
+  const [iconMeter, setIconMeter] = useState(undefined);
   const [taggedMeter, setTaggedMeter] = useState(undefined);
+  const [deletedMeter, setDeletedMeter] = useState(undefined);
+
   const handleUpdateMeter = useCallback(
     (meter, propName, propValue) => {
-      const metersAccumulated = meters.reduce((acc, m) => {
-        if (m.id === meter.id) {
-          acc[m.id] = {
-            ...m,
-            [propName]: propValue,
-          };
-        } else {
-          acc[m.id] = m;
-        }
-        return acc;
-      }, {});
-      setMetersById(metersAccumulated);
-      updateMeterRequest({
-        ...meter,
-        [propName]: propValue,
-      });
+      const updated = { ...meter, [propName]: propValue };
+      setEditedMeters((current) =>
+        current.map((m) => (m.id === meter.id ? updated : m))
+      );
+      updateMeterRequest(updated);
     },
-    [updateMeterRequest, setMetersById, meters]
+    [updateMeterRequest]
   );
 
-  const handleDeleteMeter = useCallback(
-    (meter) => () => deleteMeter(meter.id),
-    [deleteMeter]
-  );
-
-  if (isMetersLoading) {
+  // reloading the meters, e.g. after adding one, keeps showing them
+  if (isMetersLoading && meters.length === 0) {
     return <Loading />;
   }
 
+  const addButton = (
+    <Button
+      variant="contained"
+      startIcon={<AddRounded />}
+      onClick={() => setAddOpen(true)}
+    >
+      Add meter
+    </Button>
+  );
+
   return (
-    <div>
-      <ErrorSnackbar error={meterError} resetError={resetMetersError} />
-      <Typography variant="h1" className={classes.display1}>
-        Manage Meters
-      </Typography>
-      <Paper className={classes.root}>
-        <Button
-          variant="outlined"
-          size="small"
-          color="primary"
-          aria-label="Add"
-          style={{
-            color: "rgb(65, 102, 170)",
-            borderRadius: 30,
-            margin: "0.25em",
-          }}
-          onClick={() => setDrawerOpen(true)}
-        >
-          <AddIcon />
-          Add Meter
-        </Button>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell />
-              <TableCell />
-              <TableCell>Type</TableCell>
-              <TableCell>Actions</TableCell>
-              <TableCell>Daily Goal</TableCell>
-              <TableCell>Weekly Goal</TableCell>
-              <TableCell>Color</TableCell>
-              <TableCell>Icon</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {Object.keys(metersById).length !== 0 ? (
-              Object.keys(metersById).map((meterId) => {
-                const meter = metersById[meterId];
-                return (
-                  <TableRow key={meter.id}>
-                    <TableCell colSpan={3}>
-                      <TextField
-                        margin="dense"
-                        variant="outlined"
-                        value={meter.name}
-                        onChange={(ev) =>
-                          handleUpdateMeter(meter, "name", ev.target.value)
-                        }
-                      />
-                    </TableCell>
-                    <TableCell>
-                      {meter.type}
-                      {meter.type === "activities" && (
-                        <Button
-                          size="small"
-                          onClick={() => setTaggedMeter(meter)}
+    <>
+      <PageHeader title="Meters" subtitle="What you track every day">
+        {editedMeters.length > 0 && addButton}
+      </PageHeader>
+      <Card>
+        {editedMeters.length === 0 ? (
+          <EmptyState
+            icon={<TuneRounded sx={{ fontSize: 48 }} />}
+            title="No meters yet"
+            action={addButton}
+          >
+            Meters track one thing per day, like your mood, your activities or a
+            number.
+          </EmptyState>
+        ) : (
+          <TableContainer>
+            <Table sx={{ minWidth: 720 }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Meter</TableCell>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Color</TableCell>
+                  <TableCell>Goals</TableCell>
+                  <TableCell align="right" aria-label="Actions" />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {editedMeters.map((meter) => {
+                  const { label, Icon } = meterType(meter);
+                  return (
+                    <TableRow key={meter.id} hover>
+                      <TableCell>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1.5,
+                          }}
                         >
-                          Edit tags
-                        </Button>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <IconButton
-                        aria-label="Delete meter"
-                        onClick={handleDeleteMeter(meter)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell>
-                      {meter.type === "number" && (
-                        <TextField
-                          value={meter.dailyGoal || ""}
-                          onChange={(ev) =>
-                            handleUpdateMeter(
-                              meter,
-                              "dailyGoal",
-                              toNumber(ev.target.value)
-                            )
+                          <Tooltip title="Change icon">
+                            <ButtonBase
+                              aria-label={`Icon of ${meter.name}`}
+                              onClick={() => setIconMeter(meter)}
+                              sx={{ borderRadius: 2 }}
+                            >
+                              <MeterAvatar meter={meter} size={40} />
+                            </ButtonBase>
+                          </Tooltip>
+                          <TextField
+                            size="small"
+                            value={meter.name}
+                            onChange={(ev) =>
+                              handleUpdateMeter(meter, "name", ev.target.value)
+                            }
+                            slotProps={{
+                              htmlInput: {
+                                "aria-label": "Name",
+                                maxLength: 100,
+                              },
+                            }}
+                            sx={{ minWidth: { xs: 130, sm: 180 } }}
+                          />
+                        </Box>
+                      </TableCell>
+                      <TableCell>
+                        <Chip
+                          icon={<Icon />}
+                          label={label}
+                          size="small"
+                          variant="outlined"
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <ColorPicker
+                          color={meter.color || COLORS[0]}
+                          onChange={(color) =>
+                            handleUpdateMeter(meter, "color", color)
                           }
                         />
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {meter.type === "number" && (
-                        <TextField
-                          value={meter.weeklyGoal || ""}
-                          onChange={(ev) =>
-                            handleUpdateMeter(
-                              meter,
-                              "weeklyGoal",
-                              toNumber(ev.target.value)
-                            )
-                          }
-                        />
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <ColorPicker
-                        color={meter.color}
-                        onChange={() => {}}
-                        onChangeComplete={(color) =>
-                          handleUpdateMeter(meter, "color", color)
-                        }
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        onClick={() => {
-                          setOpen(true);
-                          setEditedMeter(meter);
-                        }}
-                      >
-                        {meter.icon ? (
-                          <Emoji emoji={meter.icon} size={24} set="emojione" />
+                      </TableCell>
+                      <TableCell>
+                        {meter.type === "number" ? (
+                          <Box sx={{ display: "flex", gap: 1 }}>
+                            <GoalField
+                              label="Daily goal"
+                              value={meter.dailyGoal}
+                              onChange={(goal) =>
+                                handleUpdateMeter(meter, "dailyGoal", goal)
+                              }
+                            />
+                            <GoalField
+                              label="Days/week"
+                              value={meter.weeklyGoal}
+                              onChange={(goal) =>
+                                handleUpdateMeter(meter, "weeklyGoal", goal)
+                              }
+                            />
+                          </Box>
                         ) : (
-                          "Set icon"
+                          <Typography color="text.disabled">–</Typography>
                         )}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })
-            ) : (
-              <TableRow>
-                <TableCell>No meters defined yet</TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        <Dialog
-          open={open}
-          onClose={() => {
-            setOpen(false);
-            setEditedMeter(undefined);
-          }}
-          aria-labelledby="simple-dialog-title"
-        >
-          <DialogTitle id="simple-dialog-title">Set icon</DialogTitle>
-          <div>
-            <Picker
-              set="emojione"
-              onClick={(emoji) => {
-                handleUpdateMeter(editedMeter, "icon", emoji.id);
-                setEditedMeter(undefined);
-                setOpen(false);
-              }}
-            />
-          </div>
-        </Dialog>
-        <TagsDialog
-          open={taggedMeter !== undefined}
-          meterName={taggedMeter && taggedMeter.name}
-          tags={(taggedMeter && taggedMeter.options) || []}
-          onSave={(tags) => handleUpdateMeter(taggedMeter, "options", tags)}
-          onClose={() => setTaggedMeter(undefined)}
-        />
-        <Drawer open={isDrawerOpen} onClose={() => setDrawerOpen(false)}>
-          <AddMeterDrawer
-            open={isDrawerOpen}
-            onSubmit={confirmDialog}
-            handleClose={() => setDrawerOpen(false)}
-            widgets={widgets}
-          />
-        </Drawer>
-      </Paper>
-    </div>
+                      </TableCell>
+                      <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
+                        {meter.type === "activities" && (
+                          <Tooltip title="Edit tags">
+                            <IconButton
+                              aria-label="Edit tags"
+                              onClick={() => setTaggedMeter(meter)}
+                            >
+                              <LocalOfferOutlined />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        <Tooltip title="Delete meter">
+                          <IconButton
+                            aria-label="Delete meter"
+                            onClick={() => setDeletedMeter(meter)}
+                          >
+                            <DeleteOutlineRounded />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Card>
+      <AddMeterDialog
+        open={isAddOpen}
+        // new meters get the next color of the palette
+        color={COLORS[editedMeters.length % COLORS.length]}
+        onClose={() => setAddOpen(false)}
+        onCreated={() => {
+          setAddOpen(false);
+          fetchMeters();
+        }}
+      />
+      <IconPicker
+        open={iconMeter !== undefined}
+        meterName={iconMeter && iconMeter.name}
+        hasIcon={!!(iconMeter && iconMeter.icon)}
+        onPick={(icon) => {
+          handleUpdateMeter(iconMeter, "icon", icon);
+          setIconMeter(undefined);
+        }}
+        onClose={() => setIconMeter(undefined)}
+      />
+      <TagsDialog
+        open={taggedMeter !== undefined}
+        meterName={taggedMeter && taggedMeter.name}
+        tags={(taggedMeter && taggedMeter.options) || []}
+        onSave={(tags) => handleUpdateMeter(taggedMeter, "options", tags)}
+        onClose={() => setTaggedMeter(undefined)}
+      />
+      <Dialog
+        open={deletedMeter !== undefined}
+        onClose={() => setDeletedMeter(undefined)}
+        aria-labelledby="delete-meter-title"
+      >
+        <DialogTitle id="delete-meter-title">
+          Delete {deletedMeter && deletedMeter.name}?
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            This also deletes everything you tracked with this meter.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeletedMeter(undefined)}>Cancel</Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              deleteMeter(deletedMeter.id);
+              setDeletedMeter(undefined);
+            }}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <ErrorSnackbar error={meterError} onClose={resetMetersError} />
+    </>
   );
 };
 
 MeterList.propTypes = {
-  classes: PropTypes.object,
-  deleteMeter: PropTypes.func,
-  meters: PropTypes.array,
-  updateMeterRequest: PropTypes.func,
+  deleteMeter: PropTypes.func.isRequired,
+  meters: PropTypes.array.isRequired,
+  updateMeterRequest: PropTypes.func.isRequired,
   isMetersLoading: PropTypes.bool,
-  meterError: PropTypes.object,
-  resetMetersError: PropTypes.func,
-  fetchMeters: PropTypes.func,
-};
-
-MeterList.defaultProps = {
-  widgets,
+  meterError: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  resetMetersError: PropTypes.func.isRequired,
+  fetchMeters: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -320,7 +314,6 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   resetMetersError,
   deleteMeter,
-  updateMeter,
   updateMeterRequest,
   fetchMeters,
-})(withStyles(styles)(MeterList));
+})(MeterList);

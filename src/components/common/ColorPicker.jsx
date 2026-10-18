@@ -1,103 +1,124 @@
-import React, { Fragment } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import { SketchPicker } from "react-color";
-import reactCSS from "reactcss";
+import Box from "@mui/material/Box";
+import ButtonBase from "@mui/material/ButtonBase";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import CheckRounded from "@mui/icons-material/CheckRounded";
 
-// TODO the only usage of react css, can we remove it?
-const styles = reactCSS({
-  default: {
-    swatch: {
-      padding: "5px",
-      background: "#fff",
-      borderRadius: "1px",
-      boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
-      display: "inline-block",
-      cursor: "pointer",
-      margin: 5,
-    },
-    popover: {
-      position: "absolute",
-      zIndex: "2",
-    },
-    cover: {
-      position: "fixed",
-      top: "0px",
-      right: "0px",
-      bottom: "0px",
-      left: "0px",
-    },
-  },
-});
+export const COLORS = [
+  "#4f46e5",
+  "#2563eb",
+  "#0891b2",
+  "#059669",
+  "#65a30d",
+  "#ca8a04",
+  "#ea580c",
+  "#dc2626",
+  "#db2777",
+  "#9333ea",
+  "#475569",
+  "#78716c",
+];
 
-export class ColorPicker extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      open: false,
-      color: props.color,
-    };
-  }
+const Swatch = ({ color, size, selected, ...props }) => (
+  <ButtonBase
+    aria-label={color}
+    {...props}
+    sx={{
+      width: size,
+      height: size,
+      borderRadius: "50%",
+      bgcolor: color,
+      color: "#fff",
+      boxShadow: "inset 0 0 0 1px rgba(0, 0, 0, 0.12)",
+    }}
+  >
+    {selected && <CheckRounded fontSize="small" />}
+  </ButtonBase>
+);
 
-  componentDidUpdate(prevProps) {
-    if (this.props.color !== prevProps.color) {
-      this.setState({ color: this.props.color });
-    }
-  }
-
-  handleClick = () => {
-    this.setState({ open: !this.state.open });
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  handleChange = (color) => {
-    this.setState({ color: color.hex });
-  };
-
-  handleChangeComplete = (color) => {
-    this.props.onChangeComplete(color.hex);
-  };
-
-  render() {
-    return (
-      <Fragment>
-        <div style={styles.swatch} onClick={this.handleClick}>
-          <div
-            style={{
-              height: 25,
-              width: 25,
-              borderRadius: "50%",
-              backgroundColor: this.state.color,
-              border: "none",
-            }}
-          />
-        </div>
-        {this.state.open ? (
-          <div style={styles.popover}>
-            <div style={styles.cover} onClick={this.handleClose} />
-            <SketchPicker
-              color={this.state.color}
-              onChange={(color, event) => {
-                this.props.onChange(color.hex);
-                this.handleChange(color);
-                event.stopPropagation();
-              }}
-              onChangeComplete={this.handleChangeComplete}
-            />
-          </div>
-        ) : null}
-      </Fragment>
-    );
-  }
-}
-
-ColorPicker.propTypes = {
-  onChange: PropTypes.func,
-  onChangeComplete: PropTypes.func,
+Swatch.propTypes = {
   color: PropTypes.string,
+  size: PropTypes.number,
+  selected: PropTypes.bool,
 };
 
-export default withStyles(styles)(ColorPicker);
+/** A swatch of the color that opens a palette to pick another one. */
+const ColorPicker = ({ color = COLORS[0], onChange }) => {
+  const [anchor, setAnchor] = useState(null);
+  const pick = (newColor) => {
+    setAnchor(null);
+    onChange(newColor);
+  };
+  return (
+    <>
+      <Swatch
+        color={color}
+        size={28}
+        aria-label="Change color"
+        onClick={(event) => setAnchor(event.currentTarget)}
+      />
+      <Popover
+        open={anchor !== null}
+        anchorEl={anchor}
+        onClose={() => setAnchor(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <Box sx={{ p: 2, width: 232 }}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(6, 1fr)",
+              gap: 1,
+            }}
+          >
+            {COLORS.map((c) => (
+              <Swatch
+                key={c}
+                color={c}
+                size={28}
+                selected={c.toLowerCase() === (color || "").toLowerCase()}
+                onClick={() => pick(c)}
+              />
+            ))}
+          </Box>
+          <Box
+            component="label"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mt: 2,
+              cursor: "pointer",
+            }}
+          >
+            <Typography variant="body2" color="text.secondary">
+              Custom color
+            </Typography>
+            <Box
+              component="input"
+              type="color"
+              value={color}
+              onChange={(event) => pick(event.target.value)}
+              sx={{
+                width: 40,
+                height: 28,
+                border: 0,
+                p: 0,
+                bgcolor: "transparent",
+              }}
+            />
+          </Box>
+        </Box>
+      </Popover>
+    </>
+  );
+};
+
+ColorPicker.propTypes = {
+  color: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+};
+
+export default ColorPicker;

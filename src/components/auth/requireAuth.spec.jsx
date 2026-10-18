@@ -1,39 +1,37 @@
 import React from "react";
-import { configure, mount } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
 import requireAuth from "./requireAuth";
 
-configure({ adapter: new Adapter() });
 vi.mock("./AuthProvider");
 
 const Secret = () => <div>secret</div>;
 const Protected = requireAuth(Secret);
 
 const renderAt = (path) =>
-  mount(
+  render(
     <MemoryRouter initialEntries={[path]}>
-      <div>
-        <Route
-          path="/login"
-          render={({ location }) => <div>login{location.search}</div>}
-        />
-        <Route path="/weekly" component={Protected} />
-      </div>
+      <Route
+        path="/login"
+        render={({ location }) => <div>login{location.search}</div>}
+      />
+      <Route path="/weekly" component={Protected} />
     </MemoryRouter>
   );
 
 describe("requireAuth", () => {
   it("should render the component if authenticated", () => {
     useAuth.mockReturnValue({ isAuthenticated: true });
-    expect(renderAt("/weekly").text()).toBe("secret");
+    renderAt("/weekly");
+    expect(screen.getByText("secret")).toBeInTheDocument();
   });
 
   it("should redirect to the login page if not authenticated", () => {
     useAuth.mockReturnValue({ isAuthenticated: false });
-    expect(renderAt("/weekly?x=1").text()).toBe(
-      "login?redirect=%2Fweekly%3Fx%3D1"
-    );
+    renderAt("/weekly?x=1");
+    expect(
+      screen.getByText("login?redirect=%2Fweekly%3Fx%3D1")
+    ).toBeInTheDocument();
   });
 });

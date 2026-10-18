@@ -1,25 +1,9 @@
 import React from "react";
-import Adapter from "enzyme-adapter-react-16";
-import { configure, mount } from "enzyme";
-import Chip from "@material-ui/core/Chip";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import TagsDialog, { validateTag } from "./TagsDialog";
-import { activityIcon, activityLabel } from "../../widgets/day/activities";
 
-configure({ adapter: new Adapter() });
-
-describe("activity tags", () => {
-  it("labels built-in tags nicely and shows custom ones as typed", () => {
-    expect(activityLabel("movies_tv")).toBe("Movies & TV");
-    expect(activityLabel("side_project")).toBe("Side Project");
-    expect(activityLabel("Yoga & stretching")).toBe("Yoga & stretching");
-  });
-
-  it("finds icons for known tags, ignoring case, with a fallback", () => {
-    expect(activityIcon("music")).toBe("md-musical-notes");
-    expect(activityIcon("Cooking")).toBe("md-restaurant");
-    expect(activityIcon("Board games")).toBe("md-pricetag");
-  });
-
+describe("validateTag", () => {
   it("validates new tags", () => {
     expect(validateTag("Yoga", ["work"])).toBeUndefined();
     expect(validateTag("Work", ["work"])).toEqual(expect.any(String));
@@ -28,49 +12,43 @@ describe("activity tags", () => {
 });
 
 describe("TagsDialog", () => {
-  const render = (onSave) =>
-    mount(
+  const renderDialog = (onSave, tags = ["work", "music"]) =>
+    render(
       <TagsDialog
         open
         meterName="Activities"
-        tags={["work", "music"]}
+        tags={tags}
         onSave={onSave}
         onClose={vi.fn()}
       />
     );
-  const save = (wrapper) =>
-    wrapper
-      .find("button")
-      .filterWhere((b) => b.text() === "Save")
-      .simulate("click");
+  const addTag = async (tag) => {
+    await userEvent.type(screen.getByLabelText("New tag"), tag);
+    await userEvent.click(screen.getByRole("button", { name: "Add" }));
+  };
+  const chip = (label) => screen.getByText(label).closest(".MuiChip-root");
 
-  it("adds and removes tags", () => {
+  it("adds and removes tags", async () => {
     const onSave = vi.fn();
-    const wrapper = render(onSave);
-    wrapper
-      .find("input")
-      .simulate("change", { target: { value: " Yoga & stretching " } });
-    wrapper.find("form").simulate("submit");
-    // remove "work"
-    wrapper.find(Chip).first().prop("onDelete")();
-    wrapper.update();
-    save(wrapper);
+    renderDialog(onSave);
+    await addTag(" Yoga & stretching ");
+    await userEvent.click(within(chip("Work")).getByTestId("CancelIcon"));
+    await userEvent.click(screen.getByRole("button", { name: "Save" }));
     expect(onSave).toHaveBeenCalledWith(["music", "Yoga & stretching"]);
   });
 
   it("keeps at least one tag", () => {
-    const wrapper = mount(
-      <TagsDialog open tags={["work"]} onSave={vi.fn()} onClose={vi.fn()} />
-    );
-    expect(wrapper.find(Chip).prop("onDelete")).toBeUndefined();
+    renderDialog(vi.fn(), ["work"]);
+    expect(within(chip("Work")).queryByTestId("CancelIcon")).toBeNull();
   });
 
-  it("doesn't add duplicates", () => {
+  it("doesn't add duplicates", async () => {
     const onSave = vi.fn();
-    const wrapper = render(onSave);
-    wrapper.find("input").simulate("change", { target: { value: "Music" } });
-    wrapper.find("form").simulate("submit");
-    save(wrapper);
+    renderDialog(onSave);
+    await userEvent.type(screen.getByLabelText("New tag"), "Music");
+    expect(screen.getByText("This tag already exists")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Add" })).toBeDisabled();
+    await userEvent.click(screen.getByRole("button", { name: "Save" }));
     expect(onSave).toHaveBeenCalledWith(["work", "music"]);
   });
 });

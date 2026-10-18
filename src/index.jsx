@@ -1,34 +1,35 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { ConnectedRouter } from "react-router-redux";
+import { createRoot } from "react-dom/client";
+import { Router } from "react-router-dom";
 import { Provider } from "react-redux";
-import Typography from "typography";
-import grandViewTheme from "typography-theme-grand-view";
-import "emoji-mart/css/emoji-mart.css";
-import "./index.css";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ThemeProvider } from "@mui/material/styles";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import "@fontsource-variable/inter";
+import theme from "./theme";
 import App from "./components/App";
-import { configureStore } from "./store/configureStore";
-import { history } from "./store/configureStore";
+import { configureStore, history } from "./store/configureStore";
 import DefaultErrorBoundary from "./components/common/DefaultErrorBoundary";
 import { AuthProvider } from "./components/auth/AuthProvider";
 import { rootEpic } from "./epics";
 
-const typography = new Typography(grandViewTheme);
-typography.injectStyles();
-
 const { store, epicMiddleware } = configureStore();
 epicMiddleware.run(rootEpic);
 
-ReactDOM.render(
-  <AuthProvider>
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <DefaultErrorBoundary>
-          <App />
-        </DefaultErrorBoundary>
-      </ConnectedRouter>
-    </Provider>
-  </AuthProvider>,
-  // eslint-disable-next-line no-undef
-  document.getElementById("root")
+createRoot(document.getElementById("root")).render(
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <LocalizationProvider dateAdapter={AdapterMoment}>
+      <AuthProvider>
+        <Provider store={store}>
+          <Router history={history}>
+            <DefaultErrorBoundary>
+              <App />
+            </DefaultErrorBoundary>
+          </Router>
+        </Provider>
+      </AuthProvider>
+    </LocalizationProvider>
+  </ThemeProvider>
 );

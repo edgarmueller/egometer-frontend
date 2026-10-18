@@ -1,27 +1,19 @@
 import React from "react";
 import * as _ from "lodash";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import qs from "qs";
-import Loading from "../common/Loading";
-import { primaryButton, joinClasses } from "../../common/styles";
+import Logo from "../layout/Logo";
 import { withAuth } from "./AuthProvider";
-
-const styles = (theme) => ({
-  primaryButton,
-  secondaryButton: {
-    color: "#333435",
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
-  },
-});
 
 const MIN_PASSWORD_LENGTH = 8;
 
@@ -75,22 +67,9 @@ export class LoginPage extends React.Component {
     }));
   };
 
-  renderAlert() {
-    const error = this.state.error || this.props.error;
-    if (error) {
-      return (
-        <div style={{ marginTop: "1em" }}>
-          <span style={{ color: "red" }}>{error}</span>
-        </div>
-      );
-    }
-
-    return undefined;
-  }
-
   render() {
-    const { location, auth, classes } = this.props;
-    const { email, password, isSignUp, isLoading } = this.state;
+    const { location, auth } = this.props;
+    const { email, password, isSignUp, isLoading, error } = this.state;
 
     if (auth.isAuthenticated) {
       const params = location
@@ -106,11 +85,32 @@ export class LoginPage extends React.Component {
     }
 
     return (
-      <Container component="main" maxWidth="xs">
-        <h2>Welcome to egometer</h2>
-        <form className={classes.form} onSubmit={this.handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
+      <Box
+        component="main"
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 3,
+          px: 2,
+          py: 4,
+        }}
+      >
+        <Logo />
+        <Card sx={{ width: "100%", maxWidth: 400 }}>
+          <CardContent sx={{ p: 4 }}>
+            <Typography variant="h5" component="h1">
+              {isSignUp ? "Create your account" : "Welcome back"}
+            </Typography>
+            <Typography color="text.secondary" sx={{ mt: 0.5, mb: 3 }}>
+              {isSignUp
+                ? "Start tracking your habits with egometer."
+                : "Log in to continue tracking your habits."}
+            </Typography>
+            <Stack component="form" spacing={2} onSubmit={this.handleSubmit}>
+              {error && <Alert severity="error">{error}</Alert>}
               <TextField
                 required
                 type="email"
@@ -120,14 +120,14 @@ export class LoginPage extends React.Component {
                 onChange={(e) => this.setState({ email: e.target.value })}
                 fullWidth
               />
-            </Grid>
-            <Grid item xs={12}>
               <TextField
                 required
                 type="password"
                 label="Password"
                 autoComplete={isSignUp ? "new-password" : "current-password"}
-                inputProps={isSignUp ? { minLength: MIN_PASSWORD_LENGTH } : {}}
+                slotProps={{
+                  htmlInput: isSignUp ? { minLength: MIN_PASSWORD_LENGTH } : {},
+                }}
                 helperText={
                   isSignUp
                     ? `At least ${MIN_PASSWORD_LENGTH} characters`
@@ -137,44 +137,43 @@ export class LoginPage extends React.Component {
                 onChange={(e) => this.setState({ password: e.target.value })}
                 fullWidth
               />
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container spacing={2} alignItems="center">
-                <Grid item xs={6}>
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className={joinClasses(
-                      classes.button,
-                      classes.primaryButton
-                    )}
-                  >
-                    {isSignUp ? "Sign up" : "Login"}
-                  </Button>
-                </Grid>
-                <Grid item xs={6}>
-                  <Button
-                    onClick={this.toggleMode}
-                    className={classes.secondaryButton}
-                  >
-                    {isSignUp ? "Have an account?" : "No account yet?"}
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </form>
-        {isLoading && <Loading />}
-        {this.renderAlert()}
-      </Container>
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                loading={isLoading}
+                fullWidth
+              >
+                {isSignUp ? "Sign up" : "Log in"}
+              </Button>
+            </Stack>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              align="center"
+              sx={{ mt: 3 }}
+            >
+              {isSignUp ? "Already have an account?" : "No account yet?"}{" "}
+              <Link
+                component="button"
+                type="button"
+                variant="body2"
+                underline="hover"
+                onClick={this.toggleMode}
+                sx={{ fontWeight: 600, verticalAlign: "baseline" }}
+              >
+                {isSignUp ? "Log in" : "Sign up"}
+              </Link>
+            </Typography>
+          </CardContent>
+        </Card>
+      </Box>
     );
   }
 }
 
 LoginPage.propTypes = {
-  error: PropTypes.string,
   location: PropTypes.object,
-  classes: PropTypes.object,
   auth: PropTypes.shape({
     isAuthenticated: PropTypes.bool,
     login: PropTypes.func,
@@ -182,9 +181,4 @@ LoginPage.propTypes = {
   }).isRequired,
 };
 
-LoginPage.defaultProps = {
-  error: undefined,
-  classes: {},
-};
-
-export default withStyles(styles)(withAuth(LoginPage));
+export default withAuth(LoginPage);

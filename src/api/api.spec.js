@@ -1,4 +1,3 @@
-import _ from "lodash";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { moodMeter } from "../__mocks__/fixtures";
@@ -9,33 +8,15 @@ import mockStorage from "../__mocks__/mockStorage";
 const mock = new MockAdapter(axios);
 global.localStorage = mockStorage();
 
-// a meter as the API returns it, without the fields the UI adds
-const apiMoodMeter = _.omit(moodMeter, ["widget", "schema"]);
-
 describe("api", () => {
   beforeEach(() => {
     mock.reset();
   });
 
-  it("should fetch meters and add their widget and schema", async () => {
-    mock.onGet(`${API_BASE_URL}/meters`).reply(200, [apiMoodMeter]);
+  it("should fetch meters", async () => {
+    mock.onGet(`${API_BASE_URL}/meters`).reply(200, [moodMeter]);
     const meters = await api.fetchMeters();
     expect(meters.data).toEqual([moodMeter]);
-  });
-
-  it("should derive the schema of activities meters from their options", async () => {
-    const activities = {
-      id: "a",
-      name: "Sports",
-      type: "activities",
-      options: ["run", "swim"],
-    };
-    mock.onGet(`${API_BASE_URL}/meters`).reply(200, [activities]);
-    const meters = await api.fetchMeters();
-    expect(meters.data[0]).toMatchObject({
-      widget: "Activity tags",
-      schema: { type: "array", items: { enum: ["run", "swim"] } },
-    });
   });
 
   it("should create a meter of a type", async () => {
@@ -45,7 +26,7 @@ describe("api", () => {
         name: "mood",
         color: "#cecece",
       })
-      .reply(201, apiMoodMeter);
+      .reply(201, moodMeter);
     const response = await api.createMeter("mood", "mood", "#cecece");
     expect(response.data).toEqual(moodMeter);
   });
@@ -53,10 +34,7 @@ describe("api", () => {
   it("should only send editable fields when updating a meter", async () => {
     mock
       .onPatch(`${API_BASE_URL}/meters/${moodMeter.id}`)
-      .reply((config) => [
-        200,
-        { ...apiMoodMeter, ...JSON.parse(config.data) },
-      ]);
+      .reply((config) => [200, { ...moodMeter, ...JSON.parse(config.data) }]);
     await api.updateMeter({ ...moodMeter, name: "Feeling", dailyGoal: 3 });
     expect(JSON.parse(mock.history.patch[0].data)).toEqual({
       name: "Feeling",

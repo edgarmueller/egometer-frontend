@@ -1,20 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Typography from "@material-ui/core/Typography";
-import { withStyles } from "@material-ui/core/styles";
-import { red } from "@material-ui/core/colors";
-import ErrorIcon from "@material-ui/icons/Error";
-import Ionicon from "react-ionicons";
-import Radium from "radium";
-import { Link } from "react-router-dom";
-
-import { logo } from "../../common/styles";
-
-export const RadiumLink = Radium(Link);
-
-const styles = {
-  logo,
-};
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import ErrorOutlineRounded from "@mui/icons-material/ErrorOutlineRounded";
 
 class DefaultErrorBoundary extends React.Component {
   state = {
@@ -26,42 +15,38 @@ class DefaultErrorBoundary extends React.Component {
   }
 
   render() {
-    const { isError } = this.state;
-    const { children, classes } = this.props;
-    return isError ? (
-      <div
-        style={{
+    if (!this.state.isError) {
+      return this.props.children;
+    }
+    return (
+      <Box
+        sx={{
           display: "flex",
-          alignItems: "center",
           flexDirection: "column",
-          paddingTop: "2em",
+          alignItems: "center",
+          gap: 2,
+          pt: 12,
+          px: 2,
+          textAlign: "center",
         }}
       >
-        <RadiumLink className={classes.logo} to="/">
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Ionicon icon="md-flash" />
-            egometer
-          </div>
-        </RadiumLink>
-        <h1 style={{ color: red[500] }}>Sorry, something went wrong :(</h1>
-        <ErrorIcon style={{ color: red[500], fontSize: 50 }} />
-        <Typography variant="body1">Please try again later</Typography>
-      </div>
-    ) : (
-      children
+        <ErrorOutlineRounded color="error" sx={{ fontSize: 56 }} />
+        <Typography variant="h5" component="h1">
+          Sorry, something went wrong
+        </Typography>
+        <Typography color="text.secondary">
+          Please reload the page or try again later.
+        </Typography>
+        <Button variant="contained" href="/">
+          Back to egometer
+        </Button>
+      </Box>
     );
   }
 }
 
 DefaultErrorBoundary.propTypes = {
-  classes: PropTypes.object,
   children: PropTypes.node.isRequired,
 };
 
-export default withStyles(styles)(DefaultErrorBoundary);
+export default DefaultErrorBoundary;

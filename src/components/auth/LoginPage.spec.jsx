@@ -1,13 +1,9 @@
-/* eslint-disable no-undef */
 import React from "react";
-import { configure, shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import { Redirect } from "react-router";
+import { screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { Route } from "react-router-dom";
 import { LoginPage } from "./LoginPage";
-
-configure({ adapter: new Adapter() });
+import { renderWithProviders } from "../../test-utils";
 
 const createAuth = (overrides = {}) => ({
   isAuthenticated: false,
@@ -16,58 +12,81 @@ const createAuth = (overrides = {}) => ({
   ...overrides,
 });
 
-const render = (auth, search = "") =>
-  shallow(<LoginPage auth={auth} location={{ search }} classes={{}} />);
+// renders the page at /login, showing where it redirects to
+const renderPage = (auth, search = "") =>
+  renderWithProviders(
+    <>
+      <Route
+        exact
+        path="/login"
+        render={({ location }) => <LoginPage auth={auth} location={location} />}
+      />
+      <Route
+        path="/:page"
+        render={({ location }) =>
+          location.pathname === "/login" ? null : (
+            <div>at {location.pathname}</div>
+          )
+        }
+      />
+    </>,
+    { path: `/login${search}` }
+  );
 
-const fillAndSubmit = async (wrapper, email, password) => {
-  const [emailField, passwordField] = wrapper.find(TextField);
-  emailField.props.onChange({ target: { value: email } });
-  passwordField.props.onChange({ target: { value: password } });
-  await wrapper.find("form").props().onSubmit({ preventDefault: vi.fn() });
+const fillAndSubmit = async (email, password) => {
+  const user = userEvent.setup();
+  await user.type(screen.getByLabelText(/Email/), email);
+  await user.type(screen.getByLabelText(/Password/), password);
+  // the submit button, not the link switching between logging in and up
+  const [submit] = screen
+    .getAllByRole("button")
+    .filter((button) => button.type === "submit");
+  await user.click(submit);
 };
 
 describe("LoginPage", () => {
   it("should render the login form if not authenticated", () => {
-    const wrapper = render(createAuth());
-    expect(wrapper.find(TextField).length).toBe(2);
-    expect(wrapper.find(Button).first().text()).toBe("Login");
+    renderPage(createAuth());
+    expect(screen.getByLabelText(/Email/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Password/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Log in" })).toBeInTheDocument();
   });
 
   it("should redirect to the meters if authenticated", () => {
-    const wrapper = render(createAuth({ isAuthenticated: true }));
-    expect(wrapper.find(Redirect).prop("to")).toBe("/meters");
+    renderPage(createAuth({ isAuthenticated: true }));
+    expect(screen.getByText("at /meters")).toBeInTheDocument();
   });
 
   it("should redirect back to the requested page after login", () => {
-    const wrapper = render(
+    renderPage(
       createAuth({ isAuthenticated: true }),
       "?redirect=%2Fweekly%2F2021"
     );
-    expect(wrapper.find(Redirect).prop("to")).toBe("/weekly/2021");
+    expect(screen.getByText("at /weekly/2021")).toBeInTheDocument();
   });
 
   it("should ignore external redirects", () => {
-    const wrapper = render(
+    renderPage(
       createAuth({ isAuthenticated: true }),
       "?redirect=%2F%2Fevil.example.com"
     );
-    expect(wrapper.find(Redirect).prop("to")).toBe("/meters");
+    expect(screen.getByText("at /meters")).toBeInTheDocument();
   });
 
   it("should log in with the entered credentials", async () => {
     const auth = createAuth();
-    const wrapper = render(auth);
-    await fillAndSubmit(wrapper, "foo@example.com", "secret123");
+    renderPage(auth);
+    await fillAndSubmit("foo@example.com", "secret123");
     expect(auth.login).toHaveBeenCalledWith("foo@example.com", "secret123");
     expect(auth.signUp).not.toHaveBeenCalled();
   });
 
   it("should sign up after switching modes", async () => {
     const auth = createAuth();
-    const wrapper = render(auth);
-    wrapper.find(Button).last().simulate("click");
-    expect(wrapper.find(Button).first().text()).toBe("Sign up");
-    await fillAndSubmit(wrapper, "foo@example.com", "secret123");
+    renderPage(auth);
+    await userEvent.click(screen.getByRole("button", { name: "Sign up" }));
+    expect(screen.getByText("Create your account")).toBeInTheDocument();
+    await fillAndSubmit("foo@example.com", "secret123");
     expect(auth.signUp).toHaveBeenCalledWith("foo@example.com", "secret123");
   });
 
@@ -75,8 +94,10 @@ describe("LoginPage", () => {
     const auth = createAuth({
       login: vi.fn(() => Promise.reject({ response: { status: 401 } })),
     });
-    const wrapper = render(auth);
-    await fillAndSubmit(wrapper, "foo@example.com", "wrong");
-    expect(wrapper.text()).toContain("Invalid email or password.");
+    renderPage(auth);
+    await fillAndSubmit("foo@example.com", "wrong");
+    expect(
+      await screen.findByText("Invalid email or password.")
+    ).toBeInTheDocument();
   });
 });
