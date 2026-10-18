@@ -19,16 +19,15 @@ import get from "lodash/get";
 import LinkButton from "../LinkButton";
 
 import widgets from "../../widgets";
-import { getSchemas } from "../../reducers";
 import { logo } from "../../common/styles";
 import { withStyles } from "@material-ui/styles";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth } from "../auth/AuthProvider";
 
 export const RadiumLink = Radium(Link);
 
 export const Nav = ({ classes, location, history }) => {
   const [currentRoute, setRoute] = useState(location.pathname);
-  const { logout } = useAuth0();
+  const { logout } = useAuth();
   useEffect(() =>
     history.listen((location) => {
       setRoute(location.pathname);
@@ -86,12 +85,10 @@ export const Nav = ({ classes, location, history }) => {
           <ExitToAppIcon />
         </ListItemIcon>
         <Button
-          onClick={() =>
-            logout({
-              // eslint-disable-next-line no-undef
-              returnTo: window.location.origin,
-            })
-          }
+          onClick={() => {
+            logout();
+            history.push("/login");
+          }}
         >
           Logout
         </Button>
@@ -114,7 +111,6 @@ Nav.defaultProps = {
 };
 
 const mapStateToProps = (state) => ({
-  schemas: getSchemas(state),
   isAdmin: get(state, "user.isAdmin", false),
 });
 

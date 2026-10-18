@@ -5,6 +5,7 @@ import booleanWidget from "../common/booleanWidget";
 const CustomBooleanWidget = {
   ...booleanWidget,
   name: "Boolean",
+  meterType: "boolean",
   label: "yes/no",
   icon: <Icon />,
 };

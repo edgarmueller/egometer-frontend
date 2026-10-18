@@ -3,7 +3,7 @@ import NumberBarChart from "../../components/visualizations/NumberBarChart";
 import NumberCell from "../../components/widgets/cells/NumberCell";
 
 export default {
-  schemaId: "Number",
+  meterType: "number",
   week: NumberBarChart,
   month: NumberBarChart,
   cell: NumberCell,

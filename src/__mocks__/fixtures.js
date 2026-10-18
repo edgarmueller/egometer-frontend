@@ -6,8 +6,12 @@ export const moodSchemaId = "5ac9065704040014c266ceb3";
 export const moodMeter = {
   id: moodMeterId,
   name: "mood",
+  type: "mood",
   widget: "EnumMood",
-  schemaId: moodSchemaId,
+  schema: {
+    type: "string",
+    enum: ["awful", "bad", "okay", "good", "great"]
+  },
   color: "#cecece"
 };
 export const moodSchema = {
@@ -15,7 +19,7 @@ export const moodSchema = {
   name: "mood",
   schema: {
     type: "string",
-    enum: ["bad", "down", "okayish", "good", "dabomb"]
+    enum: ["awful", "bad", "okay", "good", "great"]
   }
 };
 
@@ -37,7 +41,7 @@ export const moodEntries = [
     id: "5abfbf3b8fdd856d4c35f776",
     date: "2018-04-14",
     meterId: moodMeterId,
-    value: "okayish"
+    value: "okay"
   }
 ];
 
@@ -47,8 +51,11 @@ export const counterSchemaId = "5ab7c82bdf66b0d5bc1f5e26";
 export const counterMeter = {
   id: counterMeterId,
   name: "counter",
+  type: "number",
   widget: "Number",
-  schemaId: counterSchemaId,
+  schema: {
+    type: "number"
+  },
   color: "#ddd"
 };
 export const counterSchema = {

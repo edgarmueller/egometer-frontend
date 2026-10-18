@@ -72,7 +72,7 @@ describe("entries reducer", () => {
       id: "5abfbf3b8fdd856d4c35f77c",
       date: "2018-04-18",
       meterId: moodMeterId,
-      value: "dabomb",
+      value: "great",
     });
 
     const after = entriesReducer(s, {

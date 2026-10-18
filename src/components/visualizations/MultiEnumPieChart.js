@@ -32,7 +32,7 @@ class MultiEnumPieChart extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
+    const { data, labelProvider } = this.props;
 
     const values = _.flatMap(data, (d) => d.value);
     const groupedValues = values.reduce((acc, val) => {
@@ -46,7 +46,7 @@ class MultiEnumPieChart extends React.Component {
     const angles = _.keys(groupedValues).map((key) => {
       return {
         angle: groupedValues[key],
-        label: _.startCase(key),
+        label: labelProvider ? labelProvider(key) : _.startCase(key),
       };
     });
 
@@ -79,6 +79,7 @@ MultiEnumPieChart.propTypes = {
     })
   ),
   days: PropTypes.array.isRequired,
+  labelProvider: PropTypes.func,
   schema: PropTypes.shape({
     enum: PropTypes.array,
   }).isRequired,

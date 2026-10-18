@@ -11,8 +11,6 @@ import MonthlyMatrix from "./MonthlyMatrix";
 import {
   getMeters,
   getMeterError,
-  getSchemaError,
-  isSchemasLoading,
   isMetersLoading,
   getEntriesByMeter,
 } from "../../reducers";
@@ -22,8 +20,6 @@ import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import MatrixContainer from "../../containers/MatrixContainer";
 import { daysOfMonth } from "../../common/date";
-import { findBySchemaId } from "../../utils";
-import { getSchemas } from "../../reducers";
 import Charts from "./Charts";
 
 const styles = {
@@ -55,10 +51,6 @@ export class MonthlyDashboard extends React.Component {
     this.props.fetchEntries(year, month);
     this.setState({ mounted: true });
   }
-
-  findSchema = (schemaId) => {
-    return findBySchemaId(this.props.schemas, schemaId);
-  };
 
   render() {
     const {
@@ -116,17 +108,14 @@ export class MonthlyDashboard extends React.Component {
             year={this.state.year}
             month={this.state.month}
             child={MonthlyMatrix}
-            findBySchemaId={this.findSchema}
             meters={meters}
             entriesByMeter={entriesByMeter}
-            schemas={otherProps.schemas}
             {...otherProps}
           />
           <Charts
             isLoading={isLoading}
             days={daysOfMonth(this.state.year, this.state.month)}
             entriesByMeter={entriesByMeter}
-            findBySchemaId={this.findSchema}
             meters={meters}
             widgets={widgets}
             widgetType="month"
@@ -151,14 +140,10 @@ MonthlyDashboard.defaultProps = {
 };
 const mapStateToProps = (state) => {
   return {
-    isLoading:
-      state.entries.loadingStatus.isLoading ||
-      isMetersLoading(state) ||
-      isSchemasLoading(state),
+    isLoading: state.entries.loadingStatus.isLoading || isMetersLoading(state),
     meters: getMeters(state),
     entriesByMeter: getEntriesByMeter(state),
-    schemas: getSchemas(state),
-    error: getMeterError(state) || getSchemaError(state),
+    error: getMeterError(state),
   };
 };
 
@@ -173,7 +158,6 @@ MonthlyDashboard.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   meters: PropTypes.array.isRequired,
   entriesByMeter: PropTypes.object.isRequired,
-  schemas: PropTypes.array.isRequired,
   error: PropTypes.string,
   classes: PropTypes.object,
   history: PropTypes.object,

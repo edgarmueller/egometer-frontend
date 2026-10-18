@@ -4,7 +4,7 @@ import NumberBarChart from "../../components/visualizations/NumberBarChart";
 import NumberCell from "../../components/widgets/cells/NumberCell";
 
 const NumberWidget = {
-  schemaId: "Number",
+  meterType: "number",
   day: DailyNumber,
   week: NumberBarChart,
   month: NumberBarChart,

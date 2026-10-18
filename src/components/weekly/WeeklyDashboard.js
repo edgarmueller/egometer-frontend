@@ -8,19 +8,15 @@ import WeeklyMatrix from "../weekly/WeeklyMatrix";
 import {
   getMeters,
   getMeterError,
-  getSchemaError,
-  isSchemasLoading,
   isMetersLoading,
   getEntriesByMeter,
 } from "../../reducers";
-import { findBySchemaId } from "../../utils";
 import widgets from "../../widgets";
 import * as actions from "../../actions";
 import Loading from "../common/Loading";
 import WeekPicker from "./WeekPicker";
 import Charts from "../monthly/Charts";
 import { daysOfWeek, getWeek, weekToDate } from "../../common/date";
-import { getSchemas } from "../../reducers";
 import PickerLayout from "../common/PickerLayout";
 
 export class WeeklyDashboard extends React.Component {
@@ -60,10 +56,6 @@ export class WeeklyDashboard extends React.Component {
     this.props.fetchEntries(year, week);
     this.setState({ mounted: true });
   }
-
-  findSchema = (schemaId) => {
-    return findBySchemaId(this.props.schemas, schemaId);
-  };
 
   render() {
     const {
@@ -131,7 +123,6 @@ export class WeeklyDashboard extends React.Component {
           isLoading={isLoading}
           days={this.state.days}
           entriesByMeter={entriesByMeter}
-          findBySchemaId={this.findSchema}
           meters={meters}
           widgets={widgets}
           widgetType="week"
@@ -145,13 +136,6 @@ export class WeeklyDashboard extends React.Component {
 
 WeeklyDashboard.propTypes = {
   error: PropTypes.string,
-  schemas: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      schema: PropTypes.object,
-    })
-  ),
   match: PropTypes.object,
   meters: PropTypes.array,
   widgets: PropTypes.array,
@@ -168,14 +152,10 @@ WeeklyDashboard.defaultProps = {
 
 const mapStateToProps = (state) => {
   return {
-    isLoading:
-      state.entries.loadingStatus.isLoading ||
-      isMetersLoading(state) ||
-      isSchemasLoading(state),
+    isLoading: state.entries.loadingStatus.isLoading || isMetersLoading(state),
     meters: getMeters(state),
     entriesByMeter: getEntriesByMeter(state),
-    error: getMeterError(state) || getSchemaError(state),
-    schemas: getSchemas(state),
+    error: getMeterError(state),
   };
 };
 

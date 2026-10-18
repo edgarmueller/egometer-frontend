@@ -10,8 +10,6 @@ import {
 import { combineEpics, ofType } from "redux-observable";
 import {
   receiveEntries,
-  setSchemas,
-  setSchemasError,
   setMetersError,
   setMeters,
   FETCH_ENTRIES_FAILURE,
@@ -19,7 +17,6 @@ import {
   UPDATE_ENTRY_FAILURE,
   UPDATE_ENTRY_REQUEST,
   UPDATE_ENTRY_SUCCESS,
-  FETCH_SCHEMAS_REQUEST,
   FETCH_METERS_REQUEST,
   UPDATE_METER_REQUEST,
   UPDATE_METER_SUCCESS,
@@ -28,20 +25,6 @@ import {
   DELETE_ENTRY_FAILURE,
   DELETE_ENTRY_SUCCESS,
 } from "../actions";
-
-export function fetchSchemasEpic(action$, store, deps) {
-  return action$.pipe(
-    ofType(FETCH_SCHEMAS_REQUEST),
-    mergeMap(() =>
-      from(
-        deps.api.fetchSchemas().then(
-          (resp) => setSchemas(resp.data),
-          (err) => setSchemasError(err)
-        )
-      )
-    )
-  );
-}
 
 export function fetchMetersEpic(action$, _store, deps) {
   return action$.pipe(
@@ -179,7 +162,6 @@ export function updateMeterDebounceEpic(action$, store, deps) {
 }
 
 export const rootEpic = combineEpics(
-  fetchSchemasEpic,
   fetchMetersEpic,
   fetchEntriesEpic,
   updateEntryEpic,

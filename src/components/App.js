@@ -7,9 +7,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import "./App.css";
 import WithLayout from "./common/WithLayout";
 import Loading from "./common/Loading";
-import PeriodicAuthCheck from "../components/auth/PeriodicAuthCheck";
-import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
-import { fetchSchemas, fetchMeters } from "../actions";
+import { useAuth } from "./auth/AuthProvider";
+import requireAuth from "./auth/requireAuth";
+import { fetchMeters } from "../actions";
 
 const ConnectedSwitch = connect((state) => ({
   location: state.router.location,
@@ -36,71 +36,51 @@ const AsycnWeeklyDashboard = Loadable({
   loading: Loading,
 });
 
-export const App = ({ fetchSchemas, fetchMeters }) => {
-  const { isAuthenticated } = useAuth0;
+const MeterListPage = requireAuth(WithLayout(AsyncMeterList));
+const MonthlyDashboardPage = requireAuth(WithLayout(AsycnMonthlyDashboard));
+const WeeklyDashboardPage = requireAuth(WithLayout(AsycnWeeklyDashboard));
+const DailyDashboardPage = requireAuth(WithLayout(AsyncDailyDashboard));
+
+export const App = ({ fetchMeters }) => {
+  const { isAuthenticated } = useAuth();
   useEffect(() => {
-    fetchSchemas();
-    fetchMeters();
-  }, []);
+    if (isAuthenticated) {
+      fetchMeters();
+    }
+  }, [isAuthenticated, fetchMeters]);
 
   return (
     <div className="App" id="app">
       <CssBaseline />
-      <PeriodicAuthCheck loginPath="/login" />
       <ConnectedSwitch>
-        <Route
-          exact
-          path="/login"
-          component={isAuthenticated ? AsycnWeeklyDashboard : AsyncLoginPage}
-        />
-        <Route
-          exact
-          path="/meters"
-          component={withAuthenticationRequired(WithLayout(AsyncMeterList))}
-        />
+        <Route exact path="/login" component={AsyncLoginPage} />
+        <Route exact path="/meters" component={MeterListPage} />
         <Route
           exact
           path="/matrix/:year(\d{4})?/:month(0?[1-9]|1[012])?"
-          component={withAuthenticationRequired(
-            WithLayout(AsycnMonthlyDashboard)
-          )}
+          component={MonthlyDashboardPage}
         />
         <Route
           exact
           path="/weekly/:year(\d{4})?/:week(0?[1-9]|[0-9]{2})?"
-          component={withAuthenticationRequired(
-            WithLayout(AsycnWeeklyDashboard)
-          )}
+          component={WeeklyDashboardPage}
         />
         <Route
           exact
           path="/dashboard/:year(\d{4})?/:month(0?[1-9]|1[012])?/:day(0?[1-9]|1[0-9]|2[0-9]|3[01])?"
-          component={WithLayout(
-            withAuthenticationRequired(AsyncDailyDashboard)
-          )}
+          component={DailyDashboardPage}
         />
-        <Route
-          path="*"
-          component={
-            isAuthenticated
-              ? withAuthenticationRequired(WithLayout(AsyncDailyDashboard))
-              : AsyncLoginPage
-          }
-        />
+        <Route path="*" component={DailyDashboardPage} />
       </ConnectedSwitch>
     </div>
   );
 };
 
 App.propTypes = {
-  fetchSchemas: PropTypes.func.isRequired,
   fetchMeters: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchSchemas: () => {
-    dispatch(fetchSchemas());
-  },
   fetchMeters: () => {
     dispatch(fetchMeters());
   },

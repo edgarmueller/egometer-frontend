@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import * as _ from "lodash";
 import * as actions from "../../actions";
-import { getMeters, getSchemas } from "../../reducers";
-import { findBySchemaId } from "../../utils";
+import { getMeters } from "../../reducers";
 import widgets from "../../widgets";
 import { createProgressSuccessColor } from "../../common/color";
 import NoWidgetFound from "./NoWidgetFound";
@@ -25,6 +24,11 @@ export class Widget extends React.Component {
   updateEntry = (value, shouldDebounce) => {
     const { updateEntry, meter, date } = this.props;
     return updateEntry(meter.id, date)(value, shouldDebounce);
+  };
+
+  deleteEntry = (entry) => {
+    const { deleteEntry, meter } = this.props;
+    return deleteEntry(meter.id, entry);
   };
 
   shouldComponentUpdate(nextProps) {
@@ -134,6 +138,7 @@ Widget.propTypes = {
   // TODO enum
   widgetType: PropTypes.string.isRequired,
   widgets: PropTypes.array,
+  deleteEntry: PropTypes.func,
   // TODO: what type?
   updateEntry: PropTypes.func.isRequired,
   loadingStatus: PropTypes.shape({
@@ -147,17 +152,11 @@ Widget.defaultProps = {
   widgets,
 };
 
-const mapStateToProps = (state, ownProps) => {
-  const foundSchema = findBySchemaId(
-    getSchemas(state),
-    ownProps.meter.schemaId
-  );
-  return {
-    meters: getMeters(state),
-    schema: foundSchema,
-    ...ownProps,
-  };
-};
+const mapStateToProps = (state, ownProps) => ({
+  meters: getMeters(state),
+  schema: ownProps.meter.schema,
+  ...ownProps,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   fetchMeters() {

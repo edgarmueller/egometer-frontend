@@ -4,10 +4,6 @@ export const FETCH_METERS_REQUEST = "FETCH_METERS_REQUEST";
 export const FETCH_METERS_SUCCESS = "FETCH_METERS_SUCCESS";
 export const FETCH_METERS_FAILURE = "FETCH_METERS_FAILURE";
 
-export const FETCH_SCHEMAS_REQUEST = "FETCH_SCHEMAS_REQUEST";
-export const FETCH_SCHEMAS_SUCCESS = "FETCH_SCHEMAS_SUCCESS";
-export const FETCH_SCHEMAS_FAILURE = "FETCH_SCHEMAS_FAILURE";
-
 export const RESET_METERS_ERROR = "RESET_METERS_ERROR";
 
 export const DELETE_METER_SUCCESS = "DELETE_METER_SUCCESS";
@@ -17,17 +13,10 @@ export const UPDATE_METER_REQUEST = "UPDATE_METER_REQUEST";
 export const UPDATE_METER_SUCCESS = "UPDATE_METER_SUCCESS";
 export const UPDATE_METER_FAILURE = "UPDATE_METER_FAILURE";
 
-export const setMeters = (meters) => {
-  const mapped = meters.map(({ widget, ...otherProps }) => ({
-    ...otherProps,
-    widget,
-  }));
-
-  return {
-    type: FETCH_METERS_SUCCESS,
-    meters: mapped,
-  };
-};
+export const setMeters = (meters) => ({
+  type: FETCH_METERS_SUCCESS,
+  meters,
+});
 
 export const setMetersError = (error) => ({
   type: FETCH_METERS_FAILURE,
@@ -36,16 +25,6 @@ export const setMetersError = (error) => ({
 
 export const resetMetersError = () => ({
   type: RESET_METERS_ERROR,
-});
-
-export const setSchemas = (schemas) => ({
-  type: FETCH_SCHEMAS_SUCCESS,
-  schemas,
-});
-
-export const setSchemasError = (error) => ({
-  type: FETCH_SCHEMAS_FAILURE,
-  error: error.message,
 });
 
 export const fetchMeters = () => (dispatch) => {
@@ -59,15 +38,6 @@ export const fetchMeters = () => (dispatch) => {
         type: FETCH_METERS_FAILURE,
         error: error.message,
       })
-  );
-};
-
-export const fetchSchemas = () => (dispatch) => {
-  dispatch({ type: FETCH_SCHEMAS_REQUEST });
-
-  return api.fetchSchemas().then(
-    (resp) => dispatch(setSchemas(resp.data)),
-    (error) => dispatch(setSchemasError(error))
   );
 };
 
@@ -92,10 +62,7 @@ export const updateMeter = (meter) => (dispatch) => {
     (resp) => {
       dispatch({
         type: UPDATE_METER_SUCCESS,
-        meter: {
-          ...resp.data,
-          widget: resp.data.visualization,
-        },
+        meter: resp.data,
       });
     },
     (error) =>

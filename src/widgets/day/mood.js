@@ -17,11 +17,11 @@ import { isEnum, isString } from "../../common/testers";
 
 const labelProvider = withLabels(
   literalLabelProvider({
-    bad: "awful",
-    down: "down",
-    okayish: "okayish",
-    good: "good",
-    dabomb: "superduper",
+    awful: "Awful",
+    bad: "Bad",
+    okay: "Okay",
+    good: "Good",
+    great: "Great",
   })
 );
 
@@ -29,7 +29,7 @@ export const withMoodImageAndLabelProvider = (Component) =>
   withImages(({ selectionColor, isSelected, value }) => {
     const color = isSelected ? selectionColor : "black";
     switch (value) {
-      case "dabomb":
+      case "great":
         return (
           <SentimentVerySatisfiedRounded
             style={{ color: isSelected ? color : "black" }}
@@ -41,17 +41,17 @@ export const withMoodImageAndLabelProvider = (Component) =>
             style={{ color: isSelected ? color : "black" }}
           />
         );
-      case "okayish":
+      case "okay":
         return (
           <SentimentSatisfied style={{ color: isSelected ? color : "black" }} />
         );
-      case "down":
+      case "bad":
         return (
           <SentimentDissatisfiedRounded
             style={{ color: isSelected ? color : "black" }}
           />
         );
-      case "bad":
+      case "awful":
         return (
           <SentimentVeryDissatisfiedRounded
             style={{ color: isSelected ? color : "black" }}
@@ -64,7 +64,7 @@ export const withMoodImageAndLabelProvider = (Component) =>
 
 export const MoodMeter = {
   name: "EnumMood",
-  schemaId: "Mood",
+  meterType: "mood",
   label: "Mood",
   icon: <SentimentSatisfiedRounded />,
   category: "General",

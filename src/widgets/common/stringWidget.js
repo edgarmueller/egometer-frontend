@@ -3,7 +3,7 @@ import { isString } from "../../common/testers";
 import { StringCell } from "../../components/widgets/cells/StringCell";
 
 const StringWidget = {
-  schemaId: "String",
+  meterType: "text",
   day: DailyString,
   week: undefined,
   month: undefined,

@@ -41,7 +41,7 @@ const quantityImages = withImages(({ selectionColor, isSelected, value }) => {
 
 export const quantityEnumWidget = {
   name: "Quantity Enum",
-  schemaId: "QuantityEnum",
+  meterType: "quantity",
   day: quantityLabels(quantityImages(DailyEnum)),
   label: "Quantity",
   category: "Custom",

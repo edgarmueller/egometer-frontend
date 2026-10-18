@@ -4,7 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Hidden } from "@material-ui/core";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth } from "../auth/AuthProvider";
 
 import Nav from "./Nav";
 
@@ -24,7 +24,7 @@ export const NavDrawer = ({
   isNavOpen,
   closeNav,
 }) => {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth();
   if (isAuthenticated) {
     return (
       <Fragment>

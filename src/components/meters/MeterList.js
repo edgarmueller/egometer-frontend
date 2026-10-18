@@ -14,7 +14,7 @@ import TextField from "@material-ui/core/TextField";
 import { withStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Emoji } from "emoji-mart";
-import { Switch, Dialog, DialogTitle, Button } from "@material-ui/core";
+import { Dialog, DialogTitle, Button } from "@material-ui/core";
 import { Drawer } from "@material-ui/core";
 import { Picker } from "emoji-mart";
 import AddIcon from "@material-ui/icons/Add";
@@ -29,16 +29,10 @@ import {
   updateMeterRequest,
 } from "../../actions";
 import { display1 } from "../../common/styles";
-import {
-  getMeters,
-  isMetersLoading,
-  getMeterError,
-  getSchemas,
-} from "../../reducers";
-import { findBySchemaId } from "../../utils";
+import { getMeters, isMetersLoading, getMeterError } from "../../reducers";
 import { ErrorSnackbar } from "../common/ErrorSnackbar";
 import AddMeterDrawer from "../common/AddMeterDrawer";
-import { schemaPropType } from "../../prop-types";
+import TagsDialog from "./TagsDialog";
 
 const styles = (theme) => ({
   textField: {
@@ -65,17 +59,12 @@ const styles = (theme) => ({
   },
 });
 
-const isNumberSchema = (schema) => {
-  return schema && schema.type === "number";
-};
-
 export const MeterList = ({
   classes,
   deleteMeter,
   meters,
   updateMeterRequest,
   isMetersLoading,
-  schemas,
   meterError,
   resetMetersError,
   fetchMeters,
@@ -102,6 +91,8 @@ export const MeterList = ({
   }, [setDrawerOpen, fetchMeters]);
   const [open, setOpen] = useState(false);
   const [editedMeter, setEditedMeter] = useState(undefined);
+  // activities meter whose tags are being edited
+  const [taggedMeter, setTaggedMeter] = useState(undefined);
   const handleUpdateMeter = useCallback(
     (meter, propName, propValue) => {
       const metersAccumulated = meters.reduce((acc, m) => {
@@ -173,7 +164,6 @@ export const MeterList = ({
             {Object.keys(metersById).length !== 0 ? (
               Object.keys(metersById).map((meterId) => {
                 const meter = metersById[meterId];
-                const schema = findBySchemaId(schemas, meter.schemaId);
                 return (
                   <TableRow key={meter.id}>
                     <TableCell colSpan={3}>
@@ -186,7 +176,17 @@ export const MeterList = ({
                         }
                       />
                     </TableCell>
-                    <TableCell>{meter.widget}</TableCell>
+                    <TableCell>
+                      {meter.type}
+                      {meter.type === "activities" && (
+                        <Button
+                          size="small"
+                          onClick={() => setTaggedMeter(meter)}
+                        >
+                          Edit tags
+                        </Button>
+                      )}
+                    </TableCell>
                     <TableCell>
                       <IconButton
                         aria-label="Delete meter"
@@ -196,9 +196,9 @@ export const MeterList = ({
                       </IconButton>
                     </TableCell>
                     <TableCell>
-                      {isNumberSchema(schema) ? (
+                      {meter.type === "number" && (
                         <TextField
-                          value={meter.dailyGoal}
+                          value={meter.dailyGoal || ""}
                           onChange={(ev) =>
                             handleUpdateMeter(
                               meter,
@@ -207,26 +207,21 @@ export const MeterList = ({
                             )
                           }
                         />
-                      ) : (
-                        <Switch
-                          checked={meter.dailyGoal > 0}
-                          onChange={(ev, goal) =>
-                            handleUpdateMeter(meter, "dailyGoal", goal ? 1 : 0)
-                          }
-                        />
                       )}
                     </TableCell>
                     <TableCell>
-                      <TextField
-                        value={meter.weeklyGoal}
-                        onChange={(ev) =>
-                          handleUpdateMeter(
-                            meter,
-                            "weeklyGoal",
-                            Number(ev.target.value)
-                          )
-                        }
-                      />
+                      {meter.type === "number" && (
+                        <TextField
+                          value={meter.weeklyGoal || ""}
+                          onChange={(ev) =>
+                            handleUpdateMeter(
+                              meter,
+                              "weeklyGoal",
+                              toNumber(ev.target.value)
+                            )
+                          }
+                        />
+                      )}
                     </TableCell>
                     <TableCell>
                       <ColorPicker
@@ -281,6 +276,13 @@ export const MeterList = ({
             />
           </div>
         </Dialog>
+        <TagsDialog
+          open={taggedMeter !== undefined}
+          meterName={taggedMeter && taggedMeter.name}
+          tags={(taggedMeter && taggedMeter.options) || []}
+          onSave={(tags) => handleUpdateMeter(taggedMeter, "options", tags)}
+          onClose={() => setTaggedMeter(undefined)}
+        />
         <Drawer open={isDrawerOpen} onClose={() => setDrawerOpen(false)}>
           <AddMeterDrawer
             open={isDrawerOpen}
@@ -300,7 +302,6 @@ MeterList.propTypes = {
   meters: PropTypes.array,
   updateMeterRequest: PropTypes.func,
   isMetersLoading: PropTypes.bool,
-  schemas: PropTypes.arrayOf(schemaPropType),
   meterError: PropTypes.object,
   resetMetersError: PropTypes.func,
   fetchMeters: PropTypes.func,
@@ -313,7 +314,6 @@ MeterList.defaultProps = {
 const mapStateToProps = (state) => ({
   meters: getMeters(state),
   isMetersLoading: isMetersLoading(state),
-  schemas: getSchemas(state),
   meterError: getMeterError(state),
 });
 

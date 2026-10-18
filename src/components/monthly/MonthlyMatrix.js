@@ -10,7 +10,6 @@ class MonthlyMatrix extends React.Component {
       meters,
       days,
       entriesByMeter,
-      schemas,
       colorMapping,
       isLoading,
       widgets,
@@ -23,7 +22,6 @@ class MonthlyMatrix extends React.Component {
             calcProgress={calcMonthlyProgress}
             entriesByMeter={entriesByMeter}
             meters={meters}
-            schemas={schemas}
             days={days}
             colorMapping={colorMapping}
             isLoading={isLoading}
@@ -42,7 +40,6 @@ MonthlyMatrix.propTypes = {
   widgets: PropTypes.array.isRequired,
   days: PropTypes.array,
   entriesByMeter: PropTypes.object,
-  schemas: PropTypes.array,
   colorMapping: PropTypes.object,
 };
 

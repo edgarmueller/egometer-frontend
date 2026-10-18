@@ -11,7 +11,6 @@ import styles from "../monthly/MonthlyMatrix.css";
 import { pad } from "../../common/date";
 import { createColor, getProgressColor } from "../../common/color";
 import DefaultTableRowRenderer from "../cells/DefaultTableRowRenderer";
-import { findBySchemaId } from "../../utils";
 
 const HEADER_HEIGHT = 60;
 const OVERSCAN_ROW_COUNT = 10;
@@ -40,12 +39,12 @@ class MeterTable extends React.Component {
   };
 
   _getDatum(index) {
-    const { entriesByMeter, meters, schemas } = this.props;
+    const { entriesByMeter, meters } = this.props;
     const e = _.values(entriesByMeter);
     if (e && index < meters.length) {
       const meter = meters[index];
       const meterEntries = (entriesByMeter && entriesByMeter[meter.id]) || [];
-      const schema = findBySchemaId(schemas, meter.schemaId);
+      const schema = meter.schema;
       if (schema === undefined) {
         return {};
       }
@@ -233,13 +232,6 @@ MeterTable.propTypes = {
   width: PropTypes.number.isRequired,
   style: PropTypes.object,
   calcProgress: PropTypes.func,
-  schemas: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-      schema: PropTypes.object,
-    })
-  ),
   classes: PropTypes.object,
 };
 

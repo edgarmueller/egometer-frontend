@@ -12,14 +12,7 @@ const styles = {
   },
 };
 
-const Category = ({
-  classes,
-  category,
-  findBySchemaName,
-  handleSubmit,
-  drawTitle,
-  widgets,
-}) => {
+const Category = ({ classes, category, handleSubmit, drawTitle, widgets }) => {
   if (widgets.length === 0) {
     return null;
   }
@@ -44,14 +37,7 @@ const Category = ({
               key={widget.name}
               label={widget.label}
               icon={widget.icon}
-              onSubmit={() =>
-                handleSubmit(
-                  // schemaId === schema name
-                  findBySchemaName(widget.schemaId).id,
-                  widget.label,
-                  widget.name
-                )
-              }
+              onSubmit={() => handleSubmit(widget.meterType, widget.label)}
             />
           ))}
         </div>
@@ -62,8 +48,6 @@ const Category = ({
 
 Category.propTypes = {
   widgets: PropTypes.array.isRequired,
-  schemas: PropTypes.array,
-  findBySchemaName: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   drawTitle: PropTypes.bool,
   classes: PropTypes.object,

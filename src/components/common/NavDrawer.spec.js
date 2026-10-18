@@ -1,7 +1,7 @@
 import React from "react";
 import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth } from "../auth/AuthProvider";
 import { ListItem } from "@material-ui/core";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
@@ -11,18 +11,13 @@ import NavDrawer from "./NavDrawer";
 
 configure({ adapter: new Adapter() });
 const mockStore = configureStore([]);
-jest.mock("@auth0/auth0-react");
-
-useAuth0.mockReturnValue({
-  isAuthenticated: true,
-  logout: jest.fn(),
-  loginWithRedirect: jest.fn(),
-});
+jest.mock("../auth/AuthProvider");
 
 describe("NavDrawer", () => {
   it("should render logout button when logged in", () => {
-    useAuth0.mockReturnValue({
+    useAuth.mockReturnValue({
       isAuthenticated: true,
+      logout: jest.fn(),
     });
     const store = mockStore({
       schemas: {

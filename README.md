@@ -9,7 +9,7 @@
 
 egometer is a habit tracker that lets you track your habits via so-called meters.
 
-A meter is a data definition based on a JSON schema which is stored on the backend.
+A meter tracks one thing per day, e.g. your mood, a number or activities, and is stored on the backend.
 The frontend takes care of visualizing the stored data of the meters.
 
 It consists of a backend (see egometer-backend) and a frontend part.
@@ -29,27 +29,27 @@ Widgets on the daily dashboard can be dragged around. The layout will be saved o
 
 The monthly dashboard actually consists of two components, one is a calendar-like cell-based view for each meter per day while the other one consists of aggregated data views.
 
-## Meter format
+## Meter types
 
-A meter basically describes what data format is used (via a reference to a schema, see the `schemaId` proeprty) and how it should be displayed (via the `widget` and `color` properties).
-Meters are displayed on the client via what is called a 'widget'. A widget is linked to a meter instance via its `schemaId` and `name` properties. These properties must match the `schemaId` and `widget` properties of the meter.
+Every meter has one of the types the API defines: `mood`, `quantity`, `boolean`, `number`, `text` or
+`activities` (see the API's README). The type decides which values its entries accept and which widget
+displays it; `src/common/meterTypes.js` maps each type to its widget and describes its values as a JSON
+schema, which is what the widgets render (e.g. the options of an activities meter).
 
 ## Widget format
 
-A widget is capable of displaying the data of a meter. It's linked to a meter via its `schemaId` and `name` properties.
-The following is a list of all available properites of a widget:
+A widget displays the data of a meter. The following is a list of all available properties of a widget:
 
-- `schemaId`: the ID of the JSON schema this meters maps to
+- `meterType`: the meter type the widget creates when it's picked in the "Add meter" drawer
 - `day`: the visualization component for the daily dashboard
-- `month`: the visualization component for the monthly dashboard; typically used for displaying the data in an aggregated view
+- `week` / `month`: the visualization components for the weekly and monthly dashboards; typically used for displaying the data in an aggregated view
 - `cell`: the visualization component that is used per cell within the calendar view of a month
-- `isApplicable`: determines whether the widget can display a given schema (currently unused)
-- `name`: the name of the widget
-- `label`: the label that is used to display the widget within the `AddMeterDialog`
-- `icon`: a React element that displays an icon for the widget within the `AddMeterDialog`
-- `category`: the category this widget belongs to, e.g. 'health' or 'work'. Used while adding a meter to categorize meters
+- `name`: the name of the widget, see `src/common/meterTypes.js`
+- `label`: the label that is used to display the widget within the "Add meter" drawer
+- `icon`: a React element that displays an icon for the widget within the "Add meter" drawer
+- `category`: the category this widget belongs to, e.g. 'General'. Used while adding a meter to categorize meters
 
-All available meters for the entire app are configured within `widgets/index.js`.
+All available widgets for the entire app are configured within `widgets/index.js`.
 
 ## Development
 
@@ -57,8 +57,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### Getting started
 
-- Clone [egometer-backend](https://github.com/edgarmueller/egometer-backend)
-  and follow instructions to setup the backend
-- Install dependencies via `yarn install`
-- Run `yarn run start` to start dev mode
-- Run `yarn test` to execute all tests
+- Clone [egometer-api](https://github.com/edgarmueller/egometer-api)
+  and follow its instructions to set up the backend
+- Use Node.js 12 or 14 (see `.nvmrc`), e.g. via `nvm use`
+- Install dependencies via `npm install`
+- Copy `.env.example` to `.env` and adjust `REACT_APP_BASE_URL` if the API doesn't run on `http://localhost:3000`
+- Run `npm start` to start dev mode, then open `http://localhost:3001` and create an account
+- Run `npm test` to execute all tests
+
+### Authentication
+
+Users sign up and log in with email and password against the egometer API.
+The returned token is kept in local storage and sent with every API request;
+when it expires or the API rejects it, the user is logged out.
