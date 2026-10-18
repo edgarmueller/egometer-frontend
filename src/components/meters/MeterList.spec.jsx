@@ -10,7 +10,7 @@ vi.mock("../../api");
 const meters = [
   { id: "m", name: "Mood", type: "mood", color: "#4f46e5" },
   { id: "a", name: "Hobbies", type: "activities", options: ["work"] },
-  { id: "n", name: "Steps", type: "number", dailyGoal: 1000 },
+  { id: "n", name: "Steps", type: "number", dailyGoal: 1000, weeklyGoal: 4 },
 ];
 
 const renderList = (props = {}) => {
@@ -77,5 +77,38 @@ describe("MeterList", () => {
     expect(
       screen.getByRole("button", { name: "Add meter" })
     ).toBeInTheDocument();
+  });
+
+  it("sets weekly goals", async () => {
+    const { updateMeterRequest } = renderList();
+    const rows = screen.getAllByRole("row");
+    expect(
+      within(rows[3]).getByRole("combobox", { name: "Weekly goal" })
+    ).toHaveTextContent("4× a week");
+    await userEvent.click(
+      within(rows[1]).getByRole("combobox", { name: "Weekly goal" })
+    );
+    await userEvent.click(screen.getByRole("option", { name: "Every day" }));
+    expect(updateMeterRequest).toHaveBeenLastCalledWith({
+      ...meters[0],
+      weeklyGoal: 7,
+    });
+  });
+
+  it("edits the tags and their goals of activities meters", async () => {
+    const { updateMeterRequest } = renderList();
+    await userEvent.click(
+      screen.getByRole("button", { name: "Set tag goals" })
+    );
+    await userEvent.click(
+      screen.getByRole("combobox", { name: "Goal for Work" })
+    );
+    await userEvent.click(screen.getByRole("option", { name: "2× a week" }));
+    await userEvent.click(screen.getByRole("button", { name: "Save" }));
+    expect(updateMeterRequest).toHaveBeenLastCalledWith({
+      ...meters[1],
+      options: ["work"],
+      tagGoals: [{ tag: "work", timesPerWeek: 2 }],
+    });
   });
 });

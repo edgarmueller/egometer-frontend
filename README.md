@@ -32,6 +32,13 @@ egometer shows your meters in three ways:
 Each page can step to the previous or next day, week or month, or pick one from a calendar.
 Meters are added, renamed, colored and deleted on the **Meters** page (`/meters`).
 
+## Goals
+
+Every meter can have a weekly goal, how many days a week it should be met: a yes for yes/no meters, reaching the
+daily goal of number meters (any number without one), more than none of quantity meters and any entry otherwise.
+Activities meters have goals per tag instead, e.g. sports three times a week. Goals are set on the Meters page and
+show up in the week and month views and on the Insights page, with this week's progress and streaks of weeks.
+
 ## Meter types
 
 Every meter has one of the types the API defines: `mood`, `activities`, `quantity`, `boolean` (yes/no),

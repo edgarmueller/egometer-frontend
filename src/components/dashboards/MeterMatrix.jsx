@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import Chip from "@mui/material/Chip";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import { goalProgress } from "../../common/goals";
 import { entryIntensity, intensityScale } from "../../common/intensity";
 import MeterAvatar from "../common/MeterAvatar";
+import GoalChips from "../common/GoalChips";
 import EntryCell from "../entries/EntryCell";
 import useEntryPopover from "../entries/useEntryPopover";
 
@@ -70,7 +70,7 @@ const MeterMatrix = ({ meters, days, entriesByMeter }) => {
   const progressByMeter = meters.map((meter) =>
     goalProgress(meter, entriesByMeter[meter.id], days)
   );
-  const hasGoals = progressByMeter.some((progress) => progress !== undefined);
+  const hasGoals = progressByMeter.some((progress) => progress.length > 0);
 
   return (
     <Card>
@@ -86,7 +86,7 @@ const MeterMatrix = ({ meters, days, entriesByMeter }) => {
                   <DayHeader day={day} />
                 </TableCell>
               ))}
-              {hasGoals && <TableCell align="center">Goal</TableCell>}
+              {hasGoals && <TableCell>Goals</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -137,18 +137,8 @@ const MeterMatrix = ({ meters, days, entriesByMeter }) => {
                     );
                   })}
                   {hasGoals && (
-                    <TableCell align="center">
-                      {progress && (
-                        <Chip
-                          size="small"
-                          label={`${progress.reached} / ${progress.target}`}
-                          color={
-                            progress.reached >= progress.target
-                              ? "success"
-                              : "default"
-                          }
-                        />
-                      )}
+                    <TableCell sx={{ pr: "16px !important" }}>
+                      <GoalChips progress={progress} direction="column" />
                     </TableCell>
                   )}
                 </TableRow>

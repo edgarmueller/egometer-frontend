@@ -46,7 +46,7 @@ describe("MonthCalendar", () => {
   it("summarizes the tracked days and the goal", () => {
     renderCalendar();
     expect(screen.getByText("2 of 31 days")).toBeInTheDocument();
-    expect(screen.getByText("Goal 1 / 9")).toBeInTheDocument();
+    expect(screen.getByText("1 / 9")).toBeInTheDocument();
   });
 
   it("shades days by the intensity of their entries", () => {

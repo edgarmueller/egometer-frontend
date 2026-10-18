@@ -108,24 +108,34 @@ export const deleteMeter = async (meterId) => {
   );
 };
 
-// fields of a meter that can be changed; goals only apply to number meters
+// fields of a meter that can be changed, depending on its type
+const FIELDS_BY_TYPE = {
+  number: ["dailyGoal", "weeklyGoal"],
+  activities: ["options", "tagGoals"],
+};
 const EDITABLE_FIELDS = ["name", "color", "icon"];
-const NUMBER_FIELDS = ["dailyGoal", "weeklyGoal"];
+
+const isTimesPerWeek = (n) => Number.isInteger(n) && n >= 1 && n <= 7;
 
 export const updateMeter = async (meter) => {
   const token = getToken();
   const fields = EDITABLE_FIELDS.concat(
-    meter.type === "number" ? NUMBER_FIELDS : [],
-    meter.type === "activities" ? ["options"] : []
+    FIELDS_BY_TYPE[meter.type] || ["weeklyGoal"]
   );
   const changes = _.pick(meter, fields);
-  // goals must be positive; anything else (e.g. 0 from an emptied input)
-  // removes the goal
-  NUMBER_FIELDS.filter((field) => _.has(changes, field)).forEach((field) => {
-    if (!(changes[field] > 0)) {
-      changes[field] = null;
-    }
-  });
+  // goals out of range (e.g. 0 from an emptied input) remove the goal
+  if (_.has(changes, "dailyGoal") && !(changes.dailyGoal > 0)) {
+    changes.dailyGoal = null;
+  }
+  if (_.has(changes, "weeklyGoal") && !isTimesPerWeek(changes.weeklyGoal)) {
+    changes.weeklyGoal = null;
+  }
+  if (_.has(changes, "tagGoals")) {
+    const goals = (changes.tagGoals || []).filter((goal) =>
+      isTimesPerWeek(goal.timesPerWeek)
+    );
+    changes.tagGoals = goals.length > 0 ? goals : null;
+  }
   return Axios.patch(
     `${API_BASE_URL}/meters/${meter.id}`,
     changes,
