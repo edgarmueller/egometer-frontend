@@ -61,8 +61,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
   and follow its instructions to set up the backend
 - Use Node.js 12 or 14 (see `.nvmrc`), e.g. via `nvm use`
 - Install dependencies via `npm install`
-- Copy `.env.example` to `.env` and adjust `REACT_APP_BASE_URL` if the API doesn't run on `http://localhost:3000`
-- Run `npm start` to start dev mode, then open `http://localhost:3001` and create an account
+- Run `npm start` to start dev mode, then open `http://localhost:3001` and create an account.
+  The defaults in `.env.development` point to the API on `http://localhost:3000`;
+  put overrides in `.env.local` (see `.env.example`)
 - Run `npm test` to execute all tests
 
 ### Authentication
