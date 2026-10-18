@@ -33,11 +33,14 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: "jsdom",
       globals: true,
+      setupFiles: ["src/setupTests.js"],
       include: ["src/**/*.spec.{js,jsx}"],
       coverage: {
         include: ["src/**/*.{js,jsx}"],
         exclude: [
           "src/index.jsx",
+          "src/setupTests.js",
+          "src/test-utils.jsx",
           "src/__mocks__/**",
           "src/**/*.spec.{js,jsx}",
         ],

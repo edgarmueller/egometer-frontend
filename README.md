@@ -20,40 +20,32 @@ feature requests etc.
 
 ## Dashboards
 
-egometer can be used in two different ways, either via the daily dashboard, or, alternatively via the monthly dashboard.
-While the daily dashboard display all meters via their `day` visualization component and therefore allows easier editing,
-the monthly dashboard is meant to give you an overview of the current month, although it also allows entering data via the `cell`
-component property of a widget.
+egometer shows your meters in three ways:
 
-Widgets on the daily dashboard can be dragged around. The layout will be saved on the client via local storage.
+- **Today** (`/dashboard`): a card per meter to fill in a day, e.g. by picking a mood or toggling activities
+- **Week** (`/weekly`) and **Month** (`/matrix`): a table of all meters per day, where clicking a day edits its
+  entry, and a chart of each meter below it
 
-The monthly dashboard actually consists of two components, one is a calendar-like cell-based view for each meter per day while the other one consists of aggregated data views.
+Each page can step to the previous or next day, week or month, or pick one from a calendar.
+Meters are added, renamed, colored and deleted on the **Meters** page (`/meters`).
 
 ## Meter types
 
-Every meter has one of the types the API defines: `mood`, `quantity`, `boolean`, `number`, `text` or
-`activities` (see the API's README). The type decides which values its entries accept and which widget
-displays it; `src/common/meterTypes.js` maps each type to its widget and describes its values as a JSON
-schema, which is what the widgets render (e.g. the options of an activities meter).
+Every meter has one of the types the API defines: `mood`, `activities`, `quantity`, `boolean` (yes/no),
+`number` or `text` (a journal), see the API's README. `src/common/meterTypes.jsx` describes how each type is
+presented (its label, icon and the labels and icons of its values), `src/components/entries` has the input for
+each type, used both on the Today page and when editing a day of the week or month, and
+`src/components/charts` the chart of each type.
 
-## Widget format
+## UI
 
-A widget displays the data of a meter. The following is a list of all available properties of a widget:
-
-- `meterType`: the meter type the widget creates when it's picked in the "Add meter" drawer
-- `day`: the visualization component for the daily dashboard
-- `week` / `month`: the visualization components for the weekly and monthly dashboards; typically used for displaying the data in an aggregated view
-- `cell`: the visualization component that is used per cell within the calendar view of a month
-- `name`: the name of the widget, see `src/common/meterTypes.js`
-- `label`: the label that is used to display the widget within the "Add meter" drawer
-- `icon`: a React element that displays an icon for the widget within the "Add meter" drawer
-- `category`: the category this widget belongs to, e.g. 'General'. Used while adding a meter to categorize meters
-
-All available widgets for the entire app are configured within `widgets/index.js`.
+The UI is built with [MUI](https://mui.com) and its charts and date pickers. All components share the
+theme in `src/theme.js`, so colors, typography and shapes are changed there rather than per component.
 
 ## Development
 
-The frontend is built with [Vite](https://vite.dev) and tested with [Vitest](https://vitest.dev).
+The frontend is built with [Vite](https://vite.dev) and tested with [Vitest](https://vitest.dev) and
+[Testing Library](https://testing-library.com).
 
 ### Getting started
 

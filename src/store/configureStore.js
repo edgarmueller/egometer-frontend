@@ -2,7 +2,6 @@ import { compose, createStore, applyMiddleware } from "redux";
 import logger from "redux-logger";
 import thunk from "redux-thunk";
 import { createBrowserHistory } from "history";
-import { routerMiddleware } from "react-router-redux";
 
 import app from "../reducers";
 import { createEpicMiddleware } from "redux-observable";
@@ -17,7 +16,7 @@ export const configureStore = (initState) => {
   const epicMiddleware = createEpicMiddleware({
     dependencies: { api },
   });
-  const middlewares = [thunk, epicMiddleware, routerMiddleware(history)];
+  const middlewares = [thunk, epicMiddleware];
   if (import.meta.env.DEV) {
     middlewares.push(logger);
   }

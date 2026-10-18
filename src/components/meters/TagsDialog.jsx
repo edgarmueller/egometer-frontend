@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import Button from "@material-ui/core/Button";
-import Chip from "@material-ui/core/Chip";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
-import { activityLabel } from "../../widgets/day/activities";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import TextField from "@mui/material/TextField";
+import { ActivityIcon, activityLabel } from "../../common/meterTypes";
 
 // limits of the API
 export const MAX_TAG_LENGTH = 50;
@@ -51,18 +52,25 @@ const TagsDialog = ({ open, meterName, tags, onSave, onClose }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} aria-labelledby="tags-dialog-title">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      aria-labelledby="tags-dialog-title"
+    >
       <DialogTitle id="tags-dialog-title">Tags of {meterName}</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Removing a tag keeps it on the days already tagged with it.
         </DialogContentText>
-        <div style={{ display: "flex", flexWrap: "wrap" }}>
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2 }}>
           {editedTags.map((tag) => (
             <Chip
               key={tag}
+              icon={<ActivityIcon tag={tag} />}
               label={activityLabel(tag)}
-              style={{ margin: 4 }}
+              variant="outlined"
               onDelete={
                 // at least one tag is required
                 editedTags.length > 1
@@ -71,9 +79,14 @@ const TagsDialog = ({ open, meterName, tags, onSave, onClose }) => {
               }
             />
           ))}
-        </div>
-        <form onSubmit={addTag} style={{ display: "flex", marginTop: 16 }}>
+        </Box>
+        <Box
+          component="form"
+          onSubmit={addTag}
+          sx={{ display: "flex", alignItems: "flex-start", gap: 1, mt: 3 }}
+        >
           <TextField
+            size="small"
             label="New tag"
             value={newTag}
             onChange={(event) => setNewTag(event.target.value)}
@@ -81,15 +94,20 @@ const TagsDialog = ({ open, meterName, tags, onSave, onClose }) => {
             helperText={error}
             fullWidth
           />
-          <Button type="submit" disabled={!trimmed || error !== undefined}>
+          <Button
+            type="submit"
+            variant="outlined"
+            disabled={!trimmed || error !== undefined}
+            sx={{ height: 40 }}
+          >
             Add
           </Button>
-        </form>
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
         <Button
-          color="primary"
+          variant="contained"
           onClick={() => {
             onSave(editedTags);
             onClose();

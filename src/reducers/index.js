@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import { routerReducer } from "react-router-redux";
 import {
   metersReducer,
   getMeters as _getMeters,
@@ -11,7 +10,6 @@ import { findMeterById as _findMeterById } from "../reducers/meters";
 import entriesReducer from "./entries";
 
 const app = combineReducers({
-  router: routerReducer,
   meters: metersReducer,
   entries: entriesReducer,
 });

@@ -1,8 +1,8 @@
-import { from, of } from "rxjs";
+import { EMPTY, from, of, timer } from "rxjs";
 import {
   map,
   catchError,
-  filter,
+  groupBy,
   mergeMap,
   switchMap,
   debounceTime,
@@ -45,127 +45,119 @@ export function fetchEntriesEpic(action$, store, deps) {
   return action$.pipe(
     ofType(FETCH_ENTRIES_REQUEST),
     debounceTime(250),
-    switchMap(({ year, month, week, meterId }) => {
-      if (week) {
-        return from(fetchEntriesByWeek(year, week));
-      } else {
-        return from(fetchEntries(year, month, meterId));
-      }
-    }),
-    map((resp) => receiveEntries(resp.data)),
-    catchError((error) => {
-      return of({
-        type: FETCH_ENTRIES_FAILURE,
-        error: error.message,
-      });
-    })
-  );
-}
-
-export function updateEntryEpic(action$, store, deps) {
-  return action$.pipe(
-    ofType(UPDATE_ENTRY_REQUEST),
-    filter(({ shouldDebounce }) => !shouldDebounce),
-    switchMap(({ entry }) => {
-      return from(deps.api.updateEntry(entry)).pipe(
-        mergeMap((resp) => {
-          return of({
-            type: UPDATE_ENTRY_SUCCESS,
-            entry: resp.data,
-          });
-        }),
-        catchError((error) => {
-          return of({
-            type: UPDATE_ENTRY_FAILURE,
-            meterId: entry.meterId,
+    switchMap(({ year, month, week, meterId }) =>
+      from(
+        week
+          ? fetchEntriesByWeek(year, week)
+          : fetchEntries(year, month, meterId)
+      ).pipe(
+        map((resp) => receiveEntries(resp.data)),
+        // within the switchMap, so that later requests are still handled
+        catchError((error) =>
+          of({
+            type: FETCH_ENTRIES_FAILURE,
             error: error.message,
-          });
-        })
-      );
-    })
+          })
+        )
+      )
+    )
   );
 }
 
-export function deleteEntryEpic(action$, store, deps) {
-  return action$.pipe(
-    ofType(DELETE_ENTRY_REQUEST),
-    //    .filter(({ shouldDebounce }) => !shouldDebounce)
-    switchMap(({ entry }) => {
-      return from(deps.api.deleteEntry(entry)).pipe(
-        mergeMap(({ data }) => {
+// how long to wait for more changes before saving a debounced change
+const DEBOUNCE_MS = 500;
+
+const saveEntry = ({ entry }, api) =>
+  from(api.updateEntry(entry)).pipe(
+    map((resp) => ({
+      type: UPDATE_ENTRY_SUCCESS,
+      entry: resp.data,
+    })),
+    catchError((error) =>
+      of({
+        type: UPDATE_ENTRY_FAILURE,
+        meterId: entry.meterId,
+        error: error.message,
+      })
+    )
+  );
+
+const removeEntry = ({ entry }, api) =>
+  // an entry that was never saved only cancels pending changes
+  entry.id === undefined
+    ? EMPTY
+    : from(api.deleteEntry(entry)).pipe(
+        map(({ data }) => {
           const { meterId, ...other } = data;
-          return of({
+          return {
             type: DELETE_ENTRY_SUCCESS,
-            meterId: meterId,
+            meterId,
             entry: other,
-          });
+          };
         }),
-        catchError((error) => {
-          return of({
+        catchError((error) =>
+          of({
             type: DELETE_ENTRY_FAILURE,
             entry: entry.id,
             error: error.message,
-          });
-        })
+          })
+        )
       );
-    })
-  );
-}
 
-export function updateEntryDebounceEpic(action$, store, deps) {
+/**
+ * Saves and deletes entries. Changes of the same entry replace each other,
+ * so the latest one wins, while changes of different entries don't affect
+ * each other. Debounced changes wait for further changes first.
+ */
+export function writeEntryEpic(action$, store, deps) {
   return action$.pipe(
-    ofType(UPDATE_ENTRY_REQUEST),
-    filter(({ shouldDebounce }) => shouldDebounce),
-    debounceTime(500),
-    switchMap(({ entry }) => {
-      return from(deps.api.updateEntry(entry)).pipe(
-        mergeMap((resp) => {
-          return of({
-            type: UPDATE_ENTRY_SUCCESS,
-            entry: resp.data,
-          });
-        }),
-        catchError((error) => {
-          return of({
-            type: UPDATE_ENTRY_FAILURE,
-            meterId: entry.meterId,
-            error: error.message,
-          });
-        })
-      );
-    })
+    ofType(UPDATE_ENTRY_REQUEST, DELETE_ENTRY_REQUEST),
+    groupBy(({ entry }) => `${entry.meterId}|${entry.date}`),
+    mergeMap((changes$) =>
+      changes$.pipe(
+        switchMap((action) =>
+          timer(action.shouldDebounce ? DEBOUNCE_MS : 0).pipe(
+            mergeMap(() =>
+              action.type === UPDATE_ENTRY_REQUEST
+                ? saveEntry(action, deps.api)
+                : removeEntry(action, deps.api)
+            )
+          )
+        )
+      )
+    )
   );
 }
 
+const saveMeter = (api) => ({ meter }) =>
+  from(api.updateMeter(meter)).pipe(
+    map((resp) => ({
+      type: UPDATE_METER_SUCCESS,
+      meter: resp.data,
+    })),
+    catchError((error) =>
+      of({
+        type: UPDATE_METER_FAILURE,
+        meterId: meter.id,
+        error: error.message,
+      })
+    )
+  );
+
+/** Saves changes of meters once no more changes of a meter follow. */
 export function updateMeterDebounceEpic(action$, store, deps) {
   return action$.pipe(
     ofType(UPDATE_METER_REQUEST),
-    debounceTime(500),
-    switchMap(({ meter }) => {
-      return from(deps.api.updateMeter(meter)).pipe(
-        mergeMap((resp) => {
-          return of({
-            type: UPDATE_METER_SUCCESS,
-            meter: resp.data,
-          });
-        }),
-        catchError((error) => {
-          return of({
-            type: UPDATE_METER_FAILURE,
-            meterId: meter.id,
-            error: error.message,
-          });
-        })
-      );
-    })
+    groupBy(({ meter }) => meter.id),
+    mergeMap((updates$) =>
+      updates$.pipe(debounceTime(DEBOUNCE_MS), switchMap(saveMeter(deps.api)))
+    )
   );
 }
 
 export const rootEpic = combineEpics(
   fetchMetersEpic,
   fetchEntriesEpic,
-  updateEntryEpic,
-  deleteEntryEpic,
-  updateEntryDebounceEpic,
+  writeEntryEpic,
   updateMeterDebounceEpic
 );

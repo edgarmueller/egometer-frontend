@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect } from "react-router";
+import { Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import qs from "qs";
 import { useAuth } from "./AuthProvider";

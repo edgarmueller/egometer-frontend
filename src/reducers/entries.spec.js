@@ -268,4 +268,17 @@ describe("entries reducer", () => {
     expect(error.message).toBe("unknown error");
     expect(error.meterId).toBe(counterMeterId);
   });
+
+  it("should stop loading once entries were fetched", () => {
+    const loading = entriesReducer(undefined, {
+      type: FETCH_ENTRIES_REQUEST,
+    });
+    expect(loading.loadingStatus.isLoading).toBe(true);
+    const loaded = entriesReducer(loading, {
+      type: FETCH_ENTRIES_SUCCESS,
+      entries: counterEntries,
+    });
+    expect(loaded.loadingStatus.isLoading).toBe(false);
+    expect(loaded.entries[counterMeterId]).toEqual(counterEntries);
+  });
 });

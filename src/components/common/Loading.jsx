@@ -1,18 +1,11 @@
 import React from "react";
-import { MoonLoader } from "react-spinners";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Loading = () => (
-  <div
-    style={{
-      position: "fixed",
-      top: "50%",
-      left: "50%",
-      marginLeft: -40,
-      marginTop: -55,
-    }}
-  >
-    <MoonLoader />
-  </div>
+  <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
+    <CircularProgress aria-label="Loading" />
+  </Box>
 );
 
 export default Loading;
