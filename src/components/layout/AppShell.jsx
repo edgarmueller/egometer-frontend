@@ -16,6 +16,7 @@ import TodayRounded from "@mui/icons-material/TodayRounded";
 import DateRangeRounded from "@mui/icons-material/DateRangeRounded";
 import CalendarMonthRounded from "@mui/icons-material/CalendarMonthRounded";
 import TuneRounded from "@mui/icons-material/TuneRounded";
+import InsightsRounded from "@mui/icons-material/InsightsRounded";
 import LogoutRounded from "@mui/icons-material/LogoutRounded";
 import MenuRounded from "@mui/icons-material/MenuRounded";
 import Logo from "./Logo";
@@ -28,6 +29,7 @@ export const NAV_ITEMS = [
   { to: "/dashboard", label: "Today", Icon: TodayRounded },
   { to: "/weekly", label: "Week", Icon: DateRangeRounded },
   { to: "/matrix", label: "Month", Icon: CalendarMonthRounded },
+  { to: "/insights", label: "Insights", Icon: InsightsRounded },
   { to: "/meters", label: "Meters", Icon: TuneRounded },
 ];
 

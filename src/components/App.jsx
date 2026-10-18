@@ -13,6 +13,7 @@ const DailyDashboard = lazy(() => import("./dashboards/DailyDashboard"));
 const WeeklyDashboard = lazy(() => import("./dashboards/WeeklyDashboard"));
 const MonthlyDashboard = lazy(() => import("./dashboards/MonthlyDashboard"));
 const MeterList = lazy(() => import("./meters/MeterList"));
+const InsightsPage = lazy(() => import("./insights/InsightsPage"));
 
 // the pages of a logged in user, within the app's navigation
 const AppPages = requireAuth(() => (
@@ -20,6 +21,7 @@ const AppPages = requireAuth(() => (
     <Suspense fallback={<Loading />}>
       <Switch>
         <Route exact path="/meters" component={MeterList} />
+        <Route exact path="/insights" component={InsightsPage} />
         <Route
           exact
           path="/matrix/:year(\d{4})?/:month(0?[1-9]|1[012])?"
