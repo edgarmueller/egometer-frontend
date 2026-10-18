@@ -20,11 +20,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
-import Typography from "@mui/material/Typography";
 import AddRounded from "@mui/icons-material/AddRounded";
 import DeleteOutlineRounded from "@mui/icons-material/DeleteOutlineRounded";
 import LocalOfferOutlined from "@mui/icons-material/LocalOfferOutlined";
 import TuneRounded from "@mui/icons-material/TuneRounded";
+import FlagRounded from "@mui/icons-material/FlagRounded";
 import {
   deleteMeter,
   fetchMeters,
@@ -38,6 +38,7 @@ import Loading from "../common/Loading";
 import EmptyState from "../common/EmptyState";
 import MeterAvatar from "../common/MeterAvatar";
 import ColorPicker, { COLORS } from "../common/ColorPicker";
+import TimesPerWeekSelect from "../common/TimesPerWeekSelect";
 import ErrorSnackbar from "../common/ErrorSnackbar";
 import AddMeterDialog from "./AddMeterDialog";
 import IconPicker from "./IconPicker";
@@ -80,8 +81,8 @@ export const MeterList = ({
   const [deletedMeter, setDeletedMeter] = useState(undefined);
 
   const handleUpdateMeter = useCallback(
-    (meter, propName, propValue) => {
-      const updated = { ...meter, [propName]: propValue };
+    (meter, changes) => {
+      const updated = { ...meter, ...changes };
       setEditedMeters((current) =>
         current.map((m) => (m.id === meter.id ? updated : m))
       );
@@ -158,7 +159,9 @@ export const MeterList = ({
                             size="small"
                             value={meter.name}
                             onChange={(ev) =>
-                              handleUpdateMeter(meter, "name", ev.target.value)
+                              handleUpdateMeter(meter, {
+                                name: ev.target.value,
+                              })
                             }
                             slotProps={{
                               htmlInput: {
@@ -182,35 +185,47 @@ export const MeterList = ({
                         <ColorPicker
                           color={meter.color || COLORS[0]}
                           onChange={(color) =>
-                            handleUpdateMeter(meter, "color", color)
+                            handleUpdateMeter(meter, { color })
                           }
                         />
                       </TableCell>
                       <TableCell>
-                        {meter.type === "number" ? (
+                        {meter.type === "activities" ? (
+                          <Button
+                            size="small"
+                            startIcon={<FlagRounded />}
+                            onClick={() => setTaggedMeter(meter)}
+                          >
+                            {(meter.tagGoals || []).length > 0
+                              ? `${meter.tagGoals.length} tag ${
+                                  meter.tagGoals.length === 1 ? "goal" : "goals"
+                                }`
+                              : "Set tag goals"}
+                          </Button>
+                        ) : (
                           <Box sx={{ display: "flex", gap: 1 }}>
-                            <GoalField
-                              label="Daily goal"
-                              value={meter.dailyGoal}
-                              onChange={(goal) =>
-                                handleUpdateMeter(meter, "dailyGoal", goal)
-                              }
-                            />
-                            <GoalField
-                              label="Days/week"
+                            <TimesPerWeekSelect
+                              label="Weekly goal"
                               value={meter.weeklyGoal}
                               onChange={(goal) =>
-                                handleUpdateMeter(meter, "weeklyGoal", goal)
+                                handleUpdateMeter(meter, { weeklyGoal: goal })
                               }
                             />
+                            {meter.type === "number" && (
+                              <GoalField
+                                label="Daily goal"
+                                value={meter.dailyGoal}
+                                onChange={(goal) =>
+                                  handleUpdateMeter(meter, { dailyGoal: goal })
+                                }
+                              />
+                            )}
                           </Box>
-                        ) : (
-                          <Typography color="text.disabled">–</Typography>
                         )}
                       </TableCell>
                       <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
                         {meter.type === "activities" && (
-                          <Tooltip title="Edit tags">
+                          <Tooltip title="Edit tags and goals">
                             <IconButton
                               aria-label="Edit tags"
                               onClick={() => setTaggedMeter(meter)}
@@ -251,7 +266,7 @@ export const MeterList = ({
         meterName={iconMeter && iconMeter.name}
         hasIcon={!!(iconMeter && iconMeter.icon)}
         onPick={(icon) => {
-          handleUpdateMeter(iconMeter, "icon", icon);
+          handleUpdateMeter(iconMeter, { icon });
           setIconMeter(undefined);
         }}
         onClose={() => setIconMeter(undefined)}
@@ -260,7 +275,10 @@ export const MeterList = ({
         open={taggedMeter !== undefined}
         meterName={taggedMeter && taggedMeter.name}
         tags={(taggedMeter && taggedMeter.options) || []}
-        onSave={(tags) => handleUpdateMeter(taggedMeter, "options", tags)}
+        goals={taggedMeter && taggedMeter.tagGoals}
+        onSave={(tags, goals) =>
+          handleUpdateMeter(taggedMeter, { options: tags, tagGoals: goals })
+        }
         onClose={() => setTaggedMeter(undefined)}
       />
       <Dialog

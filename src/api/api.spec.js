@@ -35,14 +35,21 @@ describe("api", () => {
     mock
       .onPatch(`${API_BASE_URL}/meters/${moodMeter.id}`)
       .reply((config) => [200, { ...moodMeter, ...JSON.parse(config.data) }]);
-    await api.updateMeter({ ...moodMeter, name: "Feeling", dailyGoal: 3 });
+    await api.updateMeter({
+      ...moodMeter,
+      name: "Feeling",
+      dailyGoal: 3,
+      weeklyGoal: 5,
+      tagGoals: [],
+    });
     expect(JSON.parse(mock.history.patch[0].data)).toEqual({
       name: "Feeling",
       color: "#cecece",
+      weeklyGoal: 5,
     });
   });
 
-  it("should clear goals of number meters that aren't positive", async () => {
+  it("should clear goals out of range", async () => {
     mock
       .onPatch(`${API_BASE_URL}/meters/n`)
       .reply(200, { id: "n", type: "number" });
@@ -56,8 +63,33 @@ describe("api", () => {
     expect(JSON.parse(mock.history.patch[0].data)).toEqual({
       name: "Steps",
       dailyGoal: null,
-      weeklyGoal: 10,
+      weeklyGoal: null,
     });
+  });
+
+  it("should send the tag goals of activities meters", async () => {
+    mock
+      .onPatch(`${API_BASE_URL}/meters/a`)
+      .reply(200, { id: "a", type: "activities" });
+    const meter = {
+      id: "a",
+      type: "activities",
+      name: "Activities",
+      options: ["sports", "work"],
+      weeklyGoal: 3,
+      tagGoals: [
+        { tag: "sports", timesPerWeek: 3 },
+        { tag: "work", timesPerWeek: 0 },
+      ],
+    };
+    await api.updateMeter(meter);
+    await api.updateMeter({ ...meter, tagGoals: [] });
+    expect(JSON.parse(mock.history.patch[0].data)).toEqual({
+      name: "Activities",
+      options: ["sports", "work"],
+      tagGoals: [{ tag: "sports", timesPerWeek: 3 }],
+    });
+    expect(JSON.parse(mock.history.patch[1].data).tagGoals).toBeNull();
   });
 
   it("should fetch the entries of a month", async () => {

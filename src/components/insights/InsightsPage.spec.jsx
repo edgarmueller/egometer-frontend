@@ -13,7 +13,14 @@ const day = (n) => moment().subtract(n, "days").format("YYYY-MM-DD");
 const meters = [
   { id: "m", name: "Mood", type: "mood" },
   { id: "a", name: "Activities", type: "activities", options: ["sports"] },
-  { id: "b", name: "Workout", type: "boolean" },
+  {
+    id: "a2",
+    name: "Hobbies",
+    type: "activities",
+    options: ["sports", "music"],
+    tagGoals: [{ tag: "music", timesPerWeek: 2 }],
+  },
+  { id: "b", name: "Workout", type: "boolean", weeklyGoal: 3 },
 ];
 // great days with sports, bad days without, over the last 8 days
 const entries = [...Array(8)].flatMap((_, i) => [
@@ -66,5 +73,25 @@ describe("InsightsPage", () => {
     expect(
       await screen.findByRole("link", { name: "Add a mood meter" })
     ).toBeInTheDocument();
+  });
+
+  it("shows the weekly goals", async () => {
+    renderPage();
+    const card = (await screen.findByText("Weekly goals")).closest(
+      ".MuiCard-root"
+    );
+    const goals = within(card).getAllByRole("listitem");
+    expect(goals).toHaveLength(2);
+    expect(goals[0]).toHaveTextContent("Music");
+    expect(goals[0]).toHaveTextContent("Hobbies · 2× a week");
+    expect(goals[1]).toHaveTextContent("Workout");
+    expect(goals[1]).toHaveTextContent("3× a week");
+  });
+
+  it("invites to set goals", async () => {
+    renderPage({ meters: meters.slice(0, 2) });
+    expect(
+      await screen.findByRole("link", { name: "Set goals" })
+    ).toHaveAttribute("href", "/meters");
   });
 });

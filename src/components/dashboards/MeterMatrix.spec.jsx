@@ -42,7 +42,7 @@ describe("MeterMatrix", () => {
 
   it("shows the progress towards weekly goals", () => {
     renderMatrix();
-    expect(screen.getByText("Goal")).toBeInTheDocument();
+    expect(screen.getByText("Goals")).toBeInTheDocument();
     expect(screen.getByText("1 / 2")).toBeInTheDocument();
   });
 

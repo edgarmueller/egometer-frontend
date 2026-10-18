@@ -5,12 +5,12 @@ import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
-import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { isEmptyValue } from "../../common/meterTypes";
 import { goalProgress } from "../../common/goals";
 import { entryIntensity, intensityScale } from "../../common/intensity";
 import MeterAvatar from "../common/MeterAvatar";
+import GoalChips from "../common/GoalChips";
 import EntryCell from "../entries/EntryCell";
 
 const WEEKDAYS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
@@ -38,18 +38,6 @@ const MonthCalendar = ({ meter, days, entries, onEdit }) => {
         avatar={<MeterAvatar meter={meter} size={32} />}
         title={meter.name}
         subheader={`${tracked} of ${days.length} days`}
-        action={
-          progress && (
-            <Chip
-              size="small"
-              label={`Goal ${progress.reached} / ${progress.target}`}
-              color={
-                progress.reached >= progress.target ? "success" : "default"
-              }
-              sx={{ mt: 1, mr: 1 }}
-            />
-          )
-        }
       />
       <CardContent>
         <Box
@@ -87,6 +75,11 @@ const MonthCalendar = ({ meter, days, entries, onEdit }) => {
             );
           })}
         </Box>
+        {progress.length > 0 && (
+          <Box sx={{ mt: 2 }}>
+            <GoalChips progress={progress} />
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

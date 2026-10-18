@@ -37,6 +37,7 @@ import EmptyState from "../common/EmptyState";
 import MeterAvatar, { DEFAULT_METER_COLOR } from "../common/MeterAvatar";
 import NoMeters from "../dashboards/NoMeters";
 import useInsightsData from "./useInsightsData";
+import GoalsCard from "./GoalsCard";
 
 const PERIODS = [
   { days: 30, label: "30 days" },
@@ -396,6 +397,13 @@ const InsightsPage = () => {
                 ? "No mood tracked"
                 : `${formatScore(mood)} of 5 on ${pluralDays(moods.size)}`
             }
+          />
+        </Grid>
+        <Grid size={12}>
+          <GoalsCard
+            meters={meters}
+            entriesByMeter={entriesByMeter}
+            from={moment().subtract(days - 1, "days")}
           />
         </Grid>
         {moodMeter ? (
