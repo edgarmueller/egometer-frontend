@@ -99,6 +99,18 @@ describe("api", () => {
     expect(response.data).toEqual([]);
   });
 
+  it("should only send an Authorization header with a token", async () => {
+    mock.onGet(`${API_BASE_URL}/meters`).reply(200, []);
+    await api.fetchMeters();
+    localStorage.setItem("egometer.token", "the-token");
+    await api.fetchMeters();
+    localStorage.removeItem("egometer.token");
+    expect(mock.history.get.map((r) => r.headers.Authorization)).toEqual([
+      undefined,
+      "Bearer the-token",
+    ]);
+  });
+
   it("should put and delete the entry of a day", async () => {
     const entry = {
       id: "e",

@@ -47,7 +47,7 @@ export const App = ({ fetchMeters }) => {
     if (isAuthenticated) {
       fetchMeters();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchMeters]);
 
   return (
     <div className="App" id="app">

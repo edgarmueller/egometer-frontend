@@ -1,6 +1,7 @@
 import Axios from "axios";
 import { API_BASE_URL } from "../constants";
 import _ from "lodash";
+import moment from "moment";
 import { getToken } from "./session";
 import { withWidget } from "../common/meterTypes";
 import { lastDayOfMonth, pad, weekToDate } from "../common/date";
@@ -32,10 +33,11 @@ Axios.interceptors.response.use(undefined, (error) => {
   return Promise.reject(error);
 });
 
+// only adds the Authorization header if there's a token, so that a request
+// without one isn't mistaken for a rejected login (see the interceptor)
 const createHeaders = (headers) => (token) => ({
   headers: {
-    // eslint-disable-next-line no-undef
-    Authorization: `Bearer ${token}`,
+    ...(token && { Authorization: `Bearer ${token}` }),
     ...headers,
   },
 });
@@ -63,7 +65,8 @@ export const fetchMeters = async () => {
   return { ...resp, data: resp.data.map(withWidget) };
 };
 
-const toDateString = (date) => date.toISOString().substr(0, 10);
+// the local calendar day, which is what the dashboards show
+const toDateString = (date) => moment(date).format("YYYY-MM-DD");
 
 export const fetchEntriesInRange = async (from, to) => {
   const token = getToken();
@@ -86,7 +89,8 @@ export const fetchEntries = async (year, month) => {
 // ISO week
 export const fetchEntriesByWeek = async (year, week) => {
   const monday = weekToDate(Number(year), Number(week));
-  const sunday = new Date(monday.getTime() + 6 * 24 * 60 * 60 * 1000);
+  const sunday = new Date(monday.getTime());
+  sunday.setDate(monday.getDate() + 6);
   return fetchEntriesInRange(toDateString(monday), toDateString(sunday));
 };
 
