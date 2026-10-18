@@ -53,18 +53,25 @@ All available widgets for the entire app are configured within `widgets/index.js
 
 ## Development
 
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+The frontend is built with [Vite](https://vite.dev) and tested with [Vitest](https://vitest.dev).
 
 ### Getting started
 
 - Clone [egometer-api](https://github.com/edgarmueller/egometer-api)
   and follow its instructions to set up the backend
-- Use Node.js 12 or 14 (see `.nvmrc`), e.g. via `nvm use`
+- Use Node.js 22 (see `.nvmrc`), e.g. via `nvm use`
 - Install dependencies via `npm install`
 - Run `npm start` to start dev mode, then open `http://localhost:3001` and create an account.
   The defaults in `.env.development` point to the API on `http://localhost:3000`;
   put overrides in `.env.local` (see `.env.example`)
-- Run `npm test` to execute all tests
+- Run `npm test` to execute all tests (`npm run test:watch` to keep them running,
+  `npm run test:cov` for coverage) and `npm run lint` to lint the code
+
+### Building
+
+`npm run build` writes a production build to `build/`, `npm run preview` serves it on port 3001.
+Production builds don't read `.env.development`, so set `REACT_APP_BASE_URL` to the URL of the
+deployed API, e.g. `REACT_APP_BASE_URL=https://api.example.com npm run build`.
 
 ### Authentication
 

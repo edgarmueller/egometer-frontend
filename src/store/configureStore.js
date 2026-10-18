@@ -18,8 +18,7 @@ export const configureStore = (initState) => {
     dependencies: { api },
   });
   const middlewares = [thunk, epicMiddleware, routerMiddleware(history)];
-  // eslint-disable-next-line no-undef
-  if (process.env.NODE_ENV === "development") {
+  if (import.meta.env.DEV) {
     middlewares.push(logger);
   }
   return {
