@@ -2,15 +2,17 @@
   "name": "egometer-frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.12"
+  },
   "dependencies": {
     "@material-ui/core": "^4.9.12",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
     "axios": "^0.21.1",
-    "dotenv": "^6.1.0",
+    "babel-runtime": "^6.26.0",
     "email-validator": "^2.0.4",
     "emoji-mart": "^2.11.2",
-    "eslint-plugin-prettier": "^3.1.4",
     "hex-to-rgba": "^1.0.1",
     "history": "^4.10.1",
     "jwt-decode": "^2.2.0",
@@ -32,7 +34,6 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.9",
-    "react-scripts": "^4.0.0",
     "react-spinners": "^0.9.0",
     "react-virtualized": "^9.21.2",
     "react-vis": "^1.11.7",
@@ -47,55 +48,28 @@
     "typography-theme-grand-view": "^0.16.19"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "test:cov": "react-scripts test --coverage --watchAll=false",
-    "eject": "react-scripts eject",
+    "start": "vite",
+    "start:dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "oxlint --deny-warnings src/",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
     "upgrade-interactive": "npx npm-check --update"
   },
-  "jest": {
-    "coverageReporters": [
-      "json",
-      "lcov",
-      "text",
-      "html"
-    ],
-    "collectCoverageFrom": [
-      "**/*.{js,jsx}",
-      "!src/serviceWorker.js",
-      "!src/index.js",
-      "!**/node_modules/**",
-      "!**/build/**",
-      "!**/test/**",
-      "!**/public/**",
-      "!**/vendor/**",
-      "!**/coverage/**",
-      "!**/__mocks__/**"
-    ]
-  },
   "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/coverage-v8": "^4.1.12",
     "axios-mock-adapter": "^1.18.1",
-    "babel-preset-env": "^1.6.1",
-    "coveralls": "^3.1.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
-    "eslint-plugin-jest": "^24.1.0",
-    "jest-localstorage-mock": "^2.4.2",
+    "jsdom": "^29.1.1",
+    "oxlint": "^1.88.0",
     "prettier": "^2.1.2",
     "redux-logger": "^3.0.6",
     "redux-mock-store": "^1.5.4",
-    "why-did-you-update": "^1.0.8"
-  },
-  "babel": {
-    "plugins": [
-      "emotion"
-    ]
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+    "vite": "^8.3.4",
+    "vitest": "^4.1.12"
+  }
 }

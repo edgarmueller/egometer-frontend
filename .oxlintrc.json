@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "react", "oxc", "vitest"],
+  "env": { "browser": true, "es2022": true },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "react/no-did-mount-set-state": "off",
+    "react/no-did-update-set-state": "off",
+    "react/set-state-in-effect": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.spec.js", "**/*.spec.jsx"],
+      "rules": { "react/globals": "off" }
+    }
+  ]
+}

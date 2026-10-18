@@ -13,7 +13,7 @@ import { counterMeterId, counterEntries } from "../__mocks__/fixtures";
 import { fetchEntriesEpic, updateEntryEpic } from ".";
 
 describe("updateEntryEpic", () => {
-  it("should update entry and fetch entries", (done) => {
+  it("should update entry and fetch entries", async () => {
     const deps = {
       api: {
         updateEntry: () => Promise.resolve(_.head(counterEntries)),
@@ -27,13 +27,11 @@ describe("updateEntryEpic", () => {
       })
     );
     const output$ = updateEntryEpic(action$, null, deps);
-    output$.toArray().subscribe((actions) => {
-      expect(actions[0].type).toBe(UPDATE_ENTRY_SUCCESS);
-      done();
-    });
+    const actions = await output$.toArray().toPromise();
+    expect(actions[0].type).toBe(UPDATE_ENTRY_SUCCESS);
   });
 
-  it("should be capable of failing to update entry", (done) => {
+  it("should be capable of failing to update entry", async () => {
     const deps = {
       api: {
         updateEntry: () => Promise.reject({ message: "expected failure" }),
@@ -47,16 +45,14 @@ describe("updateEntryEpic", () => {
       })
     );
     const output$ = updateEntryEpic(action$, null, deps);
-    output$.toArray().subscribe((actions) => {
-      expect(actions[0].type).toBe(UPDATE_ENTRY_FAILURE);
-      expect(actions[0].error).toBe("expected failure");
-      done();
-    });
+    const actions = await output$.toArray().toPromise();
+    expect(actions[0].type).toBe(UPDATE_ENTRY_FAILURE);
+    expect(actions[0].error).toBe("expected failure");
   });
 });
 
 describe("fetchEntriesEpic", () => {
-  it("should fetch entries", (done) => {
+  it("should fetch entries", async () => {
     const deps = {
       api: {
         fetchEntries: () => {
@@ -67,13 +63,11 @@ describe("fetchEntriesEpic", () => {
     // passed date doesn't really matter
     const action$ = of(fetchEntriesRequest(2018, 6));
     const output$ = fetchEntriesEpic(action$, null, deps);
-    output$.toArray().subscribe((actions) => {
-      expect(actions[0].type).toBe(FETCH_ENTRIES_SUCCESS);
-      done();
-    });
+    const actions = await output$.toArray().toPromise();
+    expect(actions[0].type).toBe(FETCH_ENTRIES_SUCCESS);
   });
 
-  it("should be capable to fail when fetching entries", (done) => {
+  it("should be capable to fail when fetching entries", async () => {
     const deps = {
       api: {
         fetchEntries: () => {
@@ -84,10 +78,8 @@ describe("fetchEntriesEpic", () => {
     // passed date doesn't really matter
     const action$ = of(fetchEntriesRequest(2018, 6));
     const output$ = fetchEntriesEpic(action$, null, deps);
-    output$.toArray().subscribe((actions) => {
-      expect(actions[0].type).toBe(FETCH_ENTRIES_FAILURE);
-      expect(actions[0].error).toBe("expected failure");
-      done();
-    });
+    const actions = await output$.toArray().toPromise();
+    expect(actions[0].type).toBe(FETCH_ENTRIES_FAILURE);
+    expect(actions[0].error).toBe("expected failure");
   });
 });

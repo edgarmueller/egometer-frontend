@@ -7,7 +7,7 @@ const USER_KEY = "egometer.user";
 const read = (key) => {
   try {
     return localStorage.getItem(key);
-  } catch (e) {
+  } catch {
     return undefined;
   }
 };
@@ -17,7 +17,7 @@ export const getToken = () => read(TOKEN_KEY) || undefined;
 export const getStoredUser = () => {
   try {
     return JSON.parse(read(USER_KEY)) || undefined;
-  } catch (e) {
+  } catch {
     return undefined;
   }
 };
@@ -30,7 +30,7 @@ export const getExpiry = (token) => {
   try {
     const { exp } = jwtDecode(token);
     return exp ? exp * 1000 : undefined;
-  } catch (e) {
+  } catch {
     return undefined;
   }
 };
