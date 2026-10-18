@@ -111,7 +111,7 @@ export const deleteMeter = async (meterId) => {
 // fields of a meter that can be changed, depending on its type
 const FIELDS_BY_TYPE = {
   number: ["dailyGoal", "weeklyGoal"],
-  activities: ["options", "tagGoals"],
+  activities: ["options", "activityGoals"],
 };
 const EDITABLE_FIELDS = ["name", "color", "icon"];
 
@@ -130,11 +130,11 @@ export const updateMeter = async (meter) => {
   if (_.has(changes, "weeklyGoal") && !isTimesPerWeek(changes.weeklyGoal)) {
     changes.weeklyGoal = null;
   }
-  if (_.has(changes, "tagGoals")) {
-    const goals = (changes.tagGoals || []).filter((goal) =>
+  if (_.has(changes, "activityGoals")) {
+    const goals = (changes.activityGoals || []).filter((goal) =>
       isTimesPerWeek(goal.timesPerWeek)
     );
-    changes.tagGoals = goals.length > 0 ? goals : null;
+    changes.activityGoals = goals.length > 0 ? goals : null;
   }
   return Axios.patch(
     `${API_BASE_URL}/meters/${meter.id}`,

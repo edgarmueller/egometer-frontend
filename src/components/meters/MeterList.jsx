@@ -22,7 +22,7 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import AddRounded from "@mui/icons-material/AddRounded";
 import DeleteOutlineRounded from "@mui/icons-material/DeleteOutlineRounded";
-import LocalOfferOutlined from "@mui/icons-material/LocalOfferOutlined";
+import ChecklistRounded from "@mui/icons-material/ChecklistRounded";
 import TuneRounded from "@mui/icons-material/TuneRounded";
 import FlagRounded from "@mui/icons-material/FlagRounded";
 import {
@@ -42,7 +42,7 @@ import TimesPerWeekSelect from "../common/TimesPerWeekSelect";
 import ErrorSnackbar from "../common/ErrorSnackbar";
 import AddMeterDialog from "./AddMeterDialog";
 import IconPicker from "./IconPicker";
-import TagsDialog from "./TagsDialog";
+import ActivitiesDialog from "./ActivitiesDialog";
 
 const GoalField = ({ label, value, onChange }) => (
   <TextField
@@ -75,9 +75,9 @@ export const MeterList = ({
   const [editedMeters, setEditedMeters] = useState(meters);
   useEffect(() => setEditedMeters(meters), [meters]);
   const [isAddOpen, setAddOpen] = useState(false);
-  // the meters whose icon, tags or deletion are being edited
+  // the meters whose icon, activities or deletion are being edited
   const [iconMeter, setIconMeter] = useState(undefined);
-  const [taggedMeter, setTaggedMeter] = useState(undefined);
+  const [activitiesMeter, setActivitiesMeter] = useState(undefined);
   const [deletedMeter, setDeletedMeter] = useState(undefined);
 
   const handleUpdateMeter = useCallback(
@@ -194,13 +194,15 @@ export const MeterList = ({
                           <Button
                             size="small"
                             startIcon={<FlagRounded />}
-                            onClick={() => setTaggedMeter(meter)}
+                            onClick={() => setActivitiesMeter(meter)}
                           >
-                            {(meter.tagGoals || []).length > 0
-                              ? `${meter.tagGoals.length} tag ${
-                                  meter.tagGoals.length === 1 ? "goal" : "goals"
+                            {(meter.activityGoals || []).length > 0
+                              ? `${meter.activityGoals.length} activity ${
+                                  meter.activityGoals.length === 1
+                                    ? "goal"
+                                    : "goals"
                                 }`
-                              : "Set tag goals"}
+                              : "Set activity goals"}
                           </Button>
                         ) : (
                           <Box sx={{ display: "flex", gap: 1 }}>
@@ -225,12 +227,12 @@ export const MeterList = ({
                       </TableCell>
                       <TableCell align="right" sx={{ whiteSpace: "nowrap" }}>
                         {meter.type === "activities" && (
-                          <Tooltip title="Edit tags and goals">
+                          <Tooltip title="Edit activities and goals">
                             <IconButton
-                              aria-label="Edit tags"
-                              onClick={() => setTaggedMeter(meter)}
+                              aria-label="Edit activities"
+                              onClick={() => setActivitiesMeter(meter)}
                             >
-                              <LocalOfferOutlined />
+                              <ChecklistRounded />
                             </IconButton>
                           </Tooltip>
                         )}
@@ -271,15 +273,18 @@ export const MeterList = ({
         }}
         onClose={() => setIconMeter(undefined)}
       />
-      <TagsDialog
-        open={taggedMeter !== undefined}
-        meterName={taggedMeter && taggedMeter.name}
-        tags={(taggedMeter && taggedMeter.options) || []}
-        goals={taggedMeter && taggedMeter.tagGoals}
-        onSave={(tags, goals) =>
-          handleUpdateMeter(taggedMeter, { options: tags, tagGoals: goals })
+      <ActivitiesDialog
+        open={activitiesMeter !== undefined}
+        meterName={activitiesMeter && activitiesMeter.name}
+        activities={(activitiesMeter && activitiesMeter.options) || []}
+        goals={activitiesMeter && activitiesMeter.activityGoals}
+        onSave={(activities, goals) =>
+          handleUpdateMeter(activitiesMeter, {
+            options: activities,
+            activityGoals: goals,
+          })
         }
-        onClose={() => setTaggedMeter(undefined)}
+        onClose={() => setActivitiesMeter(undefined)}
       />
       <Dialog
         open={deletedMeter !== undefined}

@@ -47,7 +47,7 @@ describe("goals", () => {
     const [sports] = meterGoals({
       type: "activities",
       weeklyGoal: 7,
-      tagGoals: [{ tag: "sports", timesPerWeek: 2 }],
+      activityGoals: [{ activity: "sports", timesPerWeek: 2 }],
     });
     expect(sports).toMatchObject({ key: "sports", label: "Sports" });
     expect(sports.isMet(["work", "sports"])).toBe(true);
@@ -66,9 +66,9 @@ describe("goals", () => {
     ]);
     const activities = {
       type: "activities",
-      tagGoals: [
-        { tag: "sports", timesPerWeek: 2 },
-        { tag: "music", timesPerWeek: 1 },
+      activityGoals: [
+        { activity: "sports", timesPerWeek: 2 },
+        { activity: "music", timesPerWeek: 1 },
       ],
     };
     const tagged = [

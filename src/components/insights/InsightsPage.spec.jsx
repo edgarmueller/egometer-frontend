@@ -18,7 +18,7 @@ const meters = [
     name: "Hobbies",
     type: "activities",
     options: ["sports", "music"],
-    tagGoals: [{ tag: "music", timesPerWeek: 2 }],
+    activityGoals: [{ activity: "music", timesPerWeek: 2 }],
   },
   { id: "b", name: "Workout", type: "boolean", weeklyGoal: 3 },
 ];
