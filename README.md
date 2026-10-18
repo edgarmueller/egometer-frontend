@@ -23,8 +23,9 @@ feature requests etc.
 egometer shows your meters in three ways:
 
 - **Today** (`/dashboard`): a card per meter to fill in a day, e.g. by picking a mood or toggling activities
-- **Week** (`/weekly`) and **Month** (`/matrix`): a table of all meters per day, where clicking a day edits its
-  entry, and a chart of each meter below it
+- **Week** (`/weekly`): a table of all meters per day, and **Month** (`/matrix`): a calendar per meter. Days are
+  shaded in the meter's color by how strong their value is (a better mood, more activities, a larger number), and
+  clicking a day edits its entry. A chart of each meter follows below.
 - **Insights** (`/insights`): what goes along with your mood (each activity tag and yes/no meter, comparing the
   average mood on days with and without it), your mood by weekday, and streaks, over 30 days, 90 days or a year
 

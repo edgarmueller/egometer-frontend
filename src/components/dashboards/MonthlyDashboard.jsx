@@ -7,7 +7,9 @@ import DateNavigator from "../common/DateNavigator";
 import Loading from "../common/Loading";
 import { EntriesErrorSnackbar } from "../common/ErrorSnackbar";
 import MeterCharts from "../charts/MeterCharts";
-import MeterMatrix from "./MeterMatrix";
+import Grid from "@mui/material/Grid";
+import useEntryPopover from "../entries/useEntryPopover";
+import MonthCalendar from "./MonthCalendar";
 import NoMeters from "./NoMeters";
 import useDashboardData from "./useDashboardData";
 import { daysFrom } from "./WeeklyDashboard";
@@ -29,6 +31,7 @@ const MonthlyDashboard = () => {
     fetchEntriesRequest(year, month),
     `${year}-${month}`
   );
+  const { openEditor, popover } = useEntryPopover(meters, entriesByMeter);
 
   return (
     <>
@@ -50,11 +53,19 @@ const MonthlyDashboard = () => {
         <NoMeters />
       ) : (
         <>
-          <MeterMatrix
-            meters={meters}
-            days={days}
-            entriesByMeter={entriesByMeter}
-          />
+          <Grid container spacing={2}>
+            {meters.map((meter) => (
+              <Grid key={meter.id} size={{ xs: 12, sm: 6, lg: 4 }}>
+                <MonthCalendar
+                  meter={meter}
+                  days={days}
+                  entries={entriesByMeter[meter.id]}
+                  onEdit={openEditor}
+                />
+              </Grid>
+            ))}
+          </Grid>
+          {popover}
           <MeterCharts
             meters={meters}
             days={days}
