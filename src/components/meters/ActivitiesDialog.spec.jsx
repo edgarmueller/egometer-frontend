@@ -1,45 +1,47 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import TagsDialog, { validateTag } from "./TagsDialog";
+import ActivitiesDialog, { validateActivity } from "./ActivitiesDialog";
 
-describe("validateTag", () => {
-  it("validates new tags", () => {
-    expect(validateTag("Yoga", ["work"])).toBeUndefined();
-    expect(validateTag("Work", ["work"])).toEqual(expect.any(String));
-    expect(validateTag("x".repeat(51), ["work"])).toEqual(expect.any(String));
+describe("validateActivity", () => {
+  it("validates new activities", () => {
+    expect(validateActivity("Yoga", ["work"])).toBeUndefined();
+    expect(validateActivity("Work", ["work"])).toEqual(expect.any(String));
+    expect(validateActivity("x".repeat(51), ["work"])).toEqual(
+      expect.any(String)
+    );
   });
 });
 
-describe("TagsDialog", () => {
-  const renderDialog = (onSave, tags = ["work", "music"], goals = []) =>
+describe("ActivitiesDialog", () => {
+  const renderDialog = (onSave, activities = ["work", "music"], goals = []) =>
     render(
-      <TagsDialog
+      <ActivitiesDialog
         open
         meterName="Activities"
-        tags={tags}
+        activities={activities}
         goals={goals}
         onSave={onSave}
         onClose={vi.fn()}
       />
     );
-  const addTag = async (tag) => {
-    await userEvent.type(screen.getByLabelText("New tag"), tag);
+  const addActivity = async (activity) => {
+    await userEvent.type(screen.getByLabelText("New activity"), activity);
     await userEvent.click(screen.getByRole("button", { name: "Add" }));
   };
   const save = () =>
     userEvent.click(screen.getByRole("button", { name: "Save" }));
 
-  it("adds and removes tags", async () => {
+  it("adds and removes activities", async () => {
     const onSave = vi.fn();
     renderDialog(onSave);
-    await addTag(" Yoga & stretching ");
+    await addActivity(" Yoga & stretching ");
     await userEvent.click(screen.getByRole("button", { name: "Remove Work" }));
     await save();
     expect(onSave).toHaveBeenCalledWith(["music", "Yoga & stretching"], []);
   });
 
-  it("keeps at least one tag", () => {
+  it("keeps at least one activity", () => {
     renderDialog(vi.fn(), ["work"]);
     expect(screen.getByRole("button", { name: "Remove Work" })).toBeDisabled();
   });
@@ -47,16 +49,22 @@ describe("TagsDialog", () => {
   it("doesn't add duplicates", async () => {
     const onSave = vi.fn();
     renderDialog(onSave);
-    await userEvent.type(screen.getByLabelText("New tag"), "Music");
-    expect(screen.getByText("This tag already exists")).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText("New activity"), "Music");
+    expect(
+      screen.getByText("This activity already exists")
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Add" })).toBeDisabled();
     await save();
     expect(onSave).toHaveBeenCalledWith(["work", "music"], []);
   });
 
-  it("sets goals per tag, dropping those of removed tags", async () => {
+  it("sets goals per activity, dropping those of removed activities", async () => {
     const onSave = vi.fn();
-    renderDialog(onSave, ["work", "music"], [{ tag: "work", timesPerWeek: 5 }]);
+    renderDialog(
+      onSave,
+      ["work", "music"],
+      [{ activity: "work", timesPerWeek: 5 }]
+    );
     expect(
       screen.getByRole("combobox", { name: "Goal for Work" })
     ).toHaveTextContent("5× a week");
@@ -68,8 +76,8 @@ describe("TagsDialog", () => {
     expect(onSave).toHaveBeenLastCalledWith(
       ["work", "music"],
       [
-        { tag: "work", timesPerWeek: 5 },
-        { tag: "music", timesPerWeek: 3 },
+        { activity: "work", timesPerWeek: 5 },
+        { activity: "music", timesPerWeek: 3 },
       ]
     );
   });

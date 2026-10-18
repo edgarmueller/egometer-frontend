@@ -34,9 +34,9 @@ describe("MeterList", () => {
     // goals and tags only for the meters they apply to
     expect(within(rows[3]).getByLabelText("Daily goal")).toHaveValue(1000);
     expect(within(rows[1]).queryByLabelText("Daily goal")).toBeNull();
-    expect(screen.getAllByRole("button", { name: "Edit tags" })).toHaveLength(
-      1
-    );
+    expect(
+      screen.getAllByRole("button", { name: "Edit activities" })
+    ).toHaveLength(1);
   });
 
   it("renames meters", async () => {
@@ -95,10 +95,10 @@ describe("MeterList", () => {
     });
   });
 
-  it("edits the tags and their goals of activities meters", async () => {
+  it("edits the activities and their goals of activities meters", async () => {
     const { updateMeterRequest } = renderList();
     await userEvent.click(
-      screen.getByRole("button", { name: "Set tag goals" })
+      screen.getByRole("button", { name: "Set activity goals" })
     );
     await userEvent.click(
       screen.getByRole("combobox", { name: "Goal for Work" })
@@ -108,7 +108,7 @@ describe("MeterList", () => {
     expect(updateMeterRequest).toHaveBeenLastCalledWith({
       ...meters[1],
       options: ["work"],
-      tagGoals: [{ tag: "work", timesPerWeek: 2 }],
+      activityGoals: [{ activity: "work", timesPerWeek: 2 }],
     });
   });
 });

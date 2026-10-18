@@ -18,20 +18,20 @@ import TimesPerWeekSelect from "../common/TimesPerWeekSelect";
 import { ActivityIcon, activityLabel } from "../../common/meterTypes";
 
 // limits of the API
-export const MAX_TAG_LENGTH = 50;
-export const MAX_TAGS = 100;
+export const MAX_ACTIVITY_LENGTH = 50;
+export const MAX_ACTIVITIES = 100;
 
-/** Validates a new tag, returning an error message or undefined. */
-export const validateTag = (tag, tags) => {
-  if (tag.length > MAX_TAG_LENGTH) {
-    return `Tags can have at most ${MAX_TAG_LENGTH} characters`;
+/** Validates a new activity, returning an error message or undefined. */
+export const validateActivity = (activity, activities) => {
+  if (activity.length > MAX_ACTIVITY_LENGTH) {
+    return `Activities can have at most ${MAX_ACTIVITY_LENGTH} characters`;
   }
-  const lowerCase = tag.toLowerCase();
-  if (tags.some((t) => t.toLowerCase() === lowerCase)) {
-    return "This tag already exists";
+  const lowerCase = activity.toLowerCase();
+  if (activities.some((t) => t.toLowerCase() === lowerCase)) {
+    return "This activity already exists";
   }
-  if (tags.length >= MAX_TAGS) {
-    return `A meter can have at most ${MAX_TAGS} tags`;
+  if (activities.length >= MAX_ACTIVITIES) {
+    return `A meter can have at most ${MAX_ACTIVITIES} activities`;
   }
   return undefined;
 };
@@ -39,36 +39,38 @@ export const validateTag = (tag, tags) => {
 // a stable default, as the dialog resets when its goals change
 const NO_GOALS = [];
 
-/** Edits the tags of an activities meter and their goals. */
-const TagsDialog = ({
+/** Edits the activities of an activities meter and their goals. */
+const ActivitiesDialog = ({
   open,
   meterName,
-  tags,
+  activities,
   goals = NO_GOALS,
   onSave,
   onClose,
 }) => {
-  const [editedTags, setEditedTags] = useState(tags);
-  // days a week by tag
+  const [editedActivities, setEditedActivities] = useState(activities);
+  // days a week by activity
   const [editedGoals, setEditedGoals] = useState({});
-  const [newTag, setNewTag] = useState("");
+  const [newActivity, setNewActivity] = useState("");
   useEffect(() => {
     if (open) {
-      setEditedTags(tags);
+      setEditedActivities(activities);
       setEditedGoals(
-        Object.fromEntries(goals.map((g) => [g.tag, g.timesPerWeek]))
+        Object.fromEntries(goals.map((g) => [g.activity, g.timesPerWeek]))
       );
-      setNewTag("");
+      setNewActivity("");
     }
-  }, [open, tags, goals]);
+  }, [open, activities, goals]);
 
-  const trimmed = newTag.trim();
-  const error = trimmed ? validateTag(trimmed, editedTags) : undefined;
-  const addTag = (event) => {
+  const trimmed = newActivity.trim();
+  const error = trimmed
+    ? validateActivity(trimmed, editedActivities)
+    : undefined;
+  const addActivity = (event) => {
     event.preventDefault();
     if (trimmed && !error) {
-      setEditedTags(editedTags.concat([trimmed]));
-      setNewTag("");
+      setEditedActivities(editedActivities.concat([trimmed]));
+      setNewActivity("");
     }
   };
 
@@ -78,29 +80,31 @@ const TagsDialog = ({
       onClose={onClose}
       maxWidth="sm"
       fullWidth
-      aria-labelledby="tags-dialog-title"
+      aria-labelledby="activities-dialog-title"
     >
-      <DialogTitle id="tags-dialog-title">
-        Tags and goals of {meterName}
+      <DialogTitle id="activities-dialog-title">
+        Activities and goals of {meterName}
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Set how often a week you want to do an activity. Removing a tag keeps
-          it on the days already tagged with it.
+          Set how often a week you want to do each activity. Removing an
+          activity keeps it on the days you already did it.
         </DialogContentText>
         <List dense sx={{ mt: 1 }}>
-          {editedTags.map((tag) => (
+          {editedActivities.map((activity) => (
             <ListItem
-              key={tag}
+              key={activity}
               disableGutters
               secondaryAction={
                 <IconButton
                   edge="end"
-                  aria-label={`Remove ${activityLabel(tag)}`}
-                  // at least one tag is required
-                  disabled={editedTags.length <= 1}
+                  aria-label={`Remove ${activityLabel(activity)}`}
+                  // at least one activity is required
+                  disabled={editedActivities.length <= 1}
                   onClick={() =>
-                    setEditedTags(editedTags.filter((t) => t !== tag))
+                    setEditedActivities(
+                      editedActivities.filter((t) => t !== activity)
+                    )
                   }
                 >
                   <CloseRounded />
@@ -109,14 +113,14 @@ const TagsDialog = ({
               sx={{ pr: 6 }}
             >
               <ListItemIcon>
-                <ActivityIcon tag={tag} />
+                <ActivityIcon tag={activity} />
               </ListItemIcon>
-              <ListItemText primary={activityLabel(tag)} />
+              <ListItemText primary={activityLabel(activity)} />
               <TimesPerWeekSelect
-                ariaLabel={`Goal for ${activityLabel(tag)}`}
-                value={editedGoals[tag]}
+                ariaLabel={`Goal for ${activityLabel(activity)}`}
+                value={editedGoals[activity]}
                 onChange={(times) =>
-                  setEditedGoals({ ...editedGoals, [tag]: times })
+                  setEditedGoals({ ...editedGoals, [activity]: times })
                 }
               />
             </ListItem>
@@ -124,14 +128,14 @@ const TagsDialog = ({
         </List>
         <Box
           component="form"
-          onSubmit={addTag}
+          onSubmit={addActivity}
           sx={{ display: "flex", alignItems: "flex-start", gap: 1, mt: 2 }}
         >
           <TextField
             size="small"
-            label="New tag"
-            value={newTag}
-            onChange={(event) => setNewTag(event.target.value)}
+            label="New activity"
+            value={newActivity}
+            onChange={(event) => setNewActivity(event.target.value)}
             error={error !== undefined}
             helperText={error}
             fullWidth
@@ -152,10 +156,13 @@ const TagsDialog = ({
           variant="contained"
           onClick={() => {
             onSave(
-              editedTags,
-              editedTags
-                .filter((tag) => editedGoals[tag] > 0)
-                .map((tag) => ({ tag, timesPerWeek: editedGoals[tag] }))
+              editedActivities,
+              editedActivities
+                .filter((activity) => editedGoals[activity] > 0)
+                .map((activity) => ({
+                  activity,
+                  timesPerWeek: editedGoals[activity],
+                }))
             );
             onClose();
           }}
@@ -167,15 +174,18 @@ const TagsDialog = ({
   );
 };
 
-TagsDialog.propTypes = {
+ActivitiesDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   meterName: PropTypes.string,
-  tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+  activities: PropTypes.arrayOf(PropTypes.string).isRequired,
   goals: PropTypes.arrayOf(
-    PropTypes.shape({ tag: PropTypes.string, timesPerWeek: PropTypes.number })
+    PropTypes.shape({
+      activity: PropTypes.string,
+      timesPerWeek: PropTypes.number,
+    })
   ),
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 
-export default TagsDialog;
+export default ActivitiesDialog;

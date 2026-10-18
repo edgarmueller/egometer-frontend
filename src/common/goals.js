@@ -30,17 +30,17 @@ export const meetsMeter = (meter, value) => {
 };
 
 /**
- * The goals of a meter: its weekly goal, or one per tag of an activities
- * meter. Each goal has a label (the tag, if any), the days a week it asks
+ * The goals of a meter: its weekly goal, or one per activity of an
+ * activities meter. Each goal has a label (the activity, if any), the days a week it asks
  * for and tells which values meet it.
  */
 export const meterGoals = (meter) => {
   if (meter.type === "activities") {
-    return (meter.tagGoals || []).map(({ tag, timesPerWeek }) => ({
-      key: tag,
-      label: activityLabel(tag),
+    return (meter.activityGoals || []).map(({ activity, timesPerWeek }) => ({
+      key: activity,
+      label: activityLabel(activity),
       timesPerWeek,
-      isMet: (value) => (value || []).includes(tag),
+      isMet: (value) => (value || []).includes(activity),
     }));
   }
   return meter.weeklyGoal > 0
