@@ -93,6 +93,10 @@ export default (state = initialState, action) => {
           acc[entry.meterId].push(entry);
           return acc;
         }, {}),
+        loadingStatus: {
+          isLoading: false,
+          meterId: undefined,
+        },
       };
     case UPDATE_ENTRY_SUCCESS: {
       const e = action.entry;
