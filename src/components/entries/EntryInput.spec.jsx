@@ -67,4 +67,37 @@ describe("EntryInput", () => {
     await userEvent.type(input, "  ");
     expect(onChange).toHaveBeenLastCalledWith(undefined);
   });
+
+  it("shows existing notes as rendered Markdown", () => {
+    renderInput(
+      { type: "text" },
+      "# Day\n\n- [x] **ran** 5k\n- see [notes](https://example.com)\n\n<b>raw</b>"
+    );
+    expect(screen.getByRole("button", { name: "Preview" })).toHaveAttribute(
+      "aria-pressed",
+      "true"
+    );
+    expect(screen.getByRole("heading", { name: "Day" })).toBeInTheDocument();
+    expect(screen.getByText("ran").tagName).toBe("STRONG");
+    expect(screen.getByRole("checkbox")).toBeChecked();
+    expect(screen.getByRole("link", { name: "notes" })).toHaveAttribute(
+      "target",
+      "_blank"
+    );
+    // raw HTML isn't rendered
+    expect(document.querySelector("b")).toBeNull();
+  });
+
+  it("switches from the preview to writing", async () => {
+    const onChange = renderInput({ type: "text" }, "Hello *world*");
+    await userEvent.click(screen.getByRole("button", { name: "Edit M" }));
+    const input = screen.getByRole("textbox", { name: "M" });
+    expect(input).toHaveValue("Hello *world*");
+    expect(input).toHaveFocus();
+    // the cursor is at the end of the note
+    await userEvent.keyboard("!");
+    expect(onChange).toHaveBeenLastCalledWith("Hello *world*!");
+    await userEvent.click(screen.getByRole("button", { name: "Preview" }));
+    expect(screen.getByText("world").tagName).toBe("EM");
+  });
 });

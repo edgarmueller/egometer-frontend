@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -17,6 +17,7 @@ import {
   meterType,
 } from "../../common/meterTypes";
 import { DEFAULT_METER_COLOR } from "../common/MeterAvatar";
+import Markdown from "./Markdown";
 
 const colorOf = (meter) => meter.color || DEFAULT_METER_COLOR;
 
@@ -158,23 +159,118 @@ export const NumberInput = ({ meter, value, onChange }) => {
 };
 
 /** Edits a note, keeping what is typed even while it is saved. */
+/**
+ * Edits a note in Markdown, keeping what is typed even while it is saved.
+ * Existing notes are shown rendered first, new ones open for writing.
+ */
 export const TextInput = ({ meter, value, onChange, autoFocus }) => {
   const [text, setText] = useState(value || "");
+  const [mode, setMode] = useState(value ? "preview" : "write");
+  const inputRef = useRef(null);
+  // whether to focus the text once it is shown, after switching to writing
+  const focusOnWrite = useRef(false);
+  useEffect(() => {
+    const input = inputRef.current;
+    if (mode === "write" && input && focusOnWrite.current) {
+      focusOnWrite.current = false;
+      input.focus();
+      // continue writing at the end of the note
+      input.setSelectionRange(input.value.length, input.value.length);
+    }
+  }, [mode]);
+  const write = () => {
+    focusOnWrite.current = true;
+    setMode("write");
+  };
   return (
-    <TextField
-      multiline
-      minRows={3}
-      maxRows={12}
-      placeholder="Write something about the day…"
-      value={text}
-      autoFocus={autoFocus}
-      onChange={(event) => {
-        setText(event.target.value);
-        onChange(event.target.value.trim() ? event.target.value : undefined);
-      }}
-      slotProps={{ htmlInput: { "aria-label": meter.name } }}
-      fullWidth
-    />
+    <Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 1,
+        }}
+      >
+        <ToggleButtonGroup
+          exclusive
+          size="small"
+          value={mode}
+          onChange={(event, newMode) => {
+            if (newMode === "write") {
+              write();
+            } else if (newMode) {
+              setMode(newMode);
+            }
+          }}
+          aria-label={`${meter.name} mode`}
+        >
+          <ToggleButton value="write" sx={{ px: 1.5, py: 0.25 }}>
+            Write
+          </ToggleButton>
+          <ToggleButton value="preview" sx={{ px: 1.5, py: 0.25 }}>
+            Preview
+          </ToggleButton>
+        </ToggleButtonGroup>
+        <Typography variant="caption" color="text.secondary">
+          Markdown supported
+        </Typography>
+      </Box>
+      {mode === "write" ? (
+        <TextField
+          multiline
+          minRows={3}
+          maxRows={12}
+          placeholder="Write something about the day… **bold**, - lists, [links](…)"
+          value={text}
+          autoFocus={autoFocus}
+          inputRef={inputRef}
+          onChange={(event) => {
+            setText(event.target.value);
+            onChange(
+              event.target.value.trim() ? event.target.value : undefined
+            );
+          }}
+          slotProps={{ htmlInput: { "aria-label": meter.name } }}
+          fullWidth
+        />
+      ) : (
+        <Box
+          role="button"
+          tabIndex={0}
+          aria-label={`Edit ${meter.name}`}
+          onClick={(event) => {
+            // links in the note open, clicking elsewhere edits it
+            if (!event.target.closest("a")) {
+              write();
+            }
+          }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" && event.target === event.currentTarget) {
+              write();
+            }
+          }}
+          sx={{
+            minHeight: 96,
+            maxHeight: 360,
+            overflowY: "auto",
+            px: 1.75,
+            py: 1.5,
+            border: 1,
+            borderColor: "divider",
+            borderRadius: 1,
+            cursor: "text",
+            "&:hover": { borderColor: "text.primary" },
+          }}
+        >
+          {text.trim() ? (
+            <Markdown>{text}</Markdown>
+          ) : (
+            <Typography color="text.disabled">Nothing written yet</Typography>
+          )}
+        </Box>
+      )}
+    </Box>
   );
 };
 
