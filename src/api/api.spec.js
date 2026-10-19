@@ -121,6 +121,28 @@ describe("api", () => {
     ]);
   });
 
+  it("should notify about rejected tokens", async () => {
+    const listener = vi.fn();
+    const unsubscribe = api.onUnauthorized(listener);
+    mock.onGet(`${API_BASE_URL}/meters`).reply(401);
+    localStorage.setItem("egometer.token", "the-token");
+    await expect(api.fetchMeters()).rejects.toThrow("status code 401");
+    localStorage.removeItem("egometer.token");
+    expect(listener).toHaveBeenCalledTimes(1);
+    unsubscribe();
+  });
+
+  it("shouldn't mistake a failed login for a rejected token", async () => {
+    const listener = vi.fn();
+    const unsubscribe = api.onUnauthorized(listener);
+    mock.onPost(`${API_BASE_URL}/auth/login`).reply(401);
+    await expect(api.login("me@example.com", "wrong")).rejects.toThrow(
+      "status code 401"
+    );
+    expect(listener).not.toHaveBeenCalled();
+    unsubscribe();
+  });
+
   it("should put and delete the entry of a day", async () => {
     const entry = {
       id: "e",
