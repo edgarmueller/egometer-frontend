@@ -126,7 +126,7 @@ describe("api", () => {
     const unsubscribe = api.onUnauthorized(listener);
     mock.onGet(`${API_BASE_URL}/meters`).reply(401);
     localStorage.setItem("egometer.token", "the-token");
-    await expect(api.fetchMeters()).rejects.toThrow();
+    await expect(api.fetchMeters()).rejects.toThrow("status code 401");
     localStorage.removeItem("egometer.token");
     expect(listener).toHaveBeenCalledTimes(1);
     unsubscribe();
@@ -136,7 +136,9 @@ describe("api", () => {
     const listener = vi.fn();
     const unsubscribe = api.onUnauthorized(listener);
     mock.onPost(`${API_BASE_URL}/auth/login`).reply(401);
-    await expect(api.login("me@example.com", "wrong")).rejects.toThrow();
+    await expect(api.login("me@example.com", "wrong")).rejects.toThrow(
+      "status code 401"
+    );
     expect(listener).not.toHaveBeenCalled();
     unsubscribe();
   });
